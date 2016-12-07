@@ -1,0 +1,4 @@
+define([
+	'./unit/DummyWidget'
+], function () {
+});

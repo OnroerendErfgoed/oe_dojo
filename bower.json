@@ -1,0 +1,29 @@
+{
+  "name": "oe_dojo",
+  "description": "Dojo library for Onroerend Erfgoed UI's",
+  "main": "",
+  "authors": [
+    "Flanders Heritage Agency <ict@onroerenderfgoed.be>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "Dojo",
+    "Onroerend Erfgoed"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OnroerendErfgoed/oe_dojo"
+  },
+  "homepage": "https://github.com/OnroerendErfgoed/oe_dojo",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "tests",
+    "Gruntfile.js"
+  ],
+  "dependencies": {
+    "dojo": "~1.11.2",
+    "dijit": "~1.11.2"
+  }
+}
