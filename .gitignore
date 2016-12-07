@@ -1,0 +1,9 @@
+# IDE stuff:
+.idea
+
+# node modules
+node_modules/
+
+# javascript libraries
+dojo
+dijit
