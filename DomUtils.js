@@ -131,7 +131,6 @@ define([
     makeArrayUnique: function (nonUniqueArray, idField) {
       var unique = {};
       return array.filter(nonUniqueArray, function (value) {
-        console.log(value, unique);
         if (typeof value === 'object') {
           if (!unique[value[idField]]) {
             unique[value[idField]] = true;

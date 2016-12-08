@@ -24,6 +24,10 @@ define([
       domConstruct.create('option', { value: 3, innerHTML: 'option 3'}, singleSelect);
     },
 
+    afterEach: function() {
+      domConstruct.destroy(singleSelect);
+    },
+
     'getSelectedOption': function() {
       assert.strictEqual(DomUtils.getSelectedOption(singleSelect), '1',
         'getSelectedOption should return first option when nothing selected');
