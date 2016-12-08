@@ -16,7 +16,7 @@ define([
         'convertIsoStringToDateTime should return " - " when no date is given');
       assert.strictEqual(DateUtils.convertIsoStringToDateTime('20161112'), ' - ',
         'convertIsoStringToDateTime should return " - " when invalid date is given');
-      assert.strictEqual(DateUtils.convertIsoStringToDateTime('2016-11-21T13:52+01:00'), '21-11-2016 om 13:52',
+      assert.strictEqual(DateUtils.convertIsoStringToDateTime('2016-11-21T13:52:00+01:00'), '21-11-2016 om 13:52',
         'convertIsoStringToDateTime should return a formatted string in readable format');
     },
 
@@ -32,7 +32,7 @@ define([
     },
 
     'serializeDate': function() {
-      var testDate = new Date('21-11-2016');
+      var testDate = new Date('2016-11-21');
       assert.strictEqual(DateUtils.serializeDate(), null,
         'serializeDate should return null when no date is given');
       assert.strictEqual(DateUtils.serializeDate(testDate), '2016-11-21',
@@ -40,16 +40,16 @@ define([
     },
 
     'serializeDateTime': function() {
-      var testDate = new Date('21-11-2016');
+      var testDate = new Date('2016-11-21');
       testDate.setHours(13, 52);
       assert.strictEqual(DateUtils.serializeDateTime(), null,
         'serializeDateTime should return null when no date is given');
-      assert.strictEqual(DateUtils.serializeDateTime(testDate), '2016-11-21T13:52+01:00',
+      assert.strictEqual(DateUtils.serializeDateTime(testDate), '2016-11-21T13:52:00+01:00',
         'serializeDateTime should return the given date and time in string format');
     },
 
     'serializeDateToDdMmYy': function() {
-      var testDate = new Date('21-11-2016');
+      var testDate = new Date('2016-11-21');
       assert.strictEqual(DateUtils.serializeDateToDdMmYy(), null,
         'serializeDateToDdMmYy should return null when no date is given');
       assert.strictEqual(DateUtils.serializeDateToDdMmYy(testDate), '21-11-2016',
@@ -61,7 +61,7 @@ define([
       testDate.setHours(13, 52);
       assert.strictEqual(DateUtils.parseIsoString(), null,
         'parseIsoString should return null when no date string is given');
-      assert.strictEqual(DateUtils.parseIsoString('2016-11-21T13:52+01:00'), testDate,
+      assert.strictEqual(DateUtils.parseIsoString('2016-11-21T13:52:00+01:00').toISOString(), testDate.toISOString(),
         'parseIsoString should return the given date in string format');
     }
   });

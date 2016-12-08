@@ -23,7 +23,8 @@ define([
       if (d) {
         return locale.format(d, {
           datePattern: 'dd-MM-yyyy',
-          timePattern: '\'om \'HH:mm'
+          timePattern: '\'om \'HH:mm',
+          locale: 'be'
         });
       }
       else
@@ -45,7 +46,8 @@ define([
       if (d) {
         return locale.format(d, {
           selector: 'date',
-          datePattern: 'dd-MM-yyyy'
+          datePattern: 'dd-MM-yyyy',
+          locale: 'be'
         });
       }
       else
@@ -56,7 +58,7 @@ define([
 
     /**
      * Zet een datum object om in een datum string.
-     * @param {Date} dateObject
+     * @param {Date} dateObjectd
      * @returns {string} Datum string
      */
     serializeDate: function(dateObject){
@@ -66,7 +68,8 @@ define([
 
       var format =  {
         selector: 'date',
-        datePattern: 'yyyy-MM-dd'
+        datePattern: 'yyyy-MM-dd',
+        locale: 'be'
       };
       return locale.format(dateObject, format).toUpperCase();
     },
@@ -83,7 +86,8 @@ define([
       var timeZone = this.getTimeZone();
       var format =  {
         datePattern: 'yyyy-MM-dd',
-        timePattern: '\'T\'HH:mm:ss' + timeZone
+        timePattern: '\'T\'HH:mm:ss' + timeZone,
+        locale: 'be'
       };
       return locale.format(dateObject, format).toUpperCase().replace(/\s+/g, '');
     },
@@ -100,7 +104,8 @@ define([
 
       var format = {
         selector: 'date',
-        datePattern: 'dd-MM-yyyy'
+        datePattern: 'dd-MM-yyyy',
+        locale: 'be'
       };
       return locale.format(dateObject, format);
     },
