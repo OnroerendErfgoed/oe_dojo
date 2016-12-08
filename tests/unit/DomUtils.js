@@ -12,58 +12,52 @@ define([
   array
 ) {
 
+  var singleSelect;
+
   registerSuite({
     name: 'DomUtils',
 
-    'getSelectedOption': function() {
-      // init select without selected option
-      var select = domConstruct.create('select');
-      domConstruct.create('option', { value: 1, innerHTML: 'option 1'}, select);
-      domConstruct.create('option', { value: 2, innerHTML: 'option 2'}, select);
-      domConstruct.create('option', { value: 3, innerHTML: 'option 3'}, select);
+    beforeEach: function() {
+      singleSelect = domConstruct.create('select');
+      domConstruct.create('option', { value: 1, innerHTML: 'option 1'}, singleSelect);
+      domConstruct.create('option', { value: 2, innerHTML: 'option 2'}, singleSelect);
+      domConstruct.create('option', { value: 3, innerHTML: 'option 3'}, singleSelect);
+    },
 
-      assert.strictEqual(DomUtils.getSelectedOption(select), '1',
+    'getSelectedOption': function() {
+      assert.strictEqual(DomUtils.getSelectedOption(singleSelect), '1',
         'getSelectedOption should return first option when nothing selected');
 
       // add selected option to select
-      domConstruct.create('option', { value: 4, innerHTML: 'option 4', selected: 'selected'}, select);
+      domConstruct.create('option', { value: 4, innerHTML: 'option 4', selected: 'selected'}, singleSelect);
 
-      assert.strictEqual(DomUtils.getSelectedOption(select), '4',
+      assert.strictEqual(DomUtils.getSelectedOption(singleSelect), '4',
         'getSelectedOption should return the value of the selected option');
     },
 
     'getSelectedOptionLabel': function() {
-      // init select without selected option
-      var select = domConstruct.create('select');
-      domConstruct.create('option', { value: 1, innerHTML: 'option 1'}, select);
-      domConstruct.create('option', { value: 2, innerHTML: 'option 2'}, select);
-      domConstruct.create('option', { value: 3, innerHTML: 'option 3'}, select);
-
-      assert.strictEqual(DomUtils.getSelectedOptionLabel(select), 'option 1',
+      // test withou selected option;
+      assert.strictEqual(DomUtils.getSelectedOptionLabel(singleSelect), 'option 1',
         'getSelectedOption should return label of first option when nothing selected');
 
       // add selected option to select
-      domConstruct.create('option', { value: 4, innerHTML: 'option 4', selected: 'selected'}, select);
+      domConstruct.create('option', { value: 4, innerHTML: 'option 4', selected: 'selected'}, singleSelect);
 
-      assert.strictEqual(DomUtils.getSelectedOptionLabel(select), 'option 4',
+      assert.strictEqual(DomUtils.getSelectedOptionLabel(singleSelect), 'option 4',
         'getSelectedOption should return the label of the selected option');
     },
 
     'setSelectedOptions singleselect': function () {
-      var select = domConstruct.create('select');
-      domConstruct.create('option', { value: 1, innerHTML: 'option 1'}, select);
-      domConstruct.create('option', { value: 2, innerHTML: 'option 2'}, select);
-      domConstruct.create('option', { value: 3, innerHTML: 'option 3'}, select);
       // set option 2 selected
-      DomUtils.setSelectedOptions(select, ['2']);
+      DomUtils.setSelectedOptions(singleSelect, ['2']);
 
-      assert.strictEqual(select.options[select.selectedIndex].value, '2',
+      assert.strictEqual(singleSelect.options[singleSelect.selectedIndex].value, '2',
         'setSelectedOptions should have selected the correct options');
 
       // set no option selected
-      DomUtils.setSelectedOptions(select, []);
+      DomUtils.setSelectedOptions(singleSelect, []);
 
-      assert.strictEqual(select.options[select.selectedIndex].value, '1',
+      assert.strictEqual(singleSelect.options[singleSelect.selectedIndex].value, '1',
         'setSelectedOptions should have selected no option, so the first option should be selected');
     },
 
@@ -86,15 +80,10 @@ define([
     },
 
     'resetSelectOptions': function() {
-      var select = domConstruct.create('select');
-      domConstruct.create('option', { value: 1, innerHTML: 'option 1'}, select);
-      domConstruct.create('option', { value: 2, innerHTML: 'option 2'}, select);
-      domConstruct.create('option', { value: 3, innerHTML: 'option 3'}, select);
-
       // reset select options
-      DomUtils.resetSelectOptions(select);
+      DomUtils.resetSelectOptions(singleSelect);
 
-      assert.lengthOf(select.options, 0, 'resetSelectOptions should have removed all options');
+      assert.lengthOf(singleSelect.options, 0, 'resetSelectOptions should have removed all options');
     },
 
     'addSelectOptions': function() {
