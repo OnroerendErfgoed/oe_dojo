@@ -17,7 +17,7 @@ define([
      */
     convertIsoStringToDateTime: function (date) {
       if (!date) {
-        return ' - ';
+        return null;
       }
       var d = stamp.fromISOString(date);
       if (d) {
@@ -26,10 +26,8 @@ define([
           timePattern: '\'om \'HH:mm',
           locale: 'be'
         });
-      }
-      else
-      {
-        return ' - ';
+      } else {
+        return null;
       }
     },
 
@@ -40,7 +38,7 @@ define([
      */
     convertIsoStringToDate: function (date) {
       if (!date) {
-        return ' - ';
+        return null;
       }
       var d = stamp.fromISOString(date);
       if (d) {
@@ -49,10 +47,8 @@ define([
           datePattern: 'dd-MM-yyyy',
           locale: 'be'
         });
-      }
-      else
-      {
-        return ' - ';
+      } else {
+        return null;
       }
     },
 

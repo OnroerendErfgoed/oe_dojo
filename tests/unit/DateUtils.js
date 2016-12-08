@@ -12,19 +12,19 @@ define([
     name: 'DateUtils',
 
     'convertIsoStringToDateTime': function() {
-      assert.strictEqual(DateUtils.convertIsoStringToDateTime(), ' - ',
-        'convertIsoStringToDateTime should return " - " when no date is given');
-      assert.strictEqual(DateUtils.convertIsoStringToDateTime('20161112'), ' - ',
-        'convertIsoStringToDateTime should return " - " when invalid date is given');
+      assert.strictEqual(DateUtils.convertIsoStringToDateTime(), null,
+        'convertIsoStringToDateTime should return null when no date is given');
+      assert.strictEqual(DateUtils.convertIsoStringToDateTime('20161112'), null,
+        'convertIsoStringToDateTime should return null when invalid date is given');
       assert.strictEqual(DateUtils.convertIsoStringToDateTime('2016-11-21T13:52:00+01:00'), '21-11-2016 om 13:52',
         'convertIsoStringToDateTime should return a formatted string in readable format');
     },
 
     'convertIsoStringToDate': function() {
-      assert.strictEqual(DateUtils.convertIsoStringToDate(), ' - ',
-        'convertIsoStringToDate should return " - " when no date is given');
-      assert.strictEqual(DateUtils.convertIsoStringToDate('20161112'), ' - ',
-        'convertIsoStringToDate should return " - " when invalid date is given');
+      assert.strictEqual(DateUtils.convertIsoStringToDate(), null,
+        'convertIsoStringToDate should return null when no date is given');
+      assert.strictEqual(DateUtils.convertIsoStringToDate('20161112'), null,
+        'convertIsoStringToDate should return null when invalid date is given');
       assert.strictEqual(DateUtils.convertIsoStringToDate('2016-11-21T13:52+01:00'), '21-11-2016',
         'convertIsoStringToDate should return a formatted string in readable format');
       assert.strictEqual(DateUtils.convertIsoStringToDate('2016-11-21'), '21-11-2016',
