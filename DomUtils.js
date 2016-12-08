@@ -110,25 +110,11 @@ define([
     mergeArrays: function (array1, array2, idField) {
       idField = idField ? idField : 'id';
       var nonUnique = array1.concat(array2);
-      var uniqueIds = {};
-      return array.filter(nonUnique, function(value) {
-        if (typeof value === 'object') {
-          if (!uniqueIds[value[idField]]) {
-            uniqueIds[value[idField]] = true;
-            return true;
-          }
-          return false;
-        } else {
-          if (!uniqueIds[value]) {
-            uniqueIds[value] = true;
-            return true;
-          }
-          return false;
-        }
-      });
+      return this.makeArrayUnique(nonUnique, idField);
     },
 
     makeArrayUnique: function (nonUniqueArray, idField) {
+      idField = idField ? idField : 'id';
       var unique = {};
       return array.filter(nonUniqueArray, function (value) {
         if (typeof value === 'object') {

@@ -150,7 +150,7 @@ define([
       assert.lengthOf(ul.children, 0, 'resetList should have removed all list items');
     },
 
-    'mergeArrays': function() {
+    'mergeArrays with arrays of objects': function() {
       var arr1 = [{id: 1, label: 'item 1'}, {id: 2, label: 'item 2'}, {id: 3, label: 'item 3'}];
       var arr2 = [{id: 1, label: 'item 1'}, {id: 4, label: 'item 4'}, {id: 5, label: 'item 5'}];
 
@@ -159,7 +159,9 @@ define([
       assert.sameDeepMembers(DomUtils.mergeArrays(arr1, arr2, 'id'), [{id: 1, label: 'item 1'},
           {id: 2, label: 'item 2'}, {id: 3, label: 'item 3'}, {id: 4, label: 'item 4'}, {id: 5, label: 'item 5'}] ,
         'mergeArrays should return a merged array with no duplicate elements');
+    },
 
+    'mergeArrays with arrays of integers': function() {
       // test with array of integers (non-objects)
       var arr3 = [1, 2, 3, 4];
       var arr4 = [5, 6, 1, 4];
@@ -168,7 +170,7 @@ define([
         'mergeArrays should return a merged array with no duplicate elements');
     },
 
-    'makeArrayUnique': function() {
+    'makeArrayUnique with arrays of objects': function() {
       var arr = [{id: 1, label: 'item 1'}, {id: 2, label: 'item 2'}, {id: 3, label: 'item 3'},
         {id: 1, label: 'item 1'}];
 
@@ -176,7 +178,9 @@ define([
       assert.lengthOf(DomUtils.makeArrayUnique(arr, 'id'), 3, 'makeArrayUnique should return an array with 3 items');
       assert.sameDeepMembers(DomUtils.makeArrayUnique(arr, 'id'), [{id: 1, label: 'item 1'}, {id: 2, label: 'item 2'},
         {id: 3, label: 'item 3'}], 'makeArrayUnique should return an array with unique elements');
+    },
 
+    'makeArrayUnique with arrays of integers': function() {
       // test with array of integers (non-objects)
       var arr2 = [1, 2, 3, 4, 1, 3];
       assert.lengthOf(DomUtils.makeArrayUnique(arr2), 4, 'makeArrayUnique should return an array with 4 items');
