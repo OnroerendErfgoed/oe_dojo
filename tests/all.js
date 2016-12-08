@@ -1,5 +1,6 @@
 define([
-	'./unit/DummyWidget',
+  './unit/DummyWidget',
+  './unit/DateUtils',
   './unit/DomUtils'
 ], function () {
 });
