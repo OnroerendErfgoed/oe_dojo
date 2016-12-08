@@ -83,7 +83,7 @@ define([
       if (!dateObject) {
         return null;
       }
-      var timeZone = this.getTimeZone();
+      var timeZone = this.getTimeZone(dateObject);
       var format =  {
         datePattern: 'yyyy-MM-dd',
         timePattern: '\'T\'HH:mm:ss' + timeZone,
@@ -123,11 +123,12 @@ define([
     },
 
     /**
-     * Berekend de huidige timezone offset
+     * Berekend de timezone offset van het meegegeven date object
+     * @param {Date} dateObject Date object
      * @returns {number} de timezone offset (vb formaat: +01:00 / -12:00 / -03:00)
      */
-    getTimeZone: function() {
-      var offset = new Date().getTimezoneOffset();
+    getTimeZone: function(dateObject) {
+      var offset = dateObject.getTimezoneOffset();
       var positive = false;
       if (offset < 0) {
         positive = true;
