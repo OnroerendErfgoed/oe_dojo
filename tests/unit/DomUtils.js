@@ -156,8 +156,8 @@ define([
 
       // test with array of objects
       assert.lengthOf(DomUtils.mergeArrays(arr1, arr2, 'id'), 5, 'mergeArrays should return an array with 5 items');
-      assert.sameDeepMembers(DomUtils.mergeArrays(arr1, arr2, 'id'), [{id: 1, label: 'item 1'}, {id: 2, label: 'item 2'},
-          {id: 3, label: 'item 3'}, {id: 4, label: 'item 4'}, {id: 5, label: 'item 5'}] ,
+      assert.sameDeepMembers(DomUtils.mergeArrays(arr1, arr2, 'id'), [{id: 1, label: 'item 1'},
+          {id: 2, label: 'item 2'}, {id: 3, label: 'item 3'}, {id: 4, label: 'item 4'}, {id: 5, label: 'item 5'}] ,
         'mergeArrays should return a merged array with no duplicate elements');
 
       // test with array of integers (non-objects)
