@@ -9,7 +9,8 @@ define([
   array,
   domConstruct
 ) {
-  return{
+  return {
+
     /**
      * Geeft de geselecteerde 'option' terug uit de 'select'.
      * @param {Object} select De 'select' lijst
@@ -70,6 +71,17 @@ define([
       });
     },
 
+    /**
+     * Voeg 'options' inclusief placeholder toe aan een 'select' lijst.
+     * @param {Object} select De 'select' lijst
+     * @param {Object} options Een object met de opties, formaat:
+     *   {
+     *     data: {array},
+     *     idProperty: {string},
+     *     labelProperty: {string}
+     *     placeholder: undefined || {string}
+     *   }
+     */
     addSelectOptionsWithPlaceholder: function (select, options){
       var placeholder = options.placeholder || 'Kies een optie...';
       domConstruct.empty(select);
@@ -81,10 +93,13 @@ define([
       });
     },
 
-    resetList: function (ullist) {
-      domConstruct.empty(ullist);
+    /**
+     * Verwijder de listitems
+     * @param select {Object} list De 'ul' of 'ol' lijst
+     */
+    resetList: function (list) {
+      domConstruct.empty(list);
     },
-
 
     /**
      * Utility om arrays van objecten te mergen zonder dubbele entries (aan de hand van een uniek id)
@@ -92,29 +107,44 @@ define([
      * @param {array} array2 De tweede array
      * @param {String} idField De property die het uniek id bevat (default 'id');
      */
-    _mergeArrays: function (array1, array2, idField) {
+    mergeArrays: function (array1, array2, idField) {
       idField = idField ? idField : 'id';
       var nonUnique = array1.concat(array2);
       var uniqueIds = {};
       return array.filter(nonUnique, function(value) {
-        if (!uniqueIds[value[idField]]) {
-          uniqueIds[value[idField]] = true;
-          return true;
+        if (typeof value === 'object') {
+          if (!uniqueIds[value[idField]]) {
+            uniqueIds[value[idField]] = true;
+            return true;
+          }
+          return false;
+        } else {
+          if (!uniqueIds[value]) {
+            uniqueIds[value] = true;
+            return true;
+          }
+          return false;
         }
-        return false;
       });
     },
 
-    makeArrayUnique: function (nonUniqueArray) {
+    makeArrayUnique: function (nonUniqueArray, idField) {
       var unique = {};
-
-      return array.filter(nonUniqueArray, function(value) {
-        if (!unique[value]) {
-          unique[value] = true;
-          return true;
+      return array.filter(nonUniqueArray, function (value) {
+        console.log(value, unique);
+        if (typeof value === 'object') {
+          if (!unique[value[idField]]) {
+            unique[value[idField]] = true;
+            return true;
+          }
+          return false;
+        } else {
+          if (!unique[value]) {
+            unique[value] = true;
+            return true;
+          }
+          return false;
         }
-        return false;
-
       });
     }
   };
