@@ -4,6 +4,7 @@ define([
   './unit/DomUtils',
   './unit/ErrorUtils',
   './unit/TrackableRestStore',
-  './unit/TrackableMemoryStore'
+  './unit/TrackableMemoryStore',
+  './unit/ClipboardMixin'
 ], function () {
 });

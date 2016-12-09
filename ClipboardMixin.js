@@ -15,7 +15,6 @@ define([
 
     copyType: null,
     clipBoard: {},
-    domNode: null,
     _copyButton: null,
     _pasteButton: null,
 
