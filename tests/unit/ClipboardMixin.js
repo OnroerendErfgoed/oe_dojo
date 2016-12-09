@@ -50,7 +50,7 @@ define([
       clip1.setData('joske');
       clip1.copy(clip1.copyType);
 
-      assert.strictEqual(clip1.clipBoard['test'], 'joske',
+      assert.strictEqual(clip1.clipBoard.test, 'joske',
         'clipboardMixin should have copied the value into clipboard array');
     },
 
