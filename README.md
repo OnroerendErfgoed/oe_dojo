@@ -2,27 +2,46 @@
 
 Dojo library for Onroerend Erfgoed UI's
 
-Installatie
------------
+## Installatie
 Je kan de library in je project toevoegen via Bower: 
 ```bash
 bower install https://github.com/OnroerendErfgoed/oe_dojo.git#0.0.1 --save
 ```
 
-Development
------------
+## Development
 Check het project uit en run deze commando's:
 ```bash
-npm install
-bower install
+$ npm install
+$ bower install
 ```
 
-Testen
-------
-Unit testen kan via de Intern client. Deze moet geserved worden via een webserver. Run hiervoor:
+## Testen
+### Code quality
 
+### Unit testen
+Unit testen kan op 2 manieren:
+ + via de Intern web client
+ + command line via de ChromeDriver (met code coverage)
+ 
+De **[Intern client]** https://theintern.github.io/intern/#browser-client maakt gebruikt van een web pagina om alles tests te runnen en het resultaat weer te geven.
+Run hiervoor vanuit de project root:   
 ```bash
-grunt run
+$ grunt webtest
+``` 
+Dit zal een webserver opstarten die je command line manueel meot stoppen via CTRL-c.
+
+De **[ChromeDriver]** (https://sites.google.com/a/chromium.org/chromedriver/) zal zelf een Chrome browser openen om alle tests in uit te voeren. Nadien worden 2 webpagina's 
+geopen met de test resultaten en het coverage report.
+
+Run hiervoor vanuit de project root:   
+```bash
+$ grunt test
 ```
-Dit start een lokale web server op poort 8000.
-En ga dan naar de [test pagina](http://localhost:8000/tests/runTests.html).
+Hiervoor dient de Chrome Web Driver wel nog manueel gedownload te worden en runnen op poort 4444.
+Dit kan met volgend commando vanuit de justte directory:
+```bash
+$ ./chromedriver --port=4444 --url-base=wd/hub
+```
+
+
+Dit zal een webserver opstarten die je command line manueel meot stoppen via CTRL-c.

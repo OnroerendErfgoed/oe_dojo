@@ -1,9 +1,12 @@
 # IDE stuff:
-.idea
+.idea/
 
 # node modules
 node_modules/
 
 # javascript libraries
-dojo
-dijit
+dojo/
+dijit/
+
+# test reports
+testreport/
