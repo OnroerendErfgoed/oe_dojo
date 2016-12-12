@@ -5,7 +5,7 @@ Dojo library for Onroerend Erfgoed UI's
 ## Installatie
 Je kan de library in je project toevoegen via Bower: 
 ```bash
-bower install https://github.com/OnroerendErfgoed/oe_dojo.git#0.0.1 --save
+bower install https://github.com/OnroerendErfgoed/oe_dojo.git#<release nummer> --save
 ```
 
 ## Development
@@ -17,20 +17,25 @@ $ bower install
 
 ## Testen
 ### Code quality
+Code quality wordt getest via [jshint](http://jshint.com/). 
+Run hiervoor vanuit de project root:   
+```bash
+$ grunt jshint
+```
 
 ### Unit testen
 Unit testen kan op 2 manieren:
  + via de Intern web client
  + command line via de ChromeDriver (met code coverage)
  
-De **[Intern client]** https://theintern.github.io/intern/#browser-client maakt gebruikt van een web pagina om alles tests te runnen en het resultaat weer te geven.
+De [**Intern client**](https://theintern.github.io/intern/#browser-client) maakt gebruikt van een web pagina om alles tests te runnen en het resultaat weer te geven.
 Run hiervoor vanuit de project root:   
 ```bash
 $ grunt webtest
 ``` 
 Dit zal een webserver opstarten die je command line manueel meot stoppen via CTRL-c.
 
-De **[ChromeDriver]** (https://sites.google.com/a/chromium.org/chromedriver/) zal zelf een Chrome browser openen om alle tests in uit te voeren. Nadien worden 2 webpagina's 
+De [**ChromeDriver**](https://sites.google.com/a/chromium.org/chromedriver/) zal zelf een Chrome browser openen om alle tests in uit te voeren. Nadien worden 2 webpagina's 
 geopen met de test resultaten en het coverage report.
 
 Run hiervoor vanuit de project root:   
