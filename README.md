@@ -37,21 +37,15 @@ Run hiervoor vanuit de project root:
 ```bash
 $ grunt webtest
 ``` 
-Dit zal een webserver opstarten die je manueel moet stoppen via CTRL-C in de command line.
+Dit zal een webserver opstarten, en browsen naar de juiste test pagina. Deze zal je achteraf manueel moet stoppen 
+via CTRL-C in de command line.
 
 
-De [**ChromeDriver**](https://sites.google.com/a/chromium.org/chromedriver/) zal zelf een Chrome browser openen om alle tests in uit te voeren. Nadien worden 2 webpagina's 
-geopen met de test resultaten en het coverage report.
+De [**ChromeDriver**](https://sites.google.com/a/chromium.org/chromedriver/) zal zelf een Chrome browser openen om alle 
+tests in uit te voeren. Nadien worden 2 webpagina's geopend met de test resultaten en het coverage report.
 
 Run hiervoor vanuit de project root:   
 ```bash
 $ grunt test
 ```
-Hiervoor dient de Chrome Web Driver wel nog manueel gedownload te worden en runnen op poort 4444.
-Dit kan met volgend commando vanuit de justte directory:
-```bash
-$ ./chromedriver --port=4444 --url-base=wd/hub
-```
-
-
-Dit zal een webserver opstarten die je manueel moet stoppen via CTRL-C in de command line.
+Dit zal een webserver opstarten die je achteraf manueel moet stoppen via CTRL-C in de command line.
