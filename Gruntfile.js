@@ -24,19 +24,25 @@ module.exports = function (grunt) {
     },
     intern: {
       options: {
-        reporters: [
-          {id: 'Runner', filename: 'testreport/report.html'},
-          {id: 'LcovHtml', directory: 'testreport/coverage-report'}
-        ],
-
         runType: 'runner',
         config: 'tests/intern'
       },
-      local: {
+      basic: {
         options: {
-          config: 'tests/intern'
+          reporters: [
+            'Pretty'
+          ]
+        }
+      },
+      html: {
+        options: {
+          reporters: [
+            {id: 'Runner', filename: 'testreport/report.html'},
+            {id: 'LcovHtml', directory: 'testreport/coverage-report'}
+          ]
         }
       }
+
     },
     connect: {
       'intern': {
@@ -81,12 +87,17 @@ module.exports = function (grunt) {
   // Register tasks
   grunt.registerTask('test', [
     'run:chromedriver',
+    'intern:basic',
+    'stop:chromedriver'
+  ]);
+  grunt.registerTask('test-html', [
+    'run:chromedriver',
     'clean:report',
-    'intern:local',
+    'intern:html',
     'stop:chromedriver',
     'connect:test',
     'connect:coverage'
   ]);
-  grunt.registerTask('webtest', ['connect:intern']);
+  grunt.registerTask('test-intern', ['connect:intern']);
   grunt.registerTask('default', [ 'jshint', 'test' ]);
 };
