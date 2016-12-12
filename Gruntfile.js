@@ -10,11 +10,11 @@ module.exports = function (grunt) {
 
   // Configure tasks
   grunt.initConfig({
-		clean: {
-			report: {
-				src: [ 'testreport' ]
-			}
-		},
+    clean: {
+      report: {
+        src: [ 'testreport' ]
+      }
+    },
     jshint: {
       all: ['./*.js', 'tests/**/*.js'],
       options: {
@@ -66,7 +66,12 @@ module.exports = function (grunt) {
   });
 
   // Register tasks
-  grunt.registerTask('test', [ 'clean:report', 'intern:local', 'connect:test', 'connect:coverage' ]);
+  grunt.registerTask('test', [
+    'clean:report',
+    'intern:local',
+    'connect:test',
+    'connect:coverage'
+  ]);
   grunt.registerTask('webtest', ['connect:intern']);
   grunt.registerTask('default', [ 'jshint', 'test' ]);
 };
