@@ -34,7 +34,7 @@ Unit testen kan op 2 manieren:
 De [**Intern client**](https://theintern.github.io/intern/#browser-client) maakt gebruikt van een 
 web pagina om alle tests te runnen en het resultaat weer te geven.
 
-Om de test enkel command line te runnen vanuit de project root:   
+Run hiervoor vanuit de project root: 
 ```bash
 $ grunt test-intern
 ``` 
@@ -44,7 +44,7 @@ via CTRL-C in de command line.
 #### Intern en Chromedriver
 De [**ChromeDriver**](https://sites.google.com/a/chromium.org/chromedriver/) zal zelf een Chrome browser openen om alle 
 tests in uit te voeren. De Chromedriver wordt via een npm module in het project ingeladen.
-Run hiervoor vanuit de project root:   
+ Om de test enkel command line te runnen vanuit de project root: 
 ```bash
 $ grunt test
 ```
