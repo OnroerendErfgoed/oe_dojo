@@ -23,8 +23,8 @@ define({
   // and platformVersion; any other capabilities options specified for an environment will be copied as-is. Note that
   // browser and platform names, and version number formats, may differ between cloud testing systems.
   environments: [
-    { browserName: 'chrome' },
-    { browserName: 'firefox' }
+    { browserName: 'chrome' }
+    // { browserName: 'firefox' }
   ],
 
   // Maximum number of simultaneous integration tests that should be executed on the remote WebDriver service
