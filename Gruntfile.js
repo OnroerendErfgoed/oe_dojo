@@ -4,7 +4,6 @@ module.exports = function (grunt) {
   // Load all the tasks
   grunt.loadNpmTasks('intern');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-run');
