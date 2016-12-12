@@ -7,6 +7,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-http-server');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-run');
 
   // Configure tasks
   grunt.initConfig({
@@ -62,13 +63,27 @@ module.exports = function (grunt) {
           open: 'http://localhost:9002/index.html'
         }
       }
+    },
+    run: {
+      options: {
+        wait: false
+      },
+      chromedriver: {
+        cmd: './node_modules/chromedriver/bin/chromedriver',
+        args: [
+          '--port=4444',
+          '--url-base=wd/hub'
+        ]
+      }
     }
   });
 
   // Register tasks
   grunt.registerTask('test', [
+    'run:chromedriver',
     'clean:report',
     'intern:local',
+    'stop:chromedriver',
     'connect:test',
     'connect:coverage'
   ]);

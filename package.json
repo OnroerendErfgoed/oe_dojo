@@ -25,11 +25,11 @@
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-jshint": "^1.1.0",
+    "grunt-run": "^0.6.0",
     "intern": "^3.4.1"
   },
   "scripts": {
     "test": "intern-runner config=tests/intern reporters=Runner reporters=LcovHtml",
-    "chrome": "./node_modules/chromedriver/bin/chromedriver",
-    "start": "./node_modules/.bin/http-server -a localhost -p 8000 -c-1"
+    "chromedriver": "./node_modules/chromedriver/bin/chromedriver --port=4444 --url-base=wd/hub"
   }
 }
