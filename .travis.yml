@@ -5,8 +5,8 @@ node_js:
 sudo: required
 notifications:
   email:
-#    - aaron.steurbaut@geosolutions.be
-#    - maarten.taeymans@geosolutions.be
+    - aaron.steurbaut@geosolutions.be
+    - maarten.taeymans@geosolutions.be
     - cedrik.vanderhaegen@geosolutions.be
 addons:
   apt:
