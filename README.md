@@ -63,3 +63,8 @@ De default optie als je dit commando runt:
 $ grunt
 ```
 zal achtereenvolgens jshint en en de command line testen uitvoeren.
+
+## Links
+[Github](https://github.com/OnroerendErfgoed/oe_dojo)
+[Travis](https://travis-ci.org/OnroerendErfgoed/oe_dojo)
+[Coveralls](https://coveralls.io/github/OnroerendErfgoed/oe_dojo)
