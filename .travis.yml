@@ -25,10 +25,10 @@ install:
 before_script:
 #  - grunt -v jshint
   - date
-  - echo "Europe/Brussels" | sudo tee /etc/timezone
-  - date
-  - sudo dpkg-reconfigure --frontend noninteractive tzdata
-  - date
+#  - echo "Europe/Brussels" | sudo tee /etc/timezone
+#  - date
+#  - sudo dpkg-reconfigure --frontend noninteractive tzdata
+#  - date
   - export TZ=Europe/Brussels
   - date
 #  - "export DISPLAY=:99.0"
