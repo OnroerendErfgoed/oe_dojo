@@ -8,15 +8,15 @@ notifications:
     - aaron.steurbaut@geosolutions.be
     - maarten.taeymans@geosolutions.be
     - cedrik.vanderhaegen@geosolutions.be
-addons:
-  apt:
-    packages:
+#addons:
+#  apt:
+#    packages:
 #      - chromium-browser
 #      - chromium-chromedriver
 
 before_install:
   - echo "Europe/Brussels"
-  -npm --version
+  - npm --version
 #  - npm install -g grunt-cli
 #  - npm install -g bower
 
