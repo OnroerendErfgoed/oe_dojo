@@ -8,7 +8,7 @@ notifications:
 #    - aaron.steurbaut@geosolutions.be
 #    - maarten.taeymans@geosolutions.be
     - cedrik.vanderhaegen@geosolutions.be
-#addons:
+addons:
   apt:
     packages:
       - chromium-browser
