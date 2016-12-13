@@ -15,15 +15,16 @@ addons:
       - chromium-chromedriver
 
 before_install:
-  - npm install -g grunt-cli
-  - npm install -g bower
+#  - npm install -g grunt-cli
+#  - npm install -g bower
 
 install:
-  - npm install
-  - bower install
+#  - npm install
+#  - bower install
 
 before_script:
-  - grunt -v jshint
+#  - grunt -v jshint
+  - "date"
   - echo "Europe/Brussels" | sudo tee /etc/timezone
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
   - sudo ntpdate ntp.ubuntu.com
@@ -32,4 +33,4 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
 
 script:
-  - grunt test
+#  - grunt test
