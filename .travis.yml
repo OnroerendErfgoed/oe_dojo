@@ -9,31 +9,25 @@ notifications:
 #    - maarten.taeymans@geosolutions.be
     - cedrik.vanderhaegen@geosolutions.be
 #addons:
-#  apt:
-#    packages:
-#      - chromium-browser
-#      - chromium-chromedriver
+  apt:
+    packages:
+      - chromium-browser
+      - chromium-chromedriver
 
 before_install:
-#  - npm install -g grunt-cli
-#  - npm install -g bower
+  - npm install -g grunt-cli
+  - npm install -g bower
 
 install:
-#  - npm install
-#  - bower install
+  - npm install
+  - bower install
 
 before_script:
-#  - grunt -v jshint
-  - date
-#  - echo "Europe/Brussels" | sudo tee /etc/timezone
-#  - date
-#  - sudo dpkg-reconfigure --frontend noninteractive tzdata
-#  - date
+  - grunt -v jshint
   - export TZ=Europe/Brussels
-  - date
-#  - "export DISPLAY=:99.0"
-#  - "export CHROME_BIN=chromium-browser"
-#  - "sh -e /etc/init.d/xvfb start"
+  - "export DISPLAY=:99.0"
+  - "export CHROME_BIN=chromium-browser"
+  - "sh -e /etc/init.d/xvfb start"
 
 script:
-#  - grunt test
+  - grunt test
