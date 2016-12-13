@@ -9,5 +9,6 @@ dojo/
 dijit/
 dstore/
 
-# test reports
+# test & coverage reports
 testreport/
+lcov.info
