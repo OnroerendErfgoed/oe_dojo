@@ -67,8 +67,8 @@ define([
     },
 
     'getTimeZone': function() {
-      var winterDate = new Date('2016-12-18 00:00:00 GMT+1');
-      var zomerDate = new Date('2016-8-20 00:00:00 GMT+2');
+      var winterDate = new Date(Date.parse('18 Dec 2016 00:00:00 GMT+2'));
+      var zomerDate = new Date(Date.parse('20 Aug 2016 00:00:00 GMT+2'));
 
       assert.strictEqual(DateUtils.getTimeZone(winterDate), '+01:00',
         'getTimeZone should return the correct timezone for a date in winter');

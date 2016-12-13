@@ -1,43 +1,108 @@
-/*jshint node:true*/
+/* jshint node:true */
 module.exports = function (grunt) {
 
   // Load all the tasks
   grunt.loadNpmTasks('intern');
   grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-http-server');
+  grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-run');
 
   // Configure tasks
   grunt.initConfig({
-    intern: {
-      dev: {
-        options: {
-          runType: 'client',
-          config: 'tests/intern',
-          reporters: [ 'Console' ]
-        }
+    clean: {
+      report: {
+        src: [ 'testreport' ]
+      },
+      lcov: {
+       src: [ 'lcov.info' ]
       }
     },
     jshint: {
-      all: ['./*.js', 'tests/unit/*.js'],
+      all: ['./*.js', 'tests/**/*.js'],
       options: {
         jshintrc: './.jshintrc'
       }
     },
-    'http-server': {
-      dev: {
-        root: '.',
-        host: '0.0.0.0',
-        port: 8000,
-        showDir: true,
-        runInBackground: false,
-        openBrowser: true
+    intern: {
+      options: {
+        runType: 'runner',
+        config: 'tests/intern'
+      },
+      basic: {
+        options: {
+          reporters: [
+            'Pretty', 'Lcov'
+          ]
+        }
+      },
+      html: {
+        options: {
+          reporters: [
+            {id: 'Runner', filename: 'testreport/report.html'},
+            {id: 'LcovHtml', directory: 'testreport/coverage-report'}
+          ]
+        }
+      }
+
+    },
+    connect: {
+      'intern': {
+        options: {
+          port: 9000,
+          base: '.',
+          keepalive: true,
+          open: 'http://localhost:9000/tests/runTests.html'
+        }
+      },
+      'test': {
+        options: {
+          port: 9001,
+          base: 'testreport',
+          keepalive: false,
+          open: 'http://localhost:9001/report.html'
+        }
+      },
+      'coverage': {
+        options: {
+          port: 9002,
+          base: 'testreport/coverage-report/',
+          keepalive: true,
+          open: 'http://localhost:9002/index.html'
+        }
+      }
+    },
+    run: {
+      options: {
+        wait: false
+      },
+      chromedriver: {
+        cmd: './node_modules/chromedriver/bin/chromedriver',
+        args: [
+          '--port=4444',
+          '--url-base=wd/hub'
+        ]
       }
     }
   });
 
-
   // Register tasks
-  grunt.registerTask('test', [ 'jshint', 'intern' ]);
-  grunt.registerTask('default', [ 'test' ]);
-  grunt.registerTask('run', ['http-server:dev']);
+  grunt.registerTask('test', [
+    'run:chromedriver',
+    'clean:report',
+    'clean:lcov',
+    'intern:basic',
+    'stop:chromedriver'
+  ]);
+  grunt.registerTask('test-html', [
+    'run:chromedriver',
+    'clean:report',
+    'clean:lcov',
+    'intern:html',
+    'stop:chromedriver',
+    'connect:test',
+    'connect:coverage'
+  ]);
+  grunt.registerTask('test-intern', ['connect:intern']);
+  grunt.registerTask('default', [ 'jshint', 'test' ]);
 };
