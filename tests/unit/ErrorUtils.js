@@ -68,8 +68,7 @@ define([
       assert.deepEqual(ErrorUtils.parseError(errorHtml),
         {title: 'Er is een fout opgetreden', message: 'Het formaat van de foutmelding is onleesbaar'},
         'parseError should return a default error telling the error format is incorrect');
-    },
-
+    }
 
   });
 });
