@@ -1,5 +1,8 @@
 # oe_dojo
 
+[![Build Status](https://travis-ci.org/OnroerendErfgoed/oe_dojo.svg?branch=master)](https://travis-ci.org/OnroerendErfgoed/oe_dojo)
+[![Coverage Status](https://coveralls.io/repos/github/OnroerendErfgoed/oe_dojo/badge.svg?branch=master)](https://coveralls.io/github/OnroerendErfgoed/oe_dojo?branch=master)
+
 Dojo component library for Onroerend Erfgoed UI's.
 
 ## Installatie

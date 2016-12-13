@@ -13,6 +13,9 @@ module.exports = function (grunt) {
     clean: {
       report: {
         src: [ 'testreport' ]
+      },
+      lcov: {
+       src: [ 'lcov.info' ]
       }
     },
     jshint: {
@@ -29,7 +32,7 @@ module.exports = function (grunt) {
       basic: {
         options: {
           reporters: [
-            'Pretty'
+            'Pretty', 'Lcov'
           ]
         }
       },
@@ -86,12 +89,15 @@ module.exports = function (grunt) {
   // Register tasks
   grunt.registerTask('test', [
     'run:chromedriver',
+    'clean:report',
+    'clean:lcov',
     'intern:basic',
     'stop:chromedriver'
   ]);
   grunt.registerTask('test-html', [
     'run:chromedriver',
     'clean:report',
+    'clean:lcov',
     'intern:html',
     'stop:chromedriver',
     'connect:test',
