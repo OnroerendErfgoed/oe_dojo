@@ -29,6 +29,8 @@ before_script:
   - date
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
   - date
+  - export TZ=Europe/Brussels
+  - date
 #  - "export DISPLAY=:99.0"
 #  - "export CHROME_BIN=chromium-browser"
 #  - "sh -e /etc/init.d/xvfb start"
