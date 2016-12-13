@@ -5,8 +5,8 @@ node_js:
 sudo: required
 notifications:
   email:
-    - aaron.steurbaut@geosolutions.be
-    - maarten.taeymans@geosolutions.be
+#    - aaron.steurbaut@geosolutions.be
+#    - maarten.taeymans@geosolutions.be
     - cedrik.vanderhaegen@geosolutions.be
 #addons:
 #  apt:
@@ -15,8 +15,6 @@ notifications:
 #      - chromium-chromedriver
 
 before_install:
-  - echo "Europe/Brussels"
-  - npm --version
 #  - npm install -g grunt-cli
 #  - npm install -g bower
 
@@ -26,6 +24,7 @@ install:
 
 before_script:
 #  - grunt -v jshint
+  - date
   - echo "Europe/Brussels"
   - echo "Europe/Brussels" | sudo tee /etc/timezone
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
