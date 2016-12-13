@@ -11,10 +11,12 @@ notifications:
 addons:
   apt:
     packages:
-      - chromium-browser
-      - chromium-chromedriver
+#      - chromium-browser
+#      - chromium-chromedriver
 
 before_install:
+  - echo "Europe/Brussels"
+  -npm --version
 #  - npm install -g grunt-cli
 #  - npm install -g bower
 
@@ -24,10 +26,9 @@ install:
 
 before_script:
 #  - grunt -v jshint
-  - "date"
+  - echo "Europe/Brussels"
   - echo "Europe/Brussels" | sudo tee /etc/timezone
   - sudo dpkg-reconfigure --frontend noninteractive tzdata
-  - sudo ntpdate ntp.ubuntu.com
   - "export DISPLAY=:99.0"
   - "export CHROME_BIN=chromium-browser"
   - "sh -e /etc/init.d/xvfb start"
