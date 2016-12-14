@@ -54,7 +54,7 @@ define([
 
     /**
      * Zet een datum object om in een datum string.
-     * @param {Date} dateObjectd
+     * @param {Date} dateObject
      * @returns {string} Datum string
      */
     serializeDate: function(dateObject){
