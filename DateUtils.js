@@ -23,8 +23,7 @@ define([
       if (d) {
         return locale.format(d, {
           datePattern: 'dd-MM-yyyy',
-          timePattern: '\'om \'HH:mm',
-          locale: 'be'
+          timePattern: '\'om \'HH:mm'
         });
       } else {
         return null;
@@ -44,8 +43,7 @@ define([
       if (d) {
         return locale.format(d, {
           selector: 'date',
-          datePattern: 'dd-MM-yyyy',
-          locale: 'be'
+          datePattern: 'dd-MM-yyyy'
         });
       } else {
         return null;
@@ -54,7 +52,7 @@ define([
 
     /**
      * Zet een datum object om in een datum string.
-     * @param {Date} dateObjectd
+     * @param {Date} dateObject
      * @returns {string} Datum string
      */
     serializeDate: function(dateObject){
@@ -64,8 +62,7 @@ define([
 
       var format =  {
         selector: 'date',
-        datePattern: 'yyyy-MM-dd',
-        locale: 'be'
+        datePattern: 'yyyy-MM-dd'
       };
       return locale.format(dateObject, format).toUpperCase();
     },
@@ -79,13 +76,7 @@ define([
       if (!dateObject) {
         return null;
       }
-      var timeZone = this.getTimeZone(dateObject);
-      var format =  {
-        datePattern: 'yyyy-MM-dd',
-        timePattern: '\'T\'HH:mm:ss' + timeZone,
-        locale: 'be'
-      };
-      return locale.format(dateObject, format).toUpperCase().replace(/\s+/g, '');
+      return stamp.toISOString(dateObject);
     },
 
     /**
@@ -100,8 +91,7 @@ define([
 
       var format = {
         selector: 'date',
-        datePattern: 'dd-MM-yyyy',
-        locale: 'be'
+        datePattern: 'dd-MM-yyyy'
       };
       return locale.format(dateObject, format);
     },
@@ -116,33 +106,6 @@ define([
         return null;
       }
       return stamp.fromISOString(date);
-    },
-
-    /**
-     * Berekend de timezone offset van het meegegeven date object
-     * @param {Date} dateObject Date object
-     * @returns {number} de timezone offset (vb formaat: +01:00 / -12:00 / -03:00)
-     */
-    getTimeZone: function(dateObject) {
-      var offset = dateObject.getTimezoneOffset();
-      var positive = false;
-      if (offset < 0) {
-        positive = true;
-      }
-      offset = Math.abs(offset / 60);
-      var strOffset = offset;
-      if (offset < 10) {
-        strOffset = '0' + offset.toString() + ':00';
-      } else {
-        strOffset = offset.toString() + ':00';
-      }
-      if (positive) {
-        strOffset = '+' + strOffset;
-      } else {
-        strOffset = '-' + strOffset;
-      }
-
-      return strOffset;
     }
   };
 });

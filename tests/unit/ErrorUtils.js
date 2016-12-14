@@ -32,10 +32,43 @@ define([
           text: '{"message": "Het aangeboden SSO token is incorrect", "errors": ["error 1", "error 2"]}'
         }
       };
-      // correctly formatted error
       assert.deepEqual(ErrorUtils.parseError(errorFormatted),
         {title: 'Het aangeboden SSO token is incorrect', message: '-error 1</br>-error 2</br>'},
         'parseError should return the parsed and formatted error');
+    },
+
+    'parseError formatted error without message': function() {
+      var errorFormatted = {
+        response: {
+          text: '{"errors": ["error 1", "error 2"]}'
+        }
+      };
+      assert.deepEqual(ErrorUtils.parseError(errorFormatted),
+        {title: 'Er is een fout opgetreden', message: '-error 1</br>-error 2</br>'},
+        'parseError should return the parsed and formatted error with the default title');
+    },
+
+    'parseError formatted error with empty errors array': function() {
+      var errorFormatted = {
+        response: {
+          text: '{"message": "Het aangeboden SSO token is incorrect", "errors": []}'
+        }
+      };
+      assert.deepEqual(ErrorUtils.parseError(errorFormatted),
+        {title: 'Er is een fout opgetreden', message: 'Het aangeboden SSO token is incorrect'},
+        'parseError should return an error with the default title and the error message');
+    },
+
+    'error during json parsing': function() {
+      var errorHtml = {
+        response: {
+          text: '<html></html>'
+        }
+      };
+      assert.deepEqual(ErrorUtils.parseError(errorHtml),
+        {title: 'Er is een fout opgetreden', message: 'Het formaat van de foutmelding is onleesbaar'},
+        'parseError should return a default error telling the error format is incorrect');
     }
+
   });
 });
