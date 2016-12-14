@@ -79,10 +79,9 @@ define([
       if (!dateObject) {
         return null;
       }
-      var timeZone = this.getTimeZone(dateObject);
       var format =  {
         datePattern: 'yyyy-MM-dd',
-        timePattern: '\'T\'HH:mm:ss' + timeZone,
+        timePattern: '\'T\'HH:mm:ssZ',
         locale: 'be'
       };
       return locale.format(dateObject, format).toUpperCase().replace(/\s+/g, '');
@@ -116,33 +115,6 @@ define([
         return null;
       }
       return stamp.fromISOString(date);
-    },
-
-    /**
-     * Berekend de timezone offset van het meegegeven date object
-     * @param {Date} dateObject Date object
-     * @returns {number} de timezone offset (vb formaat: +01:00 / -12:00 / -03:00)
-     */
-    getTimeZone: function(dateObject) {
-      var offset = dateObject.getTimezoneOffset();
-      var positive = false;
-      if (offset < 0) {
-        positive = true;
-      }
-      offset = Math.abs(offset / 60);
-      var strOffset = offset;
-      if (offset < 10) {
-        strOffset = '0' + offset.toString() + ':00';
-      } else {
-        strOffset = offset.toString() + ':00';
-      }
-      if (positive) {
-        strOffset = '+' + strOffset;
-      } else {
-        strOffset = '-' + strOffset;
-      }
-
-      return strOffset;
     }
   };
 });
