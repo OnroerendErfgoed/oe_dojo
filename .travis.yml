@@ -24,7 +24,7 @@ install:
 
 before_script:
   - grunt -v jshint
-#  - export TZ=Europe/Brussels
+  - export TZ=Europe/Brussels
   - "export DISPLAY=:99.0"
   - "export CHROME_BIN=chromium-browser"
   - "sh -e /etc/init.d/xvfb start"
