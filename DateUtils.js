@@ -79,12 +79,16 @@ define([
       if (!dateObject) {
         return null;
       }
-      var format =  {
-        datePattern: 'yyyy-MM-dd',
-        timePattern: '\'T\'HH:mm:ssZ',
-        locale: 'be'
-      };
-      return locale.format(dateObject, format).toUpperCase().replace(/\s+/g, '');
+      var dateString = stamp.toISOString(dateObject);
+      // var format =  {
+      //   datePattern: 'yyyy-MM-dd',
+      //   timePattern: '\'T\'HH:mm:ssZ',
+      //   locale: 'be'
+      // };
+      // var dateString = locale.format(dateObject, format);
+      //add colon in time zone offset
+      return dateString;
+      // return locale.format(dateObject, format).toUpperCase().replace(/\s+/g, '');
     },
 
     /**
