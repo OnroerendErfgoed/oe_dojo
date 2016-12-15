@@ -2,20 +2,20 @@ define([
   'intern!object',
   'intern/chai!assert',
   'dojo/request',
-  '../support/requestMocker',
+  '../support/requestMocker'/*,
   'oe_dojo/HandlerUtils',
   'dojo/request/registry',
   'dojo/request/script',
-  'dojo/when'
+  'dojo/when'*/
 ], function (
   registerSuite,
   assert,
   request,
-  requestMocker,
+  requestMocker/*,
   HandlerUtils,
   registry,
   script,
-  when
+  when*/
 ) {
 
   registerSuite({
@@ -45,8 +45,8 @@ define([
         })
       );*/
 
-      request.get("hellowworld.json", {
-        handleAs: "json"
+      request.get('hellowworld.json', {
+        handleAs: 'json'
       }).then(function(data){
         console.log('succes', data);
       },
@@ -54,14 +54,14 @@ define([
           console.log(err);
       });
 
-      request.get("/info", {handleAs: "customJson"}).then(
+      request.get('/info', {handleAs: 'customJson'}).then(
         function(data) {
           console.log('succes', data);
         },
         function(err){
-          console.log(err)
+          console.log(err);
         }
-      )
+      );
     },
 
     teardown: function() {

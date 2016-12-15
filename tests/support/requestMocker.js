@@ -2,7 +2,7 @@ define([
   'dojo/request/registry',
   'dojo/request/script',
   'dojo/when'
-], function (registry, script, when) {
+], function (registry, script) {
   var mocking = false,
     handles = [];
 
