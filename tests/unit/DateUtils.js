@@ -64,16 +64,7 @@ define([
       // conversion to getMiliseconds for the assertion of objects
       assert.strictEqual(DateUtils.parseIsoString('2016-11-21T13:52:00+01:00').getMilliseconds(),
         testDate.getMilliseconds(), 'parseIsoString should return the given date as a date object');
-    },
-
-    'getTimeZone': function() {
-      var winterDate = new Date('2016-12-18 00:00:00 GMT+1');
-      var zomerDate = new Date('2016-8-20 00:00:00 GMT+2');
-
-      assert.strictEqual(DateUtils.getTimeZone(winterDate), '+01:00',
-        'getTimeZone should return the correct timezone for a date in winter');
-      assert.strictEqual(DateUtils.getTimeZone(zomerDate), '+02:00',
-        'getTimeZone should return the correct timezone for a date in summer');
     }
+
   });
 });

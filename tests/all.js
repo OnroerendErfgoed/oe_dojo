@@ -2,6 +2,10 @@ define([
   './unit/DummyWidget',
   './unit/DateUtils',
   './unit/DomUtils',
-  './unit/HandlerUtils'
+  './unit/ErrorUtils',
+  './unit/HandlerUtils',
+  './unit/TrackableRestStore',
+  './unit/TrackableMemoryStore',
+  './unit/ClipboardMixin'
 ], function () {
 });
