@@ -32,14 +32,36 @@ define([
        // you could also delay the response
        return when('test');
        });*/
+      /*var dfd = this.async(1000);
+
+      request.get(
+        'helloworld.json', {handleAs: 'json'},
+        dfd.callback(function (error, data) {
+          if (error) {
+            throw error;
+          }
+
+          assert.strictEqual(data, 'Hello world!');
+        })
+      );*/
 
       request.get("hellowworld.json", {
         handleAs: "json"
       }).then(function(data){
         console.log('succes', data);
-      }), function(err){
-        console.log(err);
-      };
+      },
+        function(err){
+          console.log(err);
+      });
+
+      request.get("/info", {handleAs: "customJson"}).then(
+        function(data) {
+          console.log('succes', data);
+        },
+        function(err){
+          console.log(err)
+        }
+      )
     },
 
     teardown: function() {

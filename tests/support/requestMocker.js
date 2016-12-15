@@ -14,7 +14,9 @@ define([
     // Set up a handler for requests to '/info' that mocks a
     // response without requesting from the server at all
 
-    registry.register(/\.jsonp\.js$/i, script)
+    registry.register(/\.jsonp\.js$/i, script);
+
+    registry.register('/info', script);
 
   }
 
