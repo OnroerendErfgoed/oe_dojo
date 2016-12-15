@@ -11,7 +11,7 @@ define([
 ) {
 
   handlers.register('customJson', function(response){
-    if (response.status === 401) {
+    if (response.status === 404) {
       throw {
         title: 'Niet bevoegd',
         message: 'U hebt niet voldoende rechten om deze data op te halen: ' + response.url
