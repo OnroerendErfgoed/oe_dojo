@@ -1,8 +1,11 @@
 define([
   'dojo/request/registry',
-  'dojo/request/script',
   'dojo/when'
-], function (registry, script) {
+], function (
+  registry,
+  when
+) {
+
   var mocking = false,
     handles = [];
 
@@ -11,13 +14,19 @@ define([
       return;
     }
     mocking = true;
-    // Set up a handler for requests to '/info' that mocks a
+    // Set up a handler for requests that mock a
     // response without requesting from the server at all
 
-    registry.register(/\.jsonp\.js$/i, script);
-
-    registry.register('/info', script);
-
+    handles.push(
+      registry.register(/^foobar$/, function (url, options) {
+        console.debug('requestMocker::foobar', url, options);
+        // Wrap using `when` to return a promise;
+        // you could also delay the response
+        return when({
+          foo: 'bar'
+        });
+      })
+    );
   }
 
   function stop() {
@@ -33,6 +42,7 @@ define([
 
   return {
     start: start,
-    stop: stop
+    stop: stop,
+    handles: handles
   };
 });
