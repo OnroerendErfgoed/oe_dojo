@@ -3,6 +3,8 @@ define([
   'intern/chai!assert',
   'dojo/_base/declare',
   'dojo/dom-construct',
+  'dojo/dom-attr',
+  'dijit/_WidgetBase',
   'oe_dojo/ClipboardMixin',
   'oe_dojo/DummyWidget'
 ], function (
@@ -10,17 +12,20 @@ define([
   assert,
   declare,
   domContruct,
+  domAttr,
+  _WidgetBase,
   clipboardMixin,
   DummyWidget
 ) {
 
-  var clip1, clip2, clip3, clip4;
+  var clip1, clip2, clip3, clip4, faultyClip;
 
   registerSuite({
     name: 'ClipboardMixin',
 
     beforeEach: function() {
       var DummyWidgetCopy = declare([DummyWidget, clipboardMixin]);
+      var FaultyWidgetCopy = declare([_WidgetBase, clipboardMixin]);
 
       clip1 = new DummyWidgetCopy({
         copyType: 'test'
@@ -37,6 +42,11 @@ define([
       clip4 = new DummyWidgetCopy({
         copyType: 'testtest'
       }, domContruct.create('div'));
+
+      faultyClip = new FaultyWidgetCopy({
+        copyType: 'test'
+      }, domContruct.create('div'));
+
     },
 
     afterEach: function() {
@@ -87,6 +97,48 @@ define([
       clip3.paste(clip3.copyType);
       assert.strictEqual(clip3.getData(), 'maarten',
         'clipboardMixin should have set the data for the given copytype');
+    },
+
+    'clipboardMixin disable': function() {
+      clip1.enable();
+      assert.isFalse(domAttr.has(clip1._copyButton, 'disabled'), '');
+      assert.isFalse(domAttr.has(clip1._pasteButton, 'disabled'), '');
+      clip1.disable();
+      assert.isTrue(domAttr.has(clip1._copyButton, 'disabled'), '');
+      assert.isTrue(domAttr.has(clip1._pasteButton, 'disabled'), '');
+    },
+
+    'clipboardMixin enable': function() {
+      clip1.disable();
+      assert.isTrue(domAttr.has(clip1._copyButton, 'disabled'), '');
+      assert.isTrue(domAttr.has(clip1._pasteButton, 'disabled'), '');
+      clip1.enable();
+      assert.isFalse(domAttr.has(clip1._copyButton, 'disabled'), '');
+      assert.isFalse(domAttr.has(clip1._pasteButton, 'disabled'), '');
+
+    },
+
+    'clipboardMixin paste wrong type': function() {
+      clip1.setData('joske');
+      clip1.copy(clip1.copyType);
+      clip2.paste('foo');
+
+      assert.strictEqual(clip2.getData(), undefined,
+        'clipboardMixin should have pasted undefined for unknown copy type');
+    },
+
+    'clipboardMixin no getdata': function() {
+      assert.isNotFunction(faultyClip.getdata, 'getdata should not be a function in faultyClip');
+      assert.throws(function(){
+        faultyClip.copy('bar');
+      }, TypeError, 'Geen getData beschikbaar voor copy in de widget');
+    },
+
+    'clipboardMixin no setdata': function() {
+      assert.isNotFunction(faultyClip.setdata, 'setdata should not be a function in faultyClip');
+      assert.throws(function(){
+        faultyClip.paste('bar');
+      }, TypeError, 'Geen setData beschikbaar voor copy in de widget');
     }
   });
 });

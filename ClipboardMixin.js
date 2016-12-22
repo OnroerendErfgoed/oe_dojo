@@ -44,6 +44,7 @@ define([
         this.clipBoard[type] = this.getData();
       } catch (e) {
         console.error(e);
+        throw new TypeError('Geen getData beschikbaar voor copy in de widget');
       }
     },
 
@@ -52,6 +53,7 @@ define([
         this.setData(this.clipBoard[type]);
       } catch (e) {
         console.error(e);
+        throw new TypeError('Geen setData beschikbaar voor copy in de widget');
       }
     },
 
