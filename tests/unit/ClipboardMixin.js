@@ -139,6 +139,30 @@ define([
       assert.throws(function(){
         faultyClip.paste('bar');
       }, TypeError, 'Geen setData beschikbaar voor copy in de widget');
+    },
+
+    'clipboardMixin dolayout': function() {
+      assert.isNotNull(clip1._copyButton, 'The widget should have a copy button');
+      assert.isNotNull(clip1._pasteButton, 'The widget should have a copy button');
+    },
+
+    'clipboardMixin click copy': function() {
+      var tesval = 'bar';
+      clip1.setData(tesval);
+      clip1._copyButton.click();
+
+      assert.strictEqual(clip1.clipBoard[clip1.copyType], tesval,  'clipboardMixin should have copied the test data ' +
+        'in memory after clicking copy');
+    },
+
+    'clipboardMixin click paste': function() {
+      var tesval = 'bar';
+      clip1.setData(tesval);
+      clip1._copyButton.click();
+      clip2._pasteButton.click();
+
+      assert.strictEqual(clip2.clipBoard[clip2.copyType], tesval,  'clipboardMixin should have pasted the test data ' +
+        'from memory to clip 2 after clicking paste');
     }
   });
 });

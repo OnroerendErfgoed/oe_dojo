@@ -23,10 +23,6 @@ define([
       this._doLayout();
     },
 
-    startup: function() {
-      this.inherited(arguments);
-    },
-
     enable: function() {
       this.inherited(arguments);
       domAttr.remove(this._copyButton, 'disabled');
