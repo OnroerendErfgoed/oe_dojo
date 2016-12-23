@@ -4,17 +4,13 @@ define([
   'dojo/_base/lang',
   'dojo/_base/array',
   'dijit/_TemplatedMixin',
-  'dojo/text!./locatiePercelen/templates/LocatiePercelen.html',
+  'dojo/text!./templates/LocatiePercelen.html',
   'dojo/dom-construct',
-  'dojo/dom-class',
-  'dojo/dom-attr',
   'dojo/query',
   'dojo/on',
-  'dojo/promise/all',
   'dojo/topic',
   'dgrid/OnDemandGrid',
   'dgrid/Keyboard',
-  'dgrid/Editor',
   'dgrid/Selector',
   'dgrid/Selection',
   'dgrid/extensions/DijitRegistry',
@@ -29,15 +25,11 @@ define([
   TemplatedMixin,
   template,
   domConstruct,
-  domClass,
-  domAttr,
   query,
   on,
-  all,
   topic,
   OnDemandGrid,
   Keyboard,
-  Editor,
   Selector,
   Selection,
   DijitRegistry,
@@ -49,19 +41,18 @@ define([
 
     templateString: template,
     baseClass: 'locatie-percelen',
-    crabController: null,
-    zone: null,
+    locatieService: null,
+    locatie: null,
     refAdres: null,
-    nearestAddress: null,
     disabled: true,
-    percelen: null,
-    initialized: false,
+    afdelingenStore: null,
     _perceelGrid: null,
     _perceelStore: null,
-
-    // crabController urls
-    crabHost: null,
-
+    _nearestAddress: null,
+    _refAdresType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementAdres',
+    _perceelType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel',
+    _currentZone: null,
+    _warningDisplayed: false,
 
     postCreate: function () {
       console.debug('LocatiePercelen::postCreate');
@@ -73,7 +64,8 @@ define([
       }, this.percelenNode);
 
       this._refAdresDialog = new RefAdresDialog({
-        crabController: this.crabController
+        crabController: this.crabController,
+        refAdresType: this._refAdresType
       });
 
       this.own(
@@ -86,53 +78,46 @@ define([
     startup: function () {
       console.debug('LocatiePercelen::startup');
       this.inherited(arguments);
-      this.initialized = true;
       this._perceelGrid.startup();
-      this._refAdresDialog.startup();
-      this.refreshGrid();
     },
 
-    _updateRefAdres: function(refAdres) {
-      console.debug('LocatiePercelen::_updateRefAdres', refAdres);
-      this.refAdres = refAdres;
-      var adresObj = {gemeente: '-'};
-
-      if (!refAdres) {
-        return;
-      }
-      else if (refAdres.type === 'dichtstbijzijnd') {
-        adresObj = this.nearestAddress;
-      }
-      else if (refAdres.type === 'vrij') {
-        adresObj = refAdres.refAdres;
-      }
-      else if (refAdres.type === 'perceel') {
-        adresObj = refAdres.refAdres.adres;
-      }
-
-      this.refAdresNode.innerHTML = this._getAddressString(adresObj);
+    _updateRefAdres: function(adres) {
+      console.debug('LocatiePercelen::_updateRefAdres', adres);
+      this.refAdres = adres;
+      this.refAdresNode.innerHTML = this._getAddressString(adres);
     },
 
-    _getDichtstbijzijndeAdres: function(useAsRefAdres, compareAddress) {
-      if (this.zone) {
-        this.crabController.getDichtstbijzijndeAdres(this.zone).then(lang.hitch(this, function (res) {
-          if (res && res.found) {
-            this.nearestAddress = res.address;
-            if (compareAddress) {
-              if (this._compareAddresses(this.nearestAddress, compareAddress)) {
-                this._updateRefAdres({type: 'dichtstbijzijnd'});
-              } else {
-                this._updateRefAdres({type: 'vrij', refAdres: compareAddress});
-              }
-            }
-            if (useAsRefAdres) {
-              this._updateRefAdres({type: 'dichtstbijzijnd'});
-            }
-          } else {
-            this.nearestAddress = undefined;
+    _getDichtstbijzijndeAdres: function(zone, useAsRefAdres) {
+      if (useAsRefAdres) {
+        this.refAdresNode.innerHTML = 'adres wordt opgehaald...';
+      }
+      this.crabController.getDichtstbijzijndeAdres(zone).then(lang.hitch(this, function (res) {
+        if (res && res.found) {
+          /* jshint -W106 */
+          var newStyleAddress = {
+            type: this._refAdresType,
+            gemeente: {
+              naam: res.address.gemeente,
+              id: res.address.gemeente_id
+            },
+            postcode: res.address.postcode,
+            straat: res.address.straat,
+            straat_id: res.address.straat_id,
+            huisnummer: res.address.huisnummer,
+            huisnummer_id: res.address.huisnummer_id,
+            subadres: res.address.subadres,
+            subadres_id: res.address.subadres_id,
+            land: res.address.land
+          };
+          /* jshint +W106 */
+          this._nearestAddress = newStyleAddress;
+          if (useAsRefAdres) {
+            this._updateRefAdres(newStyleAddress);
           }
-        }));
-      }
+        } else {
+          this._nearestAddress = undefined;
+        }
+      }));
     },
 
     enable: function() {
@@ -144,14 +129,12 @@ define([
         .attr({disabled: false});
       query('a.fa-pencil', this.locatieContent).removeClass('hide');
 
-      query('.placeholder-container:not(.placeholder-always-disabled) input#dichtstbijzijndeAdres-' + this.id,
-        this.locatieContent).attr({disabled: true});
+      // query('.placeholder-container:not(.placeholder-always-disabled) input#dichtstbijzijndeAdres-' + this.id,
+      //   this.locatieContent).attr({disabled: true});
 
       this.refreshPercelenNode.style.display = 'inline-block';
 
-      if (this.initialized) {
-        this._perceelGrid.styleColumn('remove', 'display: table-cell');
-      }
+      this._perceelGrid.styleColumn('remove', 'display: table-cell');
     },
 
     disable: function() {
@@ -163,214 +146,154 @@ define([
         .attr({disabled: true});
       this.refreshPercelenNode.style.display = 'none';
       query('a.fa-pencil', this.locatieContent).addClass('hide');
-      if (this.initialized) {
-        this._perceelGrid.styleColumn('remove', 'display: none;');
-      }
+      this._perceelGrid.styleColumn('remove', 'display: none;');
     },
 
     resize: function () {
-      if (this.initialized) {
-        this._perceelGrid.resize();
-      }
+      this._perceelGrid.resize();
     },
 
     _refreshPercelen: function(evt) {
       evt ? evt.preventDefault() : null;
-      if (this.zone) {
-        this.refreshPercelen(this.zone);
+      if (this._currentZone) {
+        this.updatePercelen(this._currentZone);
       } else {
-        topic.publish('dGrowl', 'Gelieve eerst een zone in te tekenen', {
-          'title':'Locatie verplicht',
-          'sticky': true,
-          'channel': 'error'
+        topic.publish('dGrowl', 'Gelieve eerst een zone in te tekenen.', {
+          'title':'Zone verplicht',
+          'sticky': false,
+          'channel': 'warn'
         });
       }
     },
 
-    refreshPercelen: function(zone) {
-      this.zone = zone;
+    updateZone: function(zone) {
+      this._currentZone = zone;
+      if (zone) {
+        this._getDichtstbijzijndeAdres(zone, true);
+        this.updatePercelen(zone);
+      }
+      else {
+        this._nearestAddress = undefined;
+        this.refAdresNode.innerHTML = '';
+        this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
+        this._perceelGrid.set('collection', this._perceelStore);
+      }
+    },
+
+    updatePercelen: function () {
       this.locatieContent.style.display = 'none';
       this.locatieLoading.style.display = 'block';
-      this._getDichtstbijzijndeAdres(true);
-
-      this.crabController.getKadastralePercelenInZone(this.zone).then(
+      this.crabController.getKadastralePercelenInZone(this._currentZone).then(
         lang.hitch(this, function (result) {
-          var resultPercelen = array.map(result.kadPercelen, function(perc) {
-            var newPerc = lang.clone(perc);
-            /* jshint -W106 */
-            newPerc.capakey = perc.kadastraal_perceel.capakey;
-            /* jshint +W106 */
-            return newPerc;
-          });
-          this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
-          array.forEach(resultPercelen, function(perc) {
-            if (!this._perceelStore.getSync(perc.capakey)) {
-              this._perceelStore.add(perc);
-            }
-          },this);
+          array.map(result, function (locatieElementPerceel) {
+            locatieElementPerceel.type = this._perceelType;
+            var perceel = locatieElementPerceel.perceel;
+            var afdeling = this.afdelingenStore.get(perceel.afdelingsnummer);
+            perceel.afdeling = afdeling ? afdeling.naam : perceel.afdelingsnummer;
+          }, this);
+
+          this._perceelStore = new TrackableMemoryStore({ data: result, idProperty: 'capakey' });
           this._perceelGrid.set('collection', this._perceelStore);
+
           this.locatieLoading.style.display = 'none';
           this.locatieContent.style.display = 'block';
-          this._updatePerceelOppervlakte();
-          this.refreshGrid();
-          // melding voor nakijken percelen
-          topic.publish('dGrowl', 'Gelieve de kadastrale percelen na te kijken.', {
-            'title': '',
-            'sticky': false,
-            'channel': 'warn'
-          });
+
+          if (!this._warningDisplayed) {
+            this._showPercelenWarning();
+          }
         }),
-        function (error) {
+        lang.hitch(this, function (error) {
           console.error(error);
-          topic.publish('dGrowl', 'Er is een fout opgetreden bij het ophalen van de percelen data.', {
+          topic.publish('dGrowl', 'Er is een fout opgetreden bij het ophalen van de percelen data bij AGIV.', {
             'title': 'Fout bij het ophalen van de percelen',
             'sticky': false,
             'channel': 'warn'
           });
-        }
+          this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
+          this._perceelGrid.set('collection', this._perceelStore);
+          this.locatieLoading.style.display = 'none';
+          this.locatieContent.style.display = 'block';
+        })
       );
-
     },
 
-    setData: function(percelen) {
-      if (!percelen) {
-        return;
-      }
-
-      // refAdres
-      var refAdresPerceelArray = percelen.filter(lang.hitch(this, function (perceel) {
-        /* jshint -W106 */
-        return (perceel.ref_adres);
-        /* jshint +W106 */
-      }));
-
-      var refAdresPerceel;
-      if (refAdresPerceelArray.length > 0) {
-        refAdresPerceel = refAdresPerceelArray[0];
-        console.debug('lcatiepercelen::setdata REFADRES', refAdresPerceel);
-      }
-
-      if (refAdresPerceel) {
-        this.refAdres = {};
-        /* jshint -W106 */
-        this.refAdresNode.innerHTML = this._getAddressString(refAdresPerceel.adres);
-
-        if (refAdresPerceel.kadastraal_perceel) {
-          this.refAdres.type = 'perceel';
-          this.refAdres.refAdres = {};
-          this.refAdres.refAdres.perceel = {};
-          this.refAdres.refAdres.perceel.kadastraal_perceel = refAdresPerceel.kadastraal_perceel;
-          this.refAdres.refAdres.adres = refAdresPerceel.adres;
-        } else {
-          //check for dichtstbijzijnd adres && vrij adres
-          this._getDichtstbijzijndeAdres(false, refAdresPerceel.adres);
-        }
-      }
-
-      //openbaar domein
-      var openbaarDomein = percelen.some(function(perceel) {
-        return (perceel.perceeltype && perceel.perceeltype.id === 2);
-      }, this);
-      if (openbaarDomein) {
-        this.domeinCheckbox.checked = true;
-      }
-
-      //kadastrale percelen
-      var kadPerceelList = percelen.filter(lang.hitch(this, function (perc) {
-        /* jshint -W106 */
-        return (perc.perceeltype.id !== 2 && perc.kadastraal_perceel);
-        /* jshint +W106 */
-      }));
-      var kadPerceelListWithId = array.map(kadPerceelList, function(perceel) {
-        var newPerceel =lang.clone(perceel);
-        newPerceel.capakey = perceel.kadastraal_perceel.capakey;
-        return newPerceel;
+    _showPercelenWarning: function () {
+      // melding voor nakijken percelen
+      this._warningDisplayed = true;
+      topic.publish('dGrowl', 'Controleer steeds of de lijst met kadastrale percelen in orde is.', {
+        'title': 'Opgelet',
+        'sticky': false,
+        'channel': 'warn'
       });
-      this._perceelStore = new TrackableMemoryStore({ data: kadPerceelListWithId, idProperty: 'capakey' });
-      this._perceelGrid.set('collection', this._perceelStore);
+    },
 
-      // if kadastraal_perceel, get nearest address => can't be refadres.
-      this._getDichtstbijzijndeAdres(false);
+    setData: function(locatie) {
+      console.debug('LocatiePercelen::setData', locatie);
+      this.locatie = locatie;
 
-      // update oppervlakte
-      this._updatePerceelOppervlakte();
+      //preload nearest address for ref adres dialog
+      if (locatie.contour) {
+        this._currentZone = locatie.contour;
+        this._getDichtstbijzijndeAdres(locatie.contour, false);
+      }
 
+      if (locatie.elementen) {
+        //set refAdres
+        var refAdresArray = locatie.elementen.filter(lang.hitch(this, function (element) {
+          return (element.type === this._refAdresType);
+        }));
+        if (refAdresArray.length > 0) {
+          this.refAdres = refAdresArray[0];
+          this.refAdresNode.innerHTML = this._getAddressString(this.refAdres);
+        }
+        else {
+          this.refAdres = null;
+          this.refAdresNode.innerHTML = '';
+        }
+
+        //set kadastrale percelen
+        var kadPerceelList = locatie.elementen.filter(lang.hitch(this, function (element) {
+          return (element.type === this._perceelType);
+        }));
+        array.forEach(kadPerceelList, function (kadPerceel) {
+          kadPerceel.capakey = kadPerceel.perceel.capakey;
+        });
+        this._perceelStore = new TrackableMemoryStore({data: kadPerceelList, idProperty: 'capakey'});
+        this._perceelGrid.set('collection', this._perceelStore);
+      }
+
+      //hide loading div
       this.locatieLoading.style.display = 'none';
       this.locatieContent.style.display = 'block';
     },
 
     getData: function() {
-      console.debug('LocatiePercelen::getData' );
-      var percelen = [];
-      var refAdres = this.refAdres;
+      console.debug('LocatiePercelen::getData');
+      var elementen = [];
 
-      /* jshint -W106 */
-      // openbaar domein
-      if (this.domeinCheckbox.checked) {
-        percelen.push({
-          perceeltype: { id: 2 },
-          ref_adres: false
-        });
+      if (this.refAdres) {
+        elementen.push(this.refAdres);
       }
 
-      // percelen
-      var capakey;
-      if (refAdres && refAdres.type === 'perceel') {
-        capakey = refAdres.refAdres.perceel.kadastraal_perceel.capakey;
-      }
-
-      array.forEach(this._perceelStore.fetchSync(), function (perceel) {
-        if (capakey && capakey === perceel.kadastraal_perceel.capakey) {
-          perceel.ref_adres = true;
-          perceel.adres = refAdres.refAdres.adres;
-        }
-        else {
-          perceel.ref_adres = false;
-        }
-        if (isNaN(perceel.id)) {
-          delete perceel.id;
-        }
-        percelen.push(perceel);
+      this._perceelStore.fetchSync().forEach(function (perceel) {
+        delete perceel.capakey; //remove the extra grid ids again
+        elementen.push(perceel);
       });
 
-      // dichtstbijzijnd adres
-      if (refAdres && refAdres.type === 'dichtstbijzijnd') {
-        percelen.push({
-          perceeltype: { id: 1 },
-          ref_adres: true,
-          adres: this.nearestAddress
-        });
-      }
-
-      //vrij adres
-      if (refAdres && refAdres.type === 'vrij') {
-        percelen.push({
-          perceeltype: { id: 1 },
-          ref_adres: true,
-          adres: refAdres.refAdres
-        });
-      }
-      /* jshint +W106 */
-
-      return percelen;
+      return elementen;
     },
 
-    reset: function(percelen, zone) {
+    reset: function () {
       this.locatieLoading.style.display = 'none';
       this.locatieContent.style.display = 'block';
+
       this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
       this._perceelGrid.set('collection', this._perceelStore);
       this.refAdres = null;
       this.refAdresNode.innerHTML = '';
-      this.refreshGrid();
-      this.domeinCheckbox.checked = false;
 
-      if (percelen && zone) {
-        this.zone = zone;
-        this.setData(percelen);
-        this._updateRefAdres(this.refAdres);
-      } else {
-        this._updatePerceelOppervlakte();
+      if (this.locatie) {
+        this.setData(this.locatie);
       }
     },
 
@@ -378,52 +301,25 @@ define([
       /* jshint -W106 */
       var columns = {
         capakey: {
-          label: 'Capakey',
-          get: function (object) { return object; },
-          formatter: function (object) {
-            if (object && object.kadastraal_perceel) {
-              return object.kadastraal_perceel.capakey;
-            }
-          }
+          label: 'Capakey'
         },
         afdeling: {
           label: 'Afdeling',
-          get: function (object) { return object; },
-          formatter: function (object) {
-            if (object && object.kadastraal_perceel) {
-              return object.kadastraal_perceel.afdeling;
-            }
+          formatter: function (value, object) {
+            return object.perceel && object.perceel.afdeling ? object.perceel.afdeling : '';
+            //'niscode: ' + object.kadastraal_perceel.niscode;
           }
         },
         sectie: {
           label: 'Sectie',
-          get: function (object) { return object; },
-          formatter: function (object) {
-            if (object && object.kadastraal_perceel) {
-              return object.kadastraal_perceel.sectie;
-            }
+          formatter: function (value, object) {
+            return object.perceel && object.perceel.sectie ? object.perceel.sectie : '';
           }
         },
         perceel: {
           label: 'Perceel',
-          get: function (object) { return object; },
-          formatter: function (object) {
-            if (object && object.kadastraal_perceel) {
-              return object.kadastraal_perceel.perceel;
-            }
-          }
-        },
-        oppervlakte: {
-          label: 'Opp. (m²)',
-          get: function (object) { return object; },
-          formatter: function (object) {
-            if (object && object.kadastraal_perceel) {
-              if (object.kadastraal_perceel.oppervlakte) {
-                return parseFloat(object.kadastraal_perceel.oppervlakte).toFixed(2);
-              } else {
-                return '-';
-              }
-            }
+          formatter: function (value, object) {
+            return object.perceel && object.perceel.perceel ? object.perceel.perceel : '';
           }
         },
         remove: {
@@ -478,19 +374,21 @@ define([
     },
 
     _removeRow: function (object) {
-      /* jshint -W106 */
-      if (object && object.kadastraal_perceel && object.kadastraal_perceel.capakey) {
-        this._perceelStore.remove(object.kadastraal_perceel.capakey);
+      if (object && object.perceel && object.perceel.capakey) {
+        this._perceelStore.remove(object.perceel.capakey);
       }
-      /* jshint +W106 */
     },
 
     _getAddressString: function (adres) {
       /* jshint -W106 */
       if (adres) {
-        return (adres.omschrijving_straat ?
-          adres.omschrijving_straat + ', ' : '') + (adres.postcode ?
-          adres.postcode + ' ' : '') + adres.gemeente;
+        var straat = (adres.straat ? adres.straat  + ' ' : '')
+          + (adres.huisnummer ? adres.huisnummer + ' ' : '')
+          + (adres.subadres ? adres.subadres : '');
+        var gemeente = (adres.postcode ? adres.postcode + ' ' : '')
+          + (adres.gemeente && adres.gemeente.naam ? adres.gemeente.naam + ' ' : '?')
+          + (adres.land ?  '(' + adres.land + ')' : '');
+        return straat ? straat + ', ' + gemeente : gemeente;
         /* jshint +W106 */
       } else {
         return '';
@@ -542,42 +440,6 @@ define([
       return null;
     },
 
-    _updatePerceelOppervlakte: function() {
-      console.debug('LocatiePercelen::_updatePerceelOppervlakte');
-      var opp = 0;
-      var promises = [];
-      array.forEach(this._perceelStore.fetchSync(), function(item) {
-        /* jshint -W106 */
-        var kadastraalPerceel = item.kadastraal_perceel;
-        /* jshint +W106 */
-        if (kadastraalPerceel && kadastraalPerceel.oppervlakte) {
-          opp += parseFloat(kadastraalPerceel.oppervlakte);
-        }
-        else {
-          promises.push(this.crabController.updateOppervlaktePerceel(kadastraalPerceel));
-        }
-      }, this);
-      all(promises).then(
-        lang.hitch(this, function (result) {
-          array.forEach(result, function (perceelopp) {
-            opp += parseFloat(perceelopp);
-          });
-          this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2);
-        }),
-        lang.hitch(this, function (error) {
-          console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
-          this.totaleOppPercelen.innerHTML = 'Er is een fout opgetreden!';
-        })
-      );
-
-    },
-
-    updateZoneOppervlakte: function(opp) {
-      if (opp !== null) {
-        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
-      }
-    },
-
     _compareAddresses: function(adres, compare) {
       if (adres && compare) {
         if ((adres.land === compare.land) &&
@@ -596,7 +458,7 @@ define([
 
     _openEditRefAdres: function(evt) {
       evt ? evt.preventDefault() : null;
-      this._refAdresDialog.show(this._perceelStore.data, this.nearestAddress, this.refAdres);
+      this._refAdresDialog.show(this._perceelStore.data, this._nearestAddress);
     }
   });
 });

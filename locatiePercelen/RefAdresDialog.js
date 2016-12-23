@@ -12,7 +12,7 @@ define([
   'dijit/Dialog',
   'dojo/text!./templates/RefAdresDialog.html',
   'dijit/form/FilteringSelect',
-  '../TrackableMemoryStore'
+  '../../utils/TrackableMemoryStore'
 ], function (
   declare,
   lang,
@@ -35,9 +35,11 @@ define([
     baseClass: 'refadres-dialog',
     title: 'Wijzig referentie adres',
     crabController: null,
+    refAdresType: null,
     _adresStore: null,
     _manueelAdresSelect: null,
     _manueelAdres: null,
+    _dichtstbijzijndeAdres: null,
 
     postCreate: function () {
       this.inherited(arguments);
@@ -100,7 +102,6 @@ define([
     },
 
     _okClick: function (evt) {
-      console.debug('RefAdresDialog::_okClick');
       evt.preventDefault();
 
       if (this._validate()) {
@@ -111,7 +112,7 @@ define([
       }
     },
 
-    show: function(percelen, dichtstbijzijndeAdres, refAdres) {
+    show: function(percelen, dichtstbijzijndeAdres) {
       this.inherited(arguments);
 
       if (percelen) {
@@ -122,50 +123,25 @@ define([
         query('input, select', this.perceelAdresContainer).attr({disabled: true});
       }
 
-      if (dichtstbijzijndeAdres && dichtstbijzijndeAdres.gemeente) {
-        /* jshint -W106 */
-        this.dichtstbijzijndeAdresNode.value = (dichtstbijzijndeAdres.omschrijving_straat ?
-          dichtstbijzijndeAdres.omschrijving_straat + ', ' : '') + (dichtstbijzijndeAdres.postcode ?
-          dichtstbijzijndeAdres.postcode + ' ' : '') + dichtstbijzijndeAdres.gemeente;
-        /* jshint +W106 */
+      if (dichtstbijzijndeAdres) {
+        this._dichtstbijzijndeAdres = dichtstbijzijndeAdres;
+        this.dichtstbijzijndeAdresNode.value = this._getAddressString(dichtstbijzijndeAdres);
       } else {
         domClass.add(this.dichtstbijzijndeAdresContainer, 'placeholder-disabled');
         query('input', this.dichtstbijzijndeAdresContainer).attr({disabled: true});
-      }
-
-      if (refAdres) {
-        console.debug('preset selection', refAdres);
-        if (refAdres.type === 'perceel') {
-          this.perceelAdresCheckbox.checked = true;
-        }
-        else if (refAdres.type === 'vrij') {
-          this.vrijAdresCheckbox.checked = true;
-          this._manueelAdres = refAdres.refAdres;
-          this._manueelAdresSelect.attr('displayedValue', this._getAddressString(refAdres.refAdres));
-        }
-        else {
-          this.dichtstbijzijndeAdresCheckbox.checked = true;
-        }
       }
     },
 
     _getRefAdres: function() {
       if (this.dichtstbijzijndeAdresCheckbox.checked) {
-        return {
-          type: 'dichtstbijzijnd'
-        };
+        return this._dichtstbijzijndeAdres;
       }
       else if (this.perceelAdresCheckbox.checked) {
-        return {
-          type: 'perceel',
-          refAdres: this._adresStore.getSync(this.perceelAdresSelectNode.value)
-        };
+        var adres = this._adresStore.getSync(this.perceelAdresSelectNode.value).adres;
+        return this._transformAdresToNewFormat(adres);
       }
       else if (this.vrijAdresCheckbox.checked) {
-        return {
-          type: 'vrij',
-          refAdres: this._manueelAdres
-        };
+        return this._transformAdresToNewFormat(this._manueelAdres);
       }
       else {
         return null;
@@ -193,8 +169,8 @@ define([
             // disable perceel select
             domClass.add(this.perceelAdresContainer, 'placeholder-disabled');
             domConstruct.place(
-               '<option value="-1" class="select-placeholder" selected>Geen adres gevonden voor de percelen.</option>',
-               this.perceelAdresSelectNode);
+              '<option value="-1" class="select-placeholder" selected>Geen adres gevonden voor de percelen.</option>',
+              this.perceelAdresSelectNode);
             query('input, select', this.perceelAdresContainer).attr({disabled: true});
           }
         })
@@ -206,7 +182,6 @@ define([
     },
 
     _cancelClick: function (evt) {
-      console.debug('RefAdresDialog::_cancelClick');
       evt.preventDefault();
       this.hide();
     },
@@ -229,10 +204,7 @@ define([
       var adres = this._getRefAdres();
       var valid = true;
 
-      if (!adres || !adres.type) {
-        valid = false;
-      }
-      else if (adres.type !== 'dichtstbijzijnd' && !adres.refAdres) {
+      if (!adres) {
         valid = false;
       }
 
@@ -295,13 +267,31 @@ define([
     _getAddressString: function (adres) {
       /* jshint -W106 */
       if (adres) {
-        return (adres.omschrijving_straat ?
-          adres.omschrijving_straat + ', ' : '') + (adres.postcode ?
-          adres.postcode + ' ' : '') + adres.gemeente;
+        var straat = (adres.straat ? adres.straat  + ' ' : '')
+          + (adres.huisnummer ? adres.huisnummer + ' ' : '')
+          + (adres.subadres ? adres.subadres : '');
+        var gemeente = (adres.postcode ? adres.postcode + ' ' : '')
+          + (adres.gemeente && adres.gemeente.naam ? adres.gemeente.naam + ' ' : '?')
+          + (adres.land ?  '(' + adres.land + ')' : '');
+        return straat ? straat + ', ' + gemeente : gemeente;
         /* jshint +W106 */
       } else {
         return '';
       }
+    },
+
+    _transformAdresToNewFormat: function (adres) {
+      return {
+        type: this.refAdresType,
+        gemeente: {
+          naam: adres.gemeente
+        },
+        huisnummer: adres.huisnummer,
+        land: 'BE',
+        postcode: adres.postcode,
+        straat: adres.straat
+
+      };
     }
   });
 });

@@ -29,21 +29,57 @@ define([
   return declare(null, {
 
     agivGRBUrl: null,
+    crabUrl: null,
+    appUrl: null,
     adresUrl: 'crab/percelen/',
     capakeyUrl: 'capakey/percelen/',
     checkFlandersUrl: 'check_within_flanders',
-    targetNearestAddress: 'nearest_address',
-    crabHost: null,
-    nearestAdresUrl: null,
-    gemeenteStore: null,
-    landenStore: null,
     _geolocationStore: null,
 
     constructor:function(args) {
       declare.safeMixin(this, args);
       // geolocation store
       this._geolocationStore = new JsonRest({
-        target: this.crabHost + 'geolocation/'
+        target: this.crabUrl + 'geolocation/'
+      });
+    },
+
+    /**
+     * Haalt percelen op obv coordinaten.
+     * @param coordinate
+     * @returns {*}
+     */
+    searchPerceelByCoordinate: function (coordinate) {
+
+      var data = '' +
+        '<wfs:GetFeature xmlns:topp="http://www.openplans.org/topp" ' +
+        'xmlns:wfs="http://www.opengis.net/wfs" ' +
+        'xmlns:ogc="http://www.opengis.net/ogc" ' +
+        'xmlns:gml="http://www.opengis.net/gml" ' +
+        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
+        'service="WFS" ' +
+        'version="1.1.0"  ' +
+        'maxFeatures="10" ' +
+        'xsi:schemaLocation="http://www.opengis.net/wfs ' +
+        'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">' +
+        '<wfs:Query typeName="grb:GRB_-_Adp_-_administratief_perceel">' +
+        '<ogc:Filter>' +
+        '<ogc:Contains>' +
+        '<ogc:PropertyName>SHAPE</ogc:PropertyName>' +
+        '<gml:Point srsName="urn:x-ogc:def:crs:EPSG:31370">' +
+        '<gml:pos srsName="urn:x-ogc:def:crs:EPSG:31370">' + coordinate[0] + ' ' + coordinate[1] + '</gml:pos>' +
+        '</gml:Point>' +
+        '</ogc:Contains>' +
+        '</ogc:Filter>' +
+        '  </wfs:Query>' +
+        '</wfs:GetFeature>';
+
+      return xhr.post(this.agivGRBUrl, {
+        data: data,
+        headers: {
+          'X-Requested-With': '',
+          'Content-Type': 'application/xml'
+        }
       });
     },
 
@@ -100,7 +136,7 @@ define([
      * @returns {*}
      */
     getAdresByCapakey: function(capakey) {
-      return xhr.get(this.crabHost + this.adresUrl + capakey, {
+      return xhr.get(this.crabUrl + this.adresUrl + capakey, {
         handleAs: 'customJson',
         headers: {
           'Accept': 'application/json',
@@ -116,7 +152,7 @@ define([
      * @returns {*}
      */
     getInfoByCapakey: function(capakey) {
-      return xhr.get(this.crabHost + this.capakeyUrl + capakey, {
+      return xhr.get(this.crabUrl + this.capakeyUrl + capakey, {
         handleAs: 'customJson',
         headers: {
           'Accept': 'application/json',
@@ -126,17 +162,85 @@ define([
       });
     },
 
-    getDichtstbijzijndeAdres: function(zone) {
-      var data = JSON.stringify(zone);
-      return xhr(this.nearestAdresUrl + this.targetNearestAddress, {
-        method: 'POST',
-        data: data,
-        handleAs: 'customJson',
-        headers: {
-          'X-Requested-With': '',
-          'Content-Type': 'application/json'
-        }
+    /**
+     * Haalt de info op van kadastrale percelen in een zone op.
+     * @param zone
+     * @param store
+     * @returns {Deferred}
+     */
+    getKadastralePercelenInfoInZone: function(zone, store) {
+      var deferred = new Deferred();
+      this.searchPerceelByZone(zone).then(lang.hitch(this, function(result) {
+        var percelen = [];
+        array.forEach(result, lang.hitch(this, function(coll) {
+          percelen = percelen.concat(this.readWfs(coll));
+        }));
+        var promises = [];
+        array.forEach(percelen, lang.hitch(this, function(perceel) {
+          var info = this.getInfoByCapakey(perceel.get('CAPAKEY'));
+          var adres = this.getAdresByCapakey(perceel.get('CAPAKEY'));
+          promises.push(all({
+            perceelInfo: info,
+            adresInfo: adres
+          }).then(lang.hitch(this, function(results) {
+            var adressen = results.adresInfo.postadressen;
+            if (adressen.length > 0) {
+              array.forEach(adressen, lang.hitch(this, function (adres) {
+                var data = {};
+                var kadPerc = {};
+                kadPerc.afdeling = results.perceelInfo.sectie.afdeling.naam;
+                kadPerc.sectie = results.perceelInfo.sectie.id;
+                kadPerc.perceel = results.perceelInfo.id;
+                kadPerc.capakey = perceel.get('CAPAKEY');
+                kadPerc.oppervlakte = perceel.get('OPPERVL');
+                /* jshint -W106 */
+                data.kadastraal_perceel = kadPerc;
+                data.adres = this._parseAddressString(adres);
+                data.ref_adres = false;
+                data.perceeltype = { id: 1 };
+                /* jshint +W106 */
+
+                if (this.checkPerceelAlreadyExists(store, data)) {
+                  store.put(data);
+                  //parent.refreshGrid();
+                }
+              }));
+            } else {
+              var data = {};
+              var kadPerc = {};
+              kadPerc.afdeling = results.perceelInfo.sectie.afdeling.naam;
+              kadPerc.sectie = results.perceelInfo.sectie.id;
+              kadPerc.perceel = results.perceelInfo.id;
+              kadPerc.capakey = perceel.get('CAPAKEY');
+              kadPerc.oppervlakte = perceel.get('OPPERVL');
+
+              /* jshint -W106 */
+              data.kadastraal_perceel = kadPerc;
+              data.adres = undefined;
+              data.ref_adres = false;
+              data.perceeltype = { id: 1 };
+              /* jshint +W106 */
+              if (this.checkPerceelAlreadyExists(store, data)) {
+                store.put(data);
+                //parent.refreshGrid();
+              }
+            }
+          }), function(err) {
+            console.log(err);
+            deferred.reject(err);
+          }));
+        }));
+        all(promises).then(function() {
+          deferred.resolve('succes');
+        }, function(err) {
+          console.log(err);
+          deferred.reject(err);
+        });
+      }), function(err) {
+        console.log(err);
+        deferred.reject(err);
       });
+      return deferred;
     },
 
     /**
@@ -267,12 +371,33 @@ define([
       return deferred;
     },
 
-    /**
-     * Geeft een store terug om gelocaties te kunnen bepalen
-     * @returns {Object} De JsonRest store die de geolocation service bevraagt
-     */
-    getGeolocationStore: function () {
-      return this._geolocationStore;
+    updateOppervlakteExistingPercelen: function(zone, store, locatiePercelen) {
+      if (zone) {
+        zone = this._bufferZone(zone, -0.0001);
+        this.searchPerceelByZone(zone).then(lang.hitch(this, function (result) {
+          var percelen = [];
+          array.forEach(result, lang.hitch(this, function (coll) {
+            percelen = percelen.concat(this.readWfs(coll));
+          }));
+          array.forEach(percelen, lang.hitch(this, function (perceel) {
+            var key = perceel.get('CAPAKEY');
+            var oppPercelen = store.filter({'capakey': key}).fetchSync();
+            var kadPerceel = null;
+            if (oppPercelen.length > 0) {
+              kadPerceel = oppPercelen[0];
+            }
+            if (kadPerceel) {
+              /* jshint -W106 */
+              kadPerceel.kadastraal_perceel.oppervlakte = perceel.get('OPPERVL');
+              /* jshint +W106 */
+              store.put(kadPerceel);
+            }
+          }));
+          locatiePercelen._updatePerceelOppervlakte();
+        }), function(err) {
+          console.log(err);
+        });
+      }
     },
 
     /**
@@ -370,7 +495,7 @@ define([
      */
     checkZoneInFlanders: function(zone) {
       var data = JSON.stringify(zone);
-      return xhr(this.nearestAdresUrl + this.checkFlandersUrl, {
+      return xhr(this.appUrl + this.checkFlandersUrl, {
         method: 'POST',
         data: data,
         handleAs: 'customJson',
@@ -379,7 +504,14 @@ define([
           'Content-Type': 'application/json'
         }
       });
-    }
+    },
 
+    /**
+     * Geeft een store terug om gelocaties te kunnen bepalen
+     * @returns {Object} De JsonRest store die de geolocation service bevraagt
+     */
+    getGeolocationStore: function () {
+      return this._geolocationStore;
+    }
   });
 });

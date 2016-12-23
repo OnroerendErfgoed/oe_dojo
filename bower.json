@@ -25,6 +25,8 @@
   "dependencies": {
     "dojo": "~1.11.2",
     "dijit": "~1.11.2",
-    "dstore": "~1.1.1"
+    "dstore": "~1.1.1",
+    "olv319": "https://github.com/openlayers/ol3/releases/download/v3.19.1/v3.19.1-dist.zip",
+    "jsts": "https://github.com/OnroerendErfgoed/jsts-amd.git#1.2.0"
   }
 }
