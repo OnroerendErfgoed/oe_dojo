@@ -1,9 +1,11 @@
 define([
   'dojo/request/registry',
-  'dojo/when'
+  'dojo/when',
+  'dojo/request/xhr'
 ], function (
   registry,
-  when
+  when,
+  xhr
 ) {
 
   var mocking = false,
@@ -20,10 +22,7 @@ define([
     //foobar
     handles.push(
       registry.register(/^foobar$/, function (url, options) {
-        console.debug('requestMocker::foobar', url, options);
-        return when({
-          foo: 'bar'
-        });
+        return xhr(require.toUrl('../../tests/unit/support/data/foobar.json'), options);
       })
     );
 
@@ -33,10 +32,9 @@ define([
         console.debug('requestMocker::401', url, options);
         // Wrap using `when` to return a promise;
         // you could also delay the response
-        var response = {
+        return {
           'status': 401
         };
-        return response
       })
     );
   }

@@ -32,7 +32,9 @@ define([
       }).then(function(data){
         try {
           assert.deepEqual(data, {
-            foo: 'bar'
+            foo: {
+              name: 'bar'
+            }
           });
           dfd.resolve();
         }
@@ -52,7 +54,9 @@ define([
       }).then(function(data){
         try {
           assert.deepEqual(data, {
-            foo: 'bar'
+            foo: {
+              name: 'bar'
+            }
           });
           dfd.resolve();
         }
