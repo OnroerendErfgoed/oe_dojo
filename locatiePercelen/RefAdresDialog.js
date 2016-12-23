@@ -12,7 +12,7 @@ define([
   'dijit/Dialog',
   'dojo/text!./templates/RefAdresDialog.html',
   'dijit/form/FilteringSelect',
-  '../../utils/TrackableMemoryStore'
+  '../TrackableMemoryStore'
 ], function (
   declare,
   lang,
@@ -34,7 +34,7 @@ define([
     templateString: template,
     baseClass: 'refadres-dialog',
     title: 'Wijzig referentie adres',
-    crabController: null,
+    locatieService: null,
     refAdresType: null,
     _adresStore: null,
     _manueelAdresSelect: null,
@@ -46,7 +46,7 @@ define([
 
       this._adresStore = new TrackableMemoryStore({ data: [], idProperty: 'id' });
 
-      var manueelAdresStore = this.crabController.getGeolocationStore();
+      var manueelAdresStore = this.locatieService.getGeolocationStore();
       // filteringselect voor vrij adres input
       this._manueelAdresSelect = new FilteringSelect({
         store: manueelAdresStore,
@@ -153,7 +153,7 @@ define([
       domConstruct.empty(this.perceelAdresSelectNode);
       this.perceelAdresLoading.style.display = 'block';
 
-      this.crabController.getAdressenFromKadastralePercelen(percelen, this._adresStore).then(
+      this.locatieService.getAdressenFromKadastralePercelen(percelen, this._adresStore).then(
         lang.hitch(this, function() {
           if (this._adresStore.data.length > 0) {
             array.forEach(this._adresStore.data, function(item) {

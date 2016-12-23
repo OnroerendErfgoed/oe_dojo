@@ -64,7 +64,7 @@ define([
       }, this.percelenNode);
 
       this._refAdresDialog = new RefAdresDialog({
-        crabController: this.crabController,
+        locatieService: this.locatieService,
         refAdresType: this._refAdresType
       });
 

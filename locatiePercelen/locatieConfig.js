@@ -7,6 +7,7 @@ var dojoConfig = {
   },
   packages: [
     { name: 'jsts', location: '../jsts' },
+    { name: 'oe_dojo', location: '..' },
     { name: 'olv319', location: '../olv319', main: 'ol' }
   ]
 };

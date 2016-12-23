@@ -1,0 +1,16 @@
+// locatie percelen grid
+.dgrid.percelenGrid {
+  .dgrid-column-afdeling { width: 150px; }
+  .dgrid-column-sectie { width: 50px; }
+  .dgrid-column-capakey { width: 150px;}
+  .dgrid-column-remove {
+    width: 25px;
+    text-align: right;
+  }
+  .dgrid-column-afdeling p {
+    margin-bottom: 0;
+    font-size: 14px;
+    line-height: 14px;
+  }
+}
+

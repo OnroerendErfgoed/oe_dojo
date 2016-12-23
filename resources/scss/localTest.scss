@@ -1,0 +1,15 @@
+// dojo/dgrid css
+@import '../../dojo/resources/dojo.css';
+@import '../../dijit/themes/nihilo/nihilo.css';
+@import '../../dgrid/css/dgrid.css';
+
+// foundation
+@import "foundation";
+
+// all oe_dojo modules css
+@import "oe_dojo";
+
+table {
+  margin-bottom: 0;
+}
+
