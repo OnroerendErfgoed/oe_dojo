@@ -41,6 +41,7 @@ define([
           }
         } catch (e) {
           console.error('Error trying to parse error object', e);
+          parsedError.message = 'Het formaat van de foutmelding is onleesbaar';
         }
       }
       return parsedError;

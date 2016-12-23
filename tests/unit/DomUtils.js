@@ -39,6 +39,12 @@ define([
         'getSelectedOption should return the value of the selected option');
     },
 
+    'getSelectedOption empty select': function() {
+      var emptySelect = domConstruct.create('select');
+      assert.strictEqual(DomUtils.getSelectedOption(emptySelect), null,
+        'getSelectedOption should return null when select has no options');
+    },
+
     'getSelectedOptionLabel': function() {
       // test withou selected option;
       assert.strictEqual(DomUtils.getSelectedOptionLabel(singleSelect), 'option 1',

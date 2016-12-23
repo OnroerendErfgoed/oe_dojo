@@ -1,6 +1,10 @@
 // Learn more about configuring this file at <https://theintern.github.io/intern/#configuration>.
 // These default settings work OK for most people. The options that *must* be changed below are the packages, suites,
 // excludeInstrumentation, and (if you want functional tests) functionalSuites
+/* jshint unused:false */
+var dojoConfig = {
+    locale: 'nl-be'
+};
 define({
 	// The port on which the instrumenting proxy will listen
 	proxyPort: 9000,
@@ -50,6 +54,7 @@ define({
   // can be used here.
   loaderOptions: {
     // Packages that should be registered with the loader in each testing environment
+    locale: 'nl-be',
     packages: [
       { name: 'oe_dojo', location: '.' },
       { name: 'dojo', location: 'dojo' },

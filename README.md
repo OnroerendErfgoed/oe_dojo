@@ -1,5 +1,8 @@
 # oe_dojo
 
+[![Build Status](https://travis-ci.org/OnroerendErfgoed/oe_dojo.svg?branch=master)](https://travis-ci.org/OnroerendErfgoed/oe_dojo)
+[![Coverage Status](https://coveralls.io/repos/github/OnroerendErfgoed/oe_dojo/badge.svg?branch=master)](https://coveralls.io/github/OnroerendErfgoed/oe_dojo?branch=master)
+
 Dojo component library for Onroerend Erfgoed UI's.
 
 ## Installatie
@@ -60,3 +63,8 @@ De default optie als je dit commando runt:
 $ grunt
 ```
 zal achtereenvolgens jshint en en de command line testen uitvoeren.
+
+## Links
+[Github](https://github.com/OnroerendErfgoed/oe_dojo)
+[Travis](https://travis-ci.org/OnroerendErfgoed/oe_dojo)
+[Coveralls](https://coveralls.io/github/OnroerendErfgoed/oe_dojo)
