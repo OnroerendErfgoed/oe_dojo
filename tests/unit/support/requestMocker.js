@@ -34,18 +34,6 @@ define([
         return xhr(require.toUrl('../../tests/unit/support/data/empty.json'), options);
       })
     );
-
-    //401 error
-    handles.push(
-      registry.register(/^401/, function (url, options) {
-        console.debug('requestMocker::401', url, options);
-        // Wrap using `when` to return a promise;
-        // you could also delay the response
-        return {
-          'status': 401
-        };
-      })
-    );
   }
 
   function stop() {
