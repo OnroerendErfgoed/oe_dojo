@@ -62,6 +62,25 @@ define([
       }, function(err){
         dfd.reject(err);
       });
+    },
+
+    'requestMocker 404': function() {
+      var dfd = this.async();
+
+      request.get('unknownurl', {
+        handleAs: 'customJson'
+      }).then(function(){
+        dfd.reject('unknownurl test should fail');
+      }, function(error){
+        console.debug('ERR', error);
+        try {
+          assert.strictEqual(error.title, 'Niet gevonden', 'Error title for 404 should be fixed');
+          dfd.resolve();
+        }
+        catch (error) {
+          dfd.reject(error);
+        }
+      });
     }
 
   });
