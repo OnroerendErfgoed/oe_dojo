@@ -12,7 +12,8 @@ define([
   'dijit/Dialog',
   'dojo/text!./templates/RefAdresDialog.html',
   'dijit/form/FilteringSelect',
-  '../TrackableMemoryStore'
+  '../TrackableMemoryStore',
+  'dojo/NodeList-manipulate'
 ], function (
   declare,
   lang,
@@ -128,6 +129,7 @@ define([
         this.dichtstbijzijndeAdresNode.value = this._getAddressString(dichtstbijzijndeAdres);
       } else {
         domClass.add(this.dichtstbijzijndeAdresContainer, 'placeholder-disabled');
+        console.log(query('input', this.dichtstbijzijndeAdresContainer));
         query('input', this.dichtstbijzijndeAdresContainer).attr({disabled: true});
       }
     },
