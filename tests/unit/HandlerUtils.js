@@ -38,8 +38,8 @@ define([
           });
           dfd.resolve();
         }
-        catch (error) {
-          dfd.reject(error);
+        catch (err) {
+          dfd.reject(err);
         }
       }, function(err){
         dfd.reject(err);
@@ -60,8 +60,8 @@ define([
           });
           dfd.resolve();
         }
-        catch (error) {
-          dfd.reject(error);
+        catch (err) {
+          dfd.reject(err);
         }
       }, function(err){
         dfd.reject(err);
@@ -75,14 +75,14 @@ define([
         handleAs: 'customJson'
       }).then(function(){
         dfd.reject('unknownurl test should fail');
-      }, function(error){
-        console.debug('ERR', error);
+      }, function(err){
+        console.debug('ERR', err);
         try {
-          assert.strictEqual(error.title, 'Niet gevonden', 'Error title for 404 should be fixed');
+          assert.strictEqual(err.title, 'Niet gevonden', 'Error title for 404 should be fixed');
           dfd.resolve();
         }
-        catch (error) {
-          dfd.reject(error);
+        catch (assertError) {
+          dfd.reject(assertError);
         }
       });
     }
