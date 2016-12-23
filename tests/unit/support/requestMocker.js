@@ -22,7 +22,16 @@ define([
     //foobar
     handles.push(
       registry.register(/^foobar$/, function (url, options) {
+        console.debug('requestMocker::foobar', url, options);
         return xhr(require.toUrl('../../tests/unit/support/data/foobar.json'), options);
+      })
+    );
+
+    //empty json
+    handles.push(
+      registry.register(/^empty/, function (url, options) {
+        console.debug('requestMocker::empty', url, options);
+        return xhr(require.toUrl('../../tests/unit/support/data/empty.json'), options);
       })
     );
 
@@ -52,7 +61,6 @@ define([
 
   return {
     start: start,
-    stop: stop,
-    handles: handles
+    stop: stop
   };
 });

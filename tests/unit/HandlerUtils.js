@@ -24,7 +24,7 @@ define([
       requestMocker.stop();
     },
 
-    'requestMocker': function() {
+    'requestMocker basic test': function() {
       var dfd = this.async();
 
       request.get('foobar', {
@@ -46,7 +46,7 @@ define([
       });
     },
 
-    'requestMocker customJson': function() {
+    'HandlerUtils customJson default': function() {
       var dfd = this.async();
 
       request.get('foobar', {
@@ -68,7 +68,25 @@ define([
       });
     },
 
-    'requestMocker 404': function() {
+    'HandlerUtils customJson default empty response': function() {
+      var dfd = this.async();
+
+      request.get('empty', {
+        handleAs: 'customJson'
+      }).then(function(data){
+        try {
+          assert.deepEqual(data, {});
+          dfd.resolve();
+        }
+        catch (err) {
+          dfd.reject(err);
+        }
+      }, function(err){
+        dfd.reject(err);
+      });
+    },
+
+    'HandlerUtils customJson 404': function() {
       var dfd = this.async();
 
       request.get('unknownurl', {

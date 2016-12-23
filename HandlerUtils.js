@@ -10,7 +10,6 @@ define([
   JSON
 ) {
   handlers.register('customJson', function(response){
-    console.debug('HandlerUtils::customJson', response);
     if (response.status === 401) {
       console.debug('HandlerUtil::customJson::401', response);
       throw {
@@ -27,7 +26,7 @@ define([
     }
     else {
       console.debug('HandlerUtil::customJson::else', response);
-      return JSON.parse(response.text || '');
+      return JSON.parse(response.text || '{}');
     }
   });
 });
