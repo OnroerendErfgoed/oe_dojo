@@ -23,10 +23,6 @@ define([
       this._doLayout();
     },
 
-    startup: function() {
-      this.inherited(arguments);
-    },
-
     enable: function() {
       this.inherited(arguments);
       domAttr.remove(this._copyButton, 'disabled');
@@ -44,6 +40,7 @@ define([
         this.clipBoard[type] = this.getData();
       } catch (e) {
         console.error(e);
+        throw new TypeError('Geen getData beschikbaar voor copy in de widget');
       }
     },
 
@@ -52,6 +49,7 @@ define([
         this.setData(this.clipBoard[type]);
       } catch (e) {
         console.error(e);
+        throw new TypeError('Geen setData beschikbaar voor copy in de widget');
       }
     },
 
