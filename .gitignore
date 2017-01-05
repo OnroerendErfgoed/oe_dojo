@@ -6,6 +6,7 @@ node_modules/
 
 # javascript libraries
 dojo/
+dgrid/
 dijit/
 dstore/
 fastclick/
