@@ -11,8 +11,8 @@ define([
   'dijit/_WidgetsInTemplateMixin',
   'dijit/Dialog',
   'dojo/text!./templates/RefAdresDialog.html',
-  'dijit/form/FilteringSelect',
   '../TrackableMemoryStore',
+  '../EnhancedFilteringSelect',
   'dojo/NodeList-manipulate'
 ], function (
   declare,
@@ -27,8 +27,8 @@ define([
   _WidgetsInTemplateMixin,
   Dialog,
   template,
-  FilteringSelect,
-  TrackableMemoryStore
+  TrackableMemoryStore,
+  EnhancedFilteringSelect
 ) {
   return declare([Dialog, _TemplatedMixin, _WidgetsInTemplateMixin], {
 
@@ -49,7 +49,7 @@ define([
 
       var manueelAdresStore = this.locatieService.getGeolocationStore();
       // filteringselect voor vrij adres input
-      this._manueelAdresSelect = new FilteringSelect({
+      this._manueelAdresSelect = new EnhancedFilteringSelect({
         store: manueelAdresStore,
         name: 'manueelAdres',
         placeholder: 'Geef een adres in..',
