@@ -16,7 +16,7 @@ define([
   'dgrid/extensions/DijitRegistry',
   'dgrid/extensions/ColumnResizer',
   './TrackableMemoryStore',
-  './locatiePercelen/RefAdresDialog'
+  'locatiepercelen/RefAdresDialog'
 ], function (
   declare,
   WidgetBase,
