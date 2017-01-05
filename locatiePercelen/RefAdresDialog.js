@@ -63,9 +63,11 @@ define([
           if (val === '') {
             this._manueelAdres = null;
           }
-          manueelAdresStore.get(val).then(lang.hitch(this, function (data) {
-            this._manueelAdres = this._parseAddressObject(data);
-          }));
+          else {
+            manueelAdresStore.get(val).then(lang.hitch(this, function (data) {
+              this._manueelAdres = this._parseAddressObject(data);
+            }));
+          }
         })
       }, this.vrijAdresNode);
 
