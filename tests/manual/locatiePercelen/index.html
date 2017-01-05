@@ -47,11 +47,14 @@
     locatieService.getAfdelingenStore().then(function(afdelingen) {
       var locatiePercelen = new LocatiePercelen({
         locatieService: locatieService,
-        afdelingenStore: afdelingen
+        afdelingenStore: afdelingen,
+        showOppervlakte: false
       }, 'widgetNode');
 
       locatiePercelen.startup();
       locatiePercelen.updateZone(locatie.contour);
+
+      locatiePercelen.updateZoneOppervlakte(500);
     });
   });
 

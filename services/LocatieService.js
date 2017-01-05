@@ -247,12 +247,13 @@ define([
         array.forEach(percelen, lang.hitch(this, function(perceel) {
           var capakey = perceel.get('CAPAKEY');
           // var niscode = perceel.get('NISCODE');
-          // var opp = perceel.get('OPPERVL');
+          var opp = parseFloat(perceel.get('OPPERVL')).toFixed(2);
           var kadPerc = {
             capakey: capakey,
             afdelingsnummer: capakey.slice(0,5),
             sectie: capakey.slice(5,6),
-            perceel: capakey.slice(6,capakey.length+1)
+            perceel: capakey.slice(6,capakey.length+1),
+            oppervlakte: opp
           };
           kadPercelen.push({
             capakey: capakey,
@@ -334,7 +335,7 @@ define([
           deferred.resolve(perceelopp);
         }),
         lang.hitch(this, function (error) {
-          console.error('CrabController::getOppervlaktePerceel', error);
+          console.error('LocatieService::getOppervlaktePerceel', error);
           deferred.reject('Error getting perceel opp.');
         })
       );

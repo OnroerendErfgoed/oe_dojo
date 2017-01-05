@@ -3,6 +3,7 @@ define([
   'dijit/_WidgetBase',
   'dojo/_base/lang',
   'dojo/_base/array',
+  'dojo/promise/all',
   'dijit/_TemplatedMixin',
   'dojo/text!./templates/LocatiePercelen.html',
   'dojo/dom-construct',
@@ -22,6 +23,7 @@ define([
   WidgetBase,
   lang,
   array,
+  all,
   TemplatedMixin,
   template,
   domConstruct,
@@ -46,6 +48,7 @@ define([
     refAdres: null,
     disabled: true,
     afdelingenStore: null,
+    showOppervlakte: false,
     _perceelGrid: null,
     _perceelStore: null,
     _nearestAddress: null,
@@ -62,6 +65,12 @@ define([
       this._perceelGrid = this._createGrid({
         collection: this._perceelStore
       }, this.percelenNode);
+
+
+      if (!this.showOppervlakte) {
+        this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
+        this.oppervlakteNode.style.display = 'none';
+      }
 
       this._refAdresDialog = new RefAdresDialog({
         locatieService: this.locatieService,
@@ -198,6 +207,10 @@ define([
           this.locatieLoading.style.display = 'none';
           this.locatieContent.style.display = 'block';
 
+          if (this.showOppervlakte) {
+            this._updatePerceelOppervlakte();
+          }
+
           if (!this._warningDisplayed) {
             this._showPercelenWarning();
           }
@@ -262,6 +275,11 @@ define([
         this._perceelGrid.set('collection', this._perceelStore);
       }
 
+      // update oppervlakte
+      if (this.showOppervlakte) {
+        this._updatePerceelOppervlakte();
+      }
+
       //hide loading div
       this.locatieLoading.style.display = 'none';
       this.locatieContent.style.display = 'block';
@@ -277,10 +295,47 @@ define([
 
       this._perceelStore.fetchSync().forEach(function (perceel) {
         delete perceel.capakey; //remove the extra grid ids again
+        // remove oppervlakte when not asked for
+        if (!this.showOppervlakte && perceel.perceel && perceel.perceel.oppervlakte) {
+          delete perceel.perceel.oppervlakte
+        }
         elementen.push(perceel);
       });
 
       return elementen;
+    },
+
+    updateZoneOppervlakte: function(opp) {
+      if (opp !== null) {
+        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
+      }
+    },
+
+    _updatePerceelOppervlakte: function() {
+      console.debug('LocatiePercelen::_updatePerceelOppervlakte');
+      var opp = 0;
+      var promises = [];
+      array.forEach(this._perceelStore.fetchSync(), function(item) {
+        var kadastraalPerceel = item.perceel;
+        if (kadastraalPerceel && kadastraalPerceel.oppervlakte) {
+          opp += parseFloat(kadastraalPerceel.oppervlakte);
+        }
+        else {
+          promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel));
+        }
+      }, this);
+      all(promises).then(
+        lang.hitch(this, function (result) {
+          array.forEach(result, function (perceelopp) {
+            opp += parseFloat(perceelopp);
+          });
+          this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2);
+        }),
+        lang.hitch(this, function (error) {
+          console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
+          this.totaleOppPercelen.innerHTML = 'Er is een fout opgetreden!';
+        })
+      );
     },
 
     reset: function () {
@@ -320,6 +375,12 @@ define([
           label: 'Perceel',
           formatter: function (value, object) {
             return object.perceel && object.perceel.perceel ? object.perceel.perceel : '';
+          }
+        },
+        oppervlakte: {
+          label: 'Opp. (m²)',
+          formatter: function(value, object) {
+            return object.perceel && object.perceel.oppervlakte ? object.perceel.oppervlakte : '';
           }
         },
         remove: {
@@ -376,6 +437,9 @@ define([
     _removeRow: function (object) {
       if (object && object.perceel && object.perceel.capakey) {
         this._perceelStore.remove(object.perceel.capakey);
+        if (this.showOppervlakte) {
+          this._updatePerceelOppervlakte();
+        }
       }
     },
 
