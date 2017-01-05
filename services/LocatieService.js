@@ -12,7 +12,8 @@ define([
   'dojo/store/Memory',
   'dojo/store/JsonRest',
   'dojo/promise/all',
-  'jsts/jsts'
+  'jsts/jsts',
+  'proj4'
 ], function (
   declare,
   lang,
@@ -24,7 +25,8 @@ define([
   Memory,
   JsonRest,
   all,
-  jsts
+  jsts,
+  proj4
 ) {
   return declare(null, {
 
@@ -42,7 +44,7 @@ define([
       declare.safeMixin(this, args);
 
       // set projections for OL adhv Proj4
-      this._defineProjections();
+      this._defineProjections(proj4);
 
       // geolocation store
       this._geolocationStore = new JsonRest({
@@ -50,7 +52,10 @@ define([
       });
     },
 
-    _defineProjections: function () {
+    _defineProjections: function (proj4) {
+      if (!window.proj4) {
+        window.proj4 = proj4;
+      }
       proj4.defs("EPSG:31370", "+proj=lcc +lat_1=51.16666723333333 +lat_2=49.8333339 +lat_0=90 +lon_0=4.367486666666666 +x_0=150000.013 +y_0=5400088.438 +ellps=intl +towgs84=-106.869,52.2978,-103.724,0.3366,-0.457,1.8422,-1.2747 +units=m +no_defs"); //epsg.io
 
       // Define aliases
@@ -58,45 +63,6 @@ define([
       proj4.defs('urn:ogc:def:crs:EPSG:6.9:31370', proj4.defs('EPSG:31370'));
       proj4.defs('urn:x-ogc:def:crs:EPSG:31370', proj4.defs('EPSG:31370'));
       proj4.defs('http://www.opengis.net/gml/srs/epsg.xml#31370', proj4.defs('EPSG:31370'));
-    },
-
-    /**
-     * Haalt percelen op obv coordinaten.
-     * @param coordinate
-     * @returns {*}
-     */
-    searchPerceelByCoordinate: function (coordinate) {
-
-      var data = '' +
-        '<wfs:GetFeature xmlns:topp="http://www.openplans.org/topp" ' +
-        'xmlns:wfs="http://www.opengis.net/wfs" ' +
-        'xmlns:ogc="http://www.opengis.net/ogc" ' +
-        'xmlns:gml="http://www.opengis.net/gml" ' +
-        'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" ' +
-        'service="WFS" ' +
-        'version="1.1.0"  ' +
-        'maxFeatures="10" ' +
-        'xsi:schemaLocation="http://www.opengis.net/wfs ' +
-        'http://schemas.opengis.net/wfs/1.1.0/wfs.xsd">' +
-        '<wfs:Query typeName="grb:GRB_-_Adp_-_administratief_perceel">' +
-        '<ogc:Filter>' +
-        '<ogc:Contains>' +
-        '<ogc:PropertyName>SHAPE</ogc:PropertyName>' +
-        '<gml:Point srsName="urn:x-ogc:def:crs:EPSG:31370">' +
-        '<gml:pos srsName="urn:x-ogc:def:crs:EPSG:31370">' + coordinate[0] + ' ' + coordinate[1] + '</gml:pos>' +
-        '</gml:Point>' +
-        '</ogc:Contains>' +
-        '</ogc:Filter>' +
-        '  </wfs:Query>' +
-        '</wfs:GetFeature>';
-
-      return xhr.post(this.agivGRBUrl, {
-        data: data,
-        headers: {
-          'X-Requested-With': '',
-          'Content-Type': 'application/xml'
-        }
-      });
     },
 
     /**
