@@ -32,7 +32,7 @@
     'dojo/domReady!'
   ], function (LocatieService, LocatiePercelen) {
 
-    var testzone = {"crs": {"type": "name", "properties": {"name": "urn:ogc:def:crs:EPSG::31370"}}, "type": "MultiPolygon", "coordinates": [[[[172933.6922879719, 174851.1496091811], [172930.21180502675, 174832.7836931711], [172920.64762709616, 174848.13247794658], [172933.6922879719, 174851.1496091811]]]]};
+    var testzone = {"type":"MultiPolygon","coordinates":[[[[156150.90194227203,209986.07671206398],[156136.90194227203,209975.32671206398],[156169.90194227203,209967.57671206398],[156150.90194227203,209986.07671206398]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
 
     var locatieService = new LocatieService({
       agivGRBUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb',
