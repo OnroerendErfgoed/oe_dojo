@@ -34,6 +34,7 @@ define([
     adresUrl: 'crab/percelen/',
     capakeyUrl: 'capakey/percelen/',
     checkFlandersUrl: 'check_within_flanders',
+    targetNearestAddress: 'nearest_address',
     _geolocationStore: null,
 
     constructor:function(args) {
@@ -91,11 +92,13 @@ define([
     searchPerceelByZone: function (zone) {
       var promises = [];
       array.forEach(zone.coordinates, lang.hitch(this, function(polygon) {
+
         var filter = new ol.format.filter.Intersects(
           'SHAPE',
           new ol.geom.Polygon(polygon),
           'urn:x-ogc:def:crs:EPSG:31370'
         );
+
         var featureRequest = new ol.format.WFS().writeGetFeature({
           srsName: 'urn:ogc:def:crs:EPSG:6.9:31370',
           featureNS: 'https://geo.agiv.be/ogc/wfs/grb',
@@ -499,6 +502,19 @@ define([
         method: 'POST',
         data: data,
         handleAs: 'customJson',
+        headers: {
+          'X-Requested-With': '',
+          'Content-Type': 'application/json'
+        }
+      });
+    },
+
+    getDichtstbijzijndeAdres: function(zone) {
+      var data = JSON.stringify(zone);
+      return xhr(this.appUrl + this.targetNearestAddress, {
+        method: 'POST',
+        data: data,
+        handleAs: 'json',
         headers: {
           'X-Requested-With': '',
           'Content-Type': 'application/json'

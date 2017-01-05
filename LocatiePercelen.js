@@ -91,7 +91,7 @@ define([
       if (useAsRefAdres) {
         this.refAdresNode.innerHTML = 'adres wordt opgehaald...';
       }
-      this.crabController.getDichtstbijzijndeAdres(zone).then(lang.hitch(this, function (res) {
+      this.locatieService.getDichtstbijzijndeAdres(zone).then(lang.hitch(this, function (res) {
         if (res && res.found) {
           /* jshint -W106 */
           var newStyleAddress = {
@@ -155,6 +155,7 @@ define([
 
     _refreshPercelen: function(evt) {
       evt ? evt.preventDefault() : null;
+      console.log(this._currentZone);
       if (this._currentZone) {
         this.updatePercelen(this._currentZone);
       } else {
@@ -183,7 +184,7 @@ define([
     updatePercelen: function () {
       this.locatieContent.style.display = 'none';
       this.locatieLoading.style.display = 'block';
-      this.crabController.getKadastralePercelenInZone(this._currentZone).then(
+      this.locatieService.getKadastralePercelenInZone(this._currentZone).then(
         lang.hitch(this, function (result) {
           array.map(result, function (locatieElementPerceel) {
             locatieElementPerceel.type = this._perceelType;
