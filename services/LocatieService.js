@@ -35,6 +35,7 @@ define([
     capakeyUrl: 'capakey/percelen/',
     checkFlandersUrl: 'check_within_flanders',
     targetNearestAddress: 'nearest_address',
+    targetAfdelingen: 'capakey/afdelingen',
     _geolocationStore: null,
 
     constructor:function(args) {
@@ -266,50 +267,34 @@ define([
      * @returns {Deferred}
      */
     getKadastralePercelenInZone: function(zone) {
-      var deferred = new Deferred();
       zone = this._bufferZone(zone, -0.0001);
-      this.searchPerceelByZone(zone).then(lang.hitch(this, function(result) {
+
+      return this.searchPerceelByZone(zone).then(lang.hitch(this, function(result) {
         var percelen = [];
-        array.forEach(result, lang.hitch(this, function(coll) {
+        array.forEach(result, function(coll) {
           percelen = percelen.concat(this.readWfs(coll));
-        }));
-        var promises = [];
+        }, this);
         var kadPercelen = [];
         array.forEach(percelen, lang.hitch(this, function(perceel) {
-          promises.push(
-            this.getInfoByCapakey(perceel.get('CAPAKEY')).then(lang.hitch(this, function(results) {
-              var kadPerc = {};
-              kadPerc.afdeling = results.sectie.afdeling.naam;
-              kadPerc.sectie = results.sectie.id;
-              kadPerc.perceel = results.id;
-              kadPerc.capakey = perceel.get('CAPAKEY');
-              kadPerc.oppervlakte = perceel.get('OPPERVL');
-
-              /* jshint -W106 */
-              kadPercelen.push({
-                kadastraal_perceel: kadPerc,
-                perceeltype: { id: 1 },
-                id: perceel.get('CAPAKEY')
-              });
-              /* jshint +W106 */
-
-            }), function(err) {
-              console.log(err);
-              deferred.reject(err);
-            })
-          );
+          var capakey = perceel.get('CAPAKEY');
+          // var niscode = perceel.get('NISCODE');
+          // var opp = perceel.get('OPPERVL');
+          var kadPerc = {
+            capakey: capakey,
+            afdelingsnummer: capakey.slice(0,5),
+            sectie: capakey.slice(5,6),
+            perceel: capakey.slice(6,capakey.length+1)
+          };
+          kadPercelen.push({
+            capakey: capakey,
+            perceel: kadPerc,
+            perceeltype: { id: 1 }
+          });
         }));
-        all(promises).then(function() {
-          deferred.resolve({kadPercelen: kadPercelen});
-        }, function(err) {
-          console.log(err);
-          deferred.reject(err);
-        });
+        return kadPercelen;
       }), function(err) {
-        console.log(err);
-        deferred.reject(err);
+        console.error('Error searching parcels:', err);
       });
-      return deferred;
     },
 
     /**
@@ -324,13 +309,12 @@ define([
       array.forEach(percelen, lang.hitch(this, function(perceel) {
         promises.push(
           /* jshint -W106 */
-          this.getAdresByCapakey(perceel.kadastraal_perceel.capakey).then(lang.hitch(this, function (results) {
+          this.getAdresByCapakey(perceel.capakey).then(lang.hitch(this, function (results) {
             var adressen = results.postadressen;
             if (adressen.length > 0) {
               array.forEach(adressen, lang.hitch(this, function (adres) {
                 var data = {};
                 data.adres = this._parseAddressString(adres);
-                data.perceel = perceel;
                 data.id = btoa(adres);
 
                 store.put(data);
@@ -534,6 +518,26 @@ define([
           'Content-Type': 'application/json'
         }
       });
+    },
+
+    getAfdelingenStore: function() {
+      var deferred = new Deferred();
+
+      xhr.get(this.crabUrl + this.targetAfdelingen, {
+        handleAs: 'json',
+        headers:{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        }
+      }).then(
+        lang.hitch(this,function(data){
+          deferred.resolve(new Memory({data:data}));
+        }),
+        function(err){
+          deferred.reject(err);
+        }
+      );
+      return deferred;
     },
 
     /**

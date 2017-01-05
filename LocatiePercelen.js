@@ -155,7 +155,6 @@ define([
 
     _refreshPercelen: function(evt) {
       evt ? evt.preventDefault() : null;
-      console.log(this._currentZone);
       if (this._currentZone) {
         this.updatePercelen(this._currentZone);
       } else {

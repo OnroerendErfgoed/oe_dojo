@@ -26,6 +26,7 @@
   require([
     'oe_dojo/services/LocatieService',
     'oe_dojo/LocatiePercelen',
+    'oe_dojo/HandlerUtils',
     'dojo/domReady!'
   ], function (LocatieService, LocatiePercelen) {
 
@@ -41,13 +42,15 @@
       contour: testzone
     };
 
-    var locatiePercelen = new LocatiePercelen({
-      locatieService: locatieService,
-      afdelingenStore: null
-    }, 'widgetNode');
+    locatieService.getAfdelingenStore().then(function(afdelingen) {
+      var locatiePercelen = new LocatiePercelen({
+        locatieService: locatieService,
+        afdelingenStore: afdelingen
+      }, 'widgetNode');
 
-    locatiePercelen.startup();
-    locatiePercelen.setData(locatie);
+      locatiePercelen.startup();
+      locatiePercelen.setData(locatie);
+    });
   });
 
 </script>
