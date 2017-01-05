@@ -4,6 +4,9 @@
 # node modules
 node_modules/
 
+# scss
+.sass-cache/
+
 # javascript libraries
 dojo/
 dgrid/
