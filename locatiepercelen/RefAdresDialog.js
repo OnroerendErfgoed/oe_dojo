@@ -7,12 +7,13 @@ define([
   'dojo/query',
   'dojo/dom-class',
   'dojo/dom-construct',
+  'dojo/dom-attr',
   'dijit/_TemplatedMixin',
   'dijit/_WidgetsInTemplateMixin',
   'dijit/Dialog',
   'dojo/text!./templates/RefAdresDialog.html',
-  'dijit/form/FilteringSelect',
   '../TrackableMemoryStore',
+  '../EnhancedFilteringSelect',
   'dojo/NodeList-manipulate'
 ], function (
   declare,
@@ -23,12 +24,13 @@ define([
   query,
   domClass,
   domConstruct,
+  domAttr,
   _TemplatedMixin,
   _WidgetsInTemplateMixin,
   Dialog,
   template,
-  FilteringSelect,
-  TrackableMemoryStore
+  TrackableMemoryStore,
+  EnhancedFilteringSelect
 ) {
   return declare([Dialog, _TemplatedMixin, _WidgetsInTemplateMixin], {
 
@@ -49,8 +51,9 @@ define([
 
       var manueelAdresStore = this.locatieService.getGeolocationStore();
       // filteringselect voor vrij adres input
-      this._manueelAdresSelect = new FilteringSelect({
+      this._manueelAdresSelect = new EnhancedFilteringSelect({
         store: manueelAdresStore,
+        disabled: true,
         name: 'manueelAdres',
         placeholder: 'Geef een adres in..',
         searchAttr: 'locatie',
@@ -63,9 +66,11 @@ define([
           if (val === '') {
             this._manueelAdres = null;
           }
-          manueelAdresStore.get(val).then(lang.hitch(this, function (data) {
-            this._manueelAdres = this._parseAddressObject(data);
-          }));
+          else {
+            manueelAdresStore.get(val).then(lang.hitch(this, function (data) {
+              this._manueelAdres = this._parseAddressObject(data);
+            }));
+          }
         })
       }, this.vrijAdresNode);
 
@@ -75,18 +80,29 @@ define([
           if (this.perceelAdresCheckbox.checked) {
             this.dichtstbijzijndeAdresCheckbox.checked = false;
             this.vrijAdresCheckbox.checked = false;
+
+            this._manueelAdresSelect.reset();
+            this._manueelAdresSelect.set('disabled', true);
+            domAttr.remove(this.perceelAdresSelectNode, 'disabled');
           }
         })),
         on(this.dichtstbijzijndeAdresCheckbox, 'change', lang.hitch(this, function() {
           if (this.dichtstbijzijndeAdresCheckbox.checked) {
             this.perceelAdresCheckbox.checked = false;
             this.vrijAdresCheckbox.checked = false;
+
+            this._manueelAdresSelect.reset();
+            this._manueelAdresSelect.set('disabled', true);
+            domAttr.set(this.perceelAdresSelectNode, 'disabled', true);
           }
         })),
         on(this.vrijAdresCheckbox, 'change', lang.hitch(this, function() {
           if (this.vrijAdresCheckbox.checked) {
             this.perceelAdresCheckbox.checked = false;
             this.dichtstbijzijndeAdresCheckbox.checked = false;
+
+            this._manueelAdresSelect.set('disabled', false);
+            domAttr.set(this.perceelAdresSelectNode, 'disabled', true);
           }
         }))
       );
@@ -129,7 +145,6 @@ define([
         this.dichtstbijzijndeAdresNode.value = this._getAddressString(dichtstbijzijndeAdres);
       } else {
         domClass.add(this.dichtstbijzijndeAdresContainer, 'placeholder-disabled');
-        console.log(query('input', this.dichtstbijzijndeAdresContainer));
         query('input', this.dichtstbijzijndeAdresContainer).attr({disabled: true});
       }
     },
@@ -200,6 +215,10 @@ define([
       this.vrijAdresCheckbox.checked = false;
 
       this._manueelAdresSelect.reset();
+
+      this._manueelAdresSelect.set('disabled', true);
+      domAttr.set(this.perceelAdresSelectNode, 'disabled', true);
+
     },
 
     _validate: function () {
