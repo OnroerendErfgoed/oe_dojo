@@ -1,3 +1,4 @@
+/*jshint unused:false */
 var dojoConfig = {
   async: 1,
   cacheBust: 0,
