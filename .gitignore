@@ -8,6 +8,14 @@ node_modules/
 dojo/
 dijit/
 dstore/
+fastclick/
+foundation/
+jquery/
+jquery-placeholder/
+jquery.cookie/
+jsts/
+modernizr/
+olv319/
 
 # test & coverage reports
 testreport/
