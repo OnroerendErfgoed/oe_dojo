@@ -28,7 +28,7 @@
     "dstore": "~1.1.1",
     "dgrid": "~1.1.0",
     "foundation": "~5.5.0",
-    "proj4": "2.3.6",
+    "proj4": "~2.3.15",
     "olv319": "https://github.com/openlayers/ol3/releases/download/v3.19.1/v3.19.1-dist.zip",
     "jsts": "https://github.com/OnroerendErfgoed/jsts-amd.git#1.2.0"
   }
