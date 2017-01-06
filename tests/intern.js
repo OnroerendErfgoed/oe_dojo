@@ -65,7 +65,8 @@ define({
       { name: 'dgrid', location: 'dgrid' },
       { name: 'jsts', location: 'jsts' },
       { name: 'proj4', location: 'proj4', main: 'dist/proj4' },
-      { name: 'olv319', location: 'olv319', main: 'ol-debug' }
+      { name: 'olv319', location: 'olv319', main: 'ol-debug' },
+      { name: 'tests', location: 'tests' }
     ]
   },
   loaders: {
@@ -74,7 +75,7 @@ define({
 
   // A regular expression matching URLs to files that should not be included in code coverage analysis. Set to `true`
   // to completely disable code coverage.
-  excludeInstrumentation: /^(?:tests|node_modules|dojo|dijit|dstore)\//,
+  excludeInstrumentation: /^(?:tests|node_modules|dojo|dijit|dstore|dgrid)\//,
 
   // Unit test suite(s) to run in each browser
   suites: [ 'tests/all' ],
