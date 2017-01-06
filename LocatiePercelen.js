@@ -321,14 +321,15 @@ define([
           opp += parseFloat(kadastraalPerceel.oppervlakte);
         }
         else {
-          promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel));
+          promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel, item));
         }
       }, this);
       all(promises).then(
         lang.hitch(this, function (result) {
-          array.forEach(result, function (perceelopp) {
-            opp += parseFloat(perceelopp);
-          });
+          array.forEach(result, function (perc) {
+            opp += parseFloat(perc.oppervlakte);
+            this._perceelStore.put(perc.perceel);
+          }, this);
           this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2);
         }),
         lang.hitch(this, function (error) {

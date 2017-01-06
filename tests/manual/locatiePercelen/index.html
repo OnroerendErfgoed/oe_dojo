@@ -32,7 +32,7 @@
     'dojo/domReady!'
   ], function (LocatieService, LocatiePercelen) {
 
-    var testzone = {"type":"MultiPolygon","coordinates":[[[[156150.90194227203,209986.07671206398],[156136.90194227203,209975.32671206398],[156169.90194227203,209967.57671206398],[156150.90194227203,209986.07671206398]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
+//    var testzone = {"type":"MultiPolygon","coordinates":[[[[156150.90194227203,209986.07671206398],[156136.90194227203,209975.32671206398],[156169.90194227203,209967.57671206398],[156150.90194227203,209986.07671206398]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
 
     var locatieService = new LocatieService({
       agivGRBUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb',
@@ -40,21 +40,31 @@
       appUrl: 'http://localhost:6543/'
     });
 
-    var locatie = {
-      contour: testzone
-    };
+//    var locatie = {
+//      contour: testzone,
+//      elementen: {}
+//    };
+
+    var locatie = { "contour": {"type":"MultiPolygon","coordinates":[[[[156148.07496554664,209985.98664404266],[156139.82496554664,209974.98664404266],[156174.07496554664,209964.23664404266],[156148.07496554664,209985.98664404266]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}},
+      "elementen":[
+        {"perceel":{"capakey":"11313B0968/00H003","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00H003","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"}, "perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
+        {"perceel":{"capakey":"11313B0968/00T002","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00T002","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"},"perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
+        {"perceel":{"capakey":"11313B0968/00W003","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00W003","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"},"perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
+        {"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementAdres","gemeente":{"naam":"Antwerpen"},"huisnummer":"5","land":"BE","postcode":"2140","straat":"Wolfjagerslei"}
+      ]};
 
     locatieService.getAfdelingenStore().then(function(afdelingen) {
       var locatiePercelen = new LocatiePercelen({
         locatieService: locatieService,
         afdelingenStore: afdelingen,
-        showOppervlakte: false
+        showOppervlakte: true
       }, 'widgetNode');
 
       locatiePercelen.startup();
-      locatiePercelen.updateZone(locatie.contour);
+      locatiePercelen.setData(locatie);
+//      locatiePercelen.updateZone(locatie.contour);
 
-      locatiePercelen.updateZoneOppervlakte(500);
+      locatiePercelen.updateZoneOppervlakte(512);
     });
   });
 

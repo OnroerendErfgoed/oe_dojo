@@ -213,18 +213,18 @@ define([
               }
             }
           }), function(err) {
-            console.log(err);
+            console.error(err);
             deferred.reject(err);
           }));
         }));
         all(promises).then(function() {
           deferred.resolve('succes');
         }, function(err) {
-          console.log(err);
+          console.error(err);
           deferred.reject(err);
         });
       }), function(err) {
-        console.log(err);
+        console.error(err);
         deferred.reject(err);
       });
       return deferred;
@@ -278,7 +278,6 @@ define([
       var promises = [];
       array.forEach(percelen, lang.hitch(this, function(perceel) {
         promises.push(
-          /* jshint -W106 */
           this.getAdresByCapakey(perceel.capakey).then(lang.hitch(this, function (results) {
             var adressen = results.postadressen;
             if (adressen.length > 0) {
@@ -291,22 +290,21 @@ define([
               }));
             }
           }), function(err) {
-            console.log(err);
+            console.error(err);
             deferred.reject(err);
           })
-          /* jshint +W106 */
         );
       }));
       all(promises).then(function() {
         deferred.resolve('succes');
       }, function(err) {
-        console.log(err);
+        console.error(err);
         deferred.reject(err);
       });
       return deferred;
     },
 
-    updateOppervlaktePerceel: function (kadastraalPerceel) {
+    updateOppervlaktePerceel: function (kadastraalPerceel, element) {
       var deferred = new Deferred();
 
       var capakey = kadastraalPerceel.capakey;
@@ -331,8 +329,8 @@ define([
           array.forEach(this.readWfs(result), function (perceel) {
             perceelopp += perceel.get('OPPERVL');
           }, this);
-          kadastraalPerceel.oppervlakte = perceelopp;
-          deferred.resolve(perceelopp);
+          element.perceel.oppervlakte = parseFloat(perceelopp).toFixed(2);
+          deferred.resolve({oppervlakte: perceelopp, perceel: element});
         }),
         lang.hitch(this, function (error) {
           console.error('LocatieService::getOppervlaktePerceel', error);
@@ -340,35 +338,6 @@ define([
         })
       );
       return deferred;
-    },
-
-    updateOppervlakteExistingPercelen: function(zone, store, locatiePercelen) {
-      if (zone) {
-        zone = this._bufferZone(zone, -0.0001);
-        this.searchPerceelByZone(zone).then(lang.hitch(this, function (result) {
-          var percelen = [];
-          array.forEach(result, lang.hitch(this, function (coll) {
-            percelen = percelen.concat(this.readWfs(coll));
-          }));
-          array.forEach(percelen, lang.hitch(this, function (perceel) {
-            var key = perceel.get('CAPAKEY');
-            var oppPercelen = store.filter({'capakey': key}).fetchSync();
-            var kadPerceel = null;
-            if (oppPercelen.length > 0) {
-              kadPerceel = oppPercelen[0];
-            }
-            if (kadPerceel) {
-              /* jshint -W106 */
-              kadPerceel.kadastraal_perceel.oppervlakte = perceel.get('OPPERVL');
-              /* jshint +W106 */
-              store.put(kadPerceel);
-            }
-          }));
-          locatiePercelen._updatePerceelOppervlakte();
-        }), function(err) {
-          console.log(err);
-        });
-      }
     },
 
     /**
