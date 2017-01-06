@@ -340,18 +340,7 @@ define([
     },
 
     reset: function () {
-      this.locatieLoading.style.display = 'none';
-      this.locatieContent.style.display = 'block';
-
-      this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
-      this._perceelGrid.set('collection', this._perceelStore);
-      this.refAdres = null;
-      this.refAdresNode.innerHTML = '';
-
-      if (this.showOppervlakte) {
-        this.totaleOppZone.innerHTML = '-';
-        this.totaleOppPercelen.innerHTML = '-';
-      }
+      this.clear();
 
       if (this.locatie) {
         this.setData(this.locatie);
@@ -366,6 +355,8 @@ define([
       this._perceelGrid.set('collection', this._perceelStore);
       this.refAdres = null;
       this.refAdresNode.innerHTML = '';
+
+      this._currentZone = null;
 
       if (this.showOppervlakte) {
         this.totaleOppZone.innerHTML = '-';
