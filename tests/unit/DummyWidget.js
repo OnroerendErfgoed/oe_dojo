@@ -11,7 +11,7 @@ define([
   var dummyWidget;
 
   registerSuite({
-    name: 'dummy widget',
+    name: 'DummyWidget',
 
     setup: function () {
       dummyWidget = new DummyWidget();
