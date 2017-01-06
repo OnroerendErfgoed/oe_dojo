@@ -23,6 +23,7 @@
   "devDependencies": {
     "chromedriver": "^2.25.3",
     "coveralls": "^2.11.15",
+    "dijit-intern-helper": "git+https://github.com/SitePen/dijit-intern-helper.git",
     "grunt": "^1.0.1",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
