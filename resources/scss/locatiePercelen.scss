@@ -14,3 +14,25 @@
   }
 }
 
+.locatie-percelen {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.refadres-dialog {
+  width: 550px;
+  min-height: 100px;
+
+  .buttons {
+    margin-top: 15px;
+  }
+
+  label {
+    width: 180px;
+  }
+  .placeholder-container.placeholder-checkbox-sm.placeholder-disabled {
+    .placeholder-checkbox-label-sm {
+      cursor: default;
+    }
+  }
+}
