@@ -38,6 +38,7 @@ define([
     checkFlandersUrl: 'check_within_flanders',
     targetNearestAddress: 'nearest_address',
     targetAfdelingen: 'capakey/afdelingen',
+    _afdelingenStore: null,
     _geolocationStore: null,
 
     constructor:function(args) {
@@ -462,20 +463,25 @@ define([
     getAfdelingenStore: function() {
       var deferred = new Deferred();
 
-      xhr.get(this.crabUrl + this.targetAfdelingen, {
-        handleAs: 'json',
-        headers:{
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        }
-      }).then(
-        lang.hitch(this,function(data){
-          deferred.resolve(new Memory({data:data}));
-        }),
-        function(err){
-          deferred.reject(err);
-        }
-      );
+      if (this._afdelingenStore) {
+        deferred.resolve(this._afdelingenStore);
+      } else {
+        xhr.get(this.crabUrl + this.targetAfdelingen, {
+          handleAs: 'json',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        }).then(
+          lang.hitch(this, function (data) {
+            this._afdelingenStore = new Memory({data: data});
+            deferred.resolve(this._afdelingenStore);
+          }),
+          function (err) {
+            deferred.reject(err);
+          }
+        );
+      }
       return deferred;
     },
 
