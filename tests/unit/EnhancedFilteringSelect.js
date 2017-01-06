@@ -1,11 +1,11 @@
 define([
   'intern!object',
-  'intern/chai!assert',
-  'oe_dojo/EnhancedFilteringSelect'
+  'intern/chai!assert'
+  //'oe_dojo/EnhancedFilteringSelect'
 ], function (
   registerSuite,
-  assert,
-  EnhancedFilteringSelect
+  assert
+  //EnhancedFilteringSelect
 ) {
 
   registerSuite({

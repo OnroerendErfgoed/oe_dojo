@@ -1,11 +1,11 @@
 define([
   'intern!object',
-  'intern/chai!assert',
-  'oe_dojo/LocatiePercelen'
+  'intern/chai!assert'
+  //'oe_dojo/LocatiePercelen'
 ], function (
   registerSuite,
-  assert,
-  LocatiePercelen
+  assert
+  //LocatiePercelen
 ) {
 
   registerSuite({

@@ -1,11 +1,11 @@
 define([
   'intern!object',
-  'intern/chai!assert',
-  'oe_dojo/RefAdresDialog'
+  'intern/chai!assert'
+  //'oe_dojo/RefAdresDialog'
 ], function (
   registerSuite,
-  assert,
-  RefAdresDialog
+  assert
+  //RefAdresDialog
 ) {
 
   registerSuite({
