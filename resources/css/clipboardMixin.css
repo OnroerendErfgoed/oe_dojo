@@ -1,0 +1,6 @@
+/* line 2, ../scss/clipboardMixin.scss */
+.clipBoardButton {
+  float: right;
+  padding: 8px !important;
+  margin: 0;
+}

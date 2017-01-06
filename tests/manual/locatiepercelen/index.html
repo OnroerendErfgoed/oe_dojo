@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Test LocatiePercelen</title>
+  <link rel="stylesheet" href="../../../resources/css/localTest.css" />
+
+  <!--Wordt nu via AMD geladen: -->
+  <!--script src="../../../proj4/dist/proj4.js"></script-->
+</head>
+
+<body class="nihilo">
+<div class="row">
+  <div class="large-8 columns">
+    <div id="widgetNode"></div>
+  </div>
+</div>
+
+<!-- load Dojo -->
+<script type="text/javascript" src="./locatieConfig.js">
+
+</script>
+<script type="text/javascript" src="../../../dojo/dojo.js"></script>
+<script src="https://use.fontawesome.com/db4e5d4de9.js"></script>
+
+<script>
+  require([
+    'oe_dojo/services/LocatieService',
+    'oe_dojo/LocatiePercelen',
+    'oe_dojo/HandlerUtils',
+    'dojo/domReady!'
+  ], function (LocatieService, LocatiePercelen) {
+
+//    var testzone = {"type":"MultiPolygon","coordinates":[[[[156150.90194227203,209986.07671206398],[156136.90194227203,209975.32671206398],[156169.90194227203,209967.57671206398],[156150.90194227203,209986.07671206398]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
+
+    var locatieService = new LocatieService({
+      agivGRBUrl: 'https://dev-geo.onroerenderfgoed.be/ogcproxy?url=https://geo.agiv.be/ogc/wfs/grb',
+      crabUrl: 'https://dev-geo.onroerenderfgoed.be/',
+      appUrl: 'http://localhost:6543/'
+    });
+
+//    var locatie = {
+//      contour: testzone,
+//      elementen: {}
+//    };
+
+    var locatie = { "contour": {"type":"MultiPolygon","coordinates":[[[[156148.07496554664,209985.98664404266],[156139.82496554664,209974.98664404266],[156174.07496554664,209964.23664404266],[156148.07496554664,209985.98664404266]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}},
+      "elementen":[
+        {"perceel":{"capakey":"11313B0968/00H003","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00H003","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"}, "perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
+        {"perceel":{"capakey":"11313B0968/00T002","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00T002","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"},"perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
+        {"perceel":{"capakey":"11313B0968/00W003","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00W003","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"},"perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
+        {"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementAdres","gemeente":{"naam":"Antwerpen"},"huisnummer":"5","land":"BE","postcode":"2140","straat":"Wolfjagerslei"}
+      ]};
+
+    locatieService.getAfdelingenStore().then(function(afdelingen) {
+      var locatiePercelen = new LocatiePercelen({
+        locatieService: locatieService,
+        afdelingenStore: afdelingen,
+        showOppervlakte: true
+      }, 'widgetNode');
+
+      locatiePercelen.startup();
+      locatiePercelen.setData(locatie);
+//      locatiePercelen.updateZone(locatie.contour);
+
+      locatiePercelen.updateZoneOppervlakte(512);
+    });
+  });
+
+</script>
+
+</body>
+</html>

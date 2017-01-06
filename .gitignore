@@ -4,10 +4,23 @@
 # node modules
 node_modules/
 
+# scss
+.sass-cache/
+
 # javascript libraries
 dojo/
+dgrid/
 dijit/
 dstore/
+fastclick/
+foundation/
+jquery/
+jquery-placeholder/
+jquery.cookie/
+jsts/
+modernizr/
+olv319/
+proj4/
 
 # test & coverage reports
 testreport/

@@ -1,0 +1,43 @@
+<div class="dijitDialog" role="dialog" aria-labelledby="refAdresDialog_title">
+  <div data-dojo-attach-point="titleBar" class="dijitDialogTitleBar">
+    <span data-dojo-attach-point="titleNode" class="dijitDialogTitle" role="heading"></span>
+		<span data-dojo-attach-point="closeButtonNode" class="dijitDialogCloseIcon"
+          data-dojo-attach-event="ondijitclick: onCancel" title="Annuleren" role="button" tabIndex="-1">
+			<span data-dojo-attach-point="closeText" class="closeText" title="Annuleren" tabIndex="-1">
+        <i class="fa fa-times"></i></span>
+		</span>
+  </div>
+
+  <div data-dojo-attach-point="containerNode" class="dijitDialogPaneContent">
+    <div class="row">
+      <div class="large-12 columns">
+        <div class="placeholder-container placeholder-checkbox-sm" data-dojo-attach-point="perceelAdresContainer">
+          <input id="perceelAdresChk-${id}" type="checkbox" data-dojo-attach-point="perceelAdresCheckbox" />
+          <label for="perceelAdresChk-${id}" class="placeholder-checkbox-label-sm">Perceel adres</label>
+          <select data-dojo-attach-point="perceelAdresSelectNode" disabled></select>
+          <i class="fa fa-spinner fa-pulse dichtsteLoadingIcon" data-dojo-attach-point="perceelAdresLoading" style="display: none;"></i>
+        </div>
+      </div>
+      <div class="large-12 columns">
+        <div class="placeholder-container placeholder-checkbox-sm" data-dojo-attach-point="dichtstbijzijndeAdresContainer">
+          <input id="dichtstbijzijndeAdresChk-${id}" type="checkbox" data-dojo-attach-point="dichtstbijzijndeAdresCheckbox" />
+          <label for="dichtstbijzijndeAdresChk-${id}" class="placeholder-checkbox-label-sm">Dichtstbijzijnde adres</label>
+          <input type="text" data-dojo-attach-point="dichtstbijzijndeAdresNode" disabled/>
+        </div>
+      </div>
+      <div class="large-12 columns">
+        <div class="placeholder-container placeholder-checkbox-sm">
+          <input id="vrijAdresChk-${id}" type="checkbox" data-dojo-attach-point="vrijAdresCheckbox" />
+          <label for="vrijAdresChk-${id}" class="placeholder-checkbox-label-sm">Vrij adres</label>
+          <input type="text" data-dojo-attach-point="vrijAdresNode" />
+        </div>
+      </div>
+    </div>
+    <div class="row buttons">
+      <div class="large-12 columns text-center">
+        <a href="#" data-dojo-attach-event="onClick: _okClick" class="button tiny">Ok</a>
+        <a href="#" data-dojo-attach-event="onClick: _cancelClick" class="button tiny">Annuleren</a>
+      </div>
+    </div>
+  </div>
+</div>
