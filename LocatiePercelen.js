@@ -353,6 +353,16 @@ define([
       }
     },
 
+    clear: function() {
+      this.locatieLoading.style.display = 'none';
+      this.locatieContent.style.display = 'block';
+
+      this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
+      this._perceelGrid.set('collection', this._perceelStore);
+      this.refAdres = null;
+      this.refAdresNode.innerHTML = '';
+    },
+
     _createGrid: function(options, node) {
       /* jshint -W106 */
       var columns = {
