@@ -27,4 +27,4 @@ testreport/
 lcov.info
 
 # compiled css
-*.css
+resources/css/*.css
