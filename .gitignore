@@ -25,3 +25,6 @@ proj4/
 # test & coverage reports
 testreport/
 lcov.info
+
+# compiled css
+*.css
