@@ -19,7 +19,7 @@ module.exports = function (grunt) {
       }
     },
     jshint: {
-      all: ['./*.js', 'tests/**/*.js', 'locatiePercelen/**/*.js', 'services/**/*.js'],
+      all: ['./*.js', 'tests/**/*.js', 'locatiepercelen/**/*.js', 'services/**/*.js'],
       options: {
         jshintrc: './.jshintrc'
       }
