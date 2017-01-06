@@ -85,6 +85,9 @@ define([
             this._manueelAdresSelect.set('disabled', true);
             domAttr.remove(this.perceelAdresSelectNode, 'disabled');
           }
+          else {
+            domAttr.set(this.perceelAdresSelectNode, 'disabled', true);
+          }
         })),
         on(this.dichtstbijzijndeAdresCheckbox, 'change', lang.hitch(this, function() {
           if (this.dichtstbijzijndeAdresCheckbox.checked) {
@@ -103,6 +106,10 @@ define([
 
             this._manueelAdresSelect.set('disabled', false);
             domAttr.set(this.perceelAdresSelectNode, 'disabled', true);
+          }
+          else {
+            this._manueelAdresSelect.reset();
+            this._manueelAdresSelect.set('disabled', true);
           }
         }))
       );
