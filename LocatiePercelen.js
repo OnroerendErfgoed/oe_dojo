@@ -297,7 +297,7 @@ define([
         delete perceel.capakey; //remove the extra grid ids again
         // remove oppervlakte when not asked for
         if (!this.showOppervlakte && perceel.perceel && perceel.perceel.oppervlakte) {
-          delete perceel.perceel.oppervlakte
+          delete perceel.perceel.oppervlakte;
         }
         elementen.push(perceel);
       });
