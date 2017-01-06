@@ -348,6 +348,11 @@ define([
       this.refAdres = null;
       this.refAdresNode.innerHTML = '';
 
+      if (this.showOppervlakte) {
+        this.totaleOppZone.innerHTML = '-';
+        this.totaleOppPercelen.innerHTML = '-';
+      }
+
       if (this.locatie) {
         this.setData(this.locatie);
       }
@@ -361,6 +366,11 @@ define([
       this._perceelGrid.set('collection', this._perceelStore);
       this.refAdres = null;
       this.refAdresNode.innerHTML = '';
+
+      if (this.showOppervlakte) {
+        this.totaleOppZone.innerHTML = '-';
+        this.totaleOppPercelen.innerHTML = '-';
+      }
     },
 
     _createGrid: function(options, node) {
