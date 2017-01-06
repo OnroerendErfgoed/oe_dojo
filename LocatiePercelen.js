@@ -348,8 +348,28 @@ define([
       this.refAdres = null;
       this.refAdresNode.innerHTML = '';
 
+      if (this.showOppervlakte) {
+        this.totaleOppZone.innerHTML = '-';
+        this.totaleOppPercelen.innerHTML = '-';
+      }
+
       if (this.locatie) {
         this.setData(this.locatie);
+      }
+    },
+
+    clear: function() {
+      this.locatieLoading.style.display = 'none';
+      this.locatieContent.style.display = 'block';
+
+      this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
+      this._perceelGrid.set('collection', this._perceelStore);
+      this.refAdres = null;
+      this.refAdresNode.innerHTML = '';
+
+      if (this.showOppervlakte) {
+        this.totaleOppZone.innerHTML = '-';
+        this.totaleOppPercelen.innerHTML = '-';
       }
     },
 
