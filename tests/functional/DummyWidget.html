@@ -9,11 +9,7 @@
 
 <body class="nihilo">
 <h1 id="testid">Test dummy Widget</h1>
-<div class="row">
-  <div class="large-8 columns">
-    <div id="widgetNode" data-dojo-type="oe_dojo/DummyWidget"></div>
-  </div>
-</div>
+<div id="widgetNode">test placeholder</div>
 
 <!-- load Dojo -->
 <script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: 1"></script>
@@ -22,13 +18,13 @@
   var ready;
 
   require([
-    'dojo/parser',
-    'oe_dojo/DummyWidget',
+    'DummyWidget',
     'dojo/domReady!'
-  ], function (parser) {
-      parser.parse(document.body).then(function () {
-        ready = true;
-      });
+  ], function (DummyWidget) {
+    var dummyWidget = new DummyWidget({
+    }, 'widgetNode');
+
+    dummyWidget.startup();
   });
 
 </script>

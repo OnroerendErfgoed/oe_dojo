@@ -16,11 +16,13 @@ define([
     name: 'DummyWidget',
 
     'html load test': function () {
+      var url = require.toUrl('tests/functional/DummyWidget.html');
+
       return this.remote
-        .get(require.toUrl('tests/functional/DummyWidget.html'))
-        .setFindTimeout(10000)
-        .setPageLoadTimeout(8000)
-        .setExecuteAsyncTimeout(10000)
+        .get(require.toUrl(url))
+        .setFindTimeout(4000)
+        .setPageLoadTimeout(4000)
+        .setExecuteAsyncTimeout(4000)
         .then(pollUntil('return document.getElementById("testid");', 5000))
         .then(function(){
           return true;
@@ -34,16 +36,31 @@ define([
         .setPageLoadTimeout(4000)
         .setExecuteAsyncTimeout(4000)
         .then(pollUntil('return document.getElementById("testid");', 5000))
-        // Obtain widget DOM node via the dijit registry
-        .then(dijit.byId('widgetNode'))
-        .then(function (/*widget*/) {
-          return true;
-          //assert.isFunction(widget.getData, 'widget.getData is a function');
-          //return widget.get('a');
+        .findByTagName('h2')
+        .getVisibleText()
+        .then(function (text) {
+          assert.strictEqual(text, 'title2');
         });
-        //.then(function(prop) {
-        //  assert.strictEqual(prop, null);
-        //});
+      //.then(dijit.nodeById('widgetNode'))
+      //.then(function (node) {
+      //  assert.strictEqual(node.innerHtml, 'foo');
+      //});
+      //.then(function () {
+      //  return true;
+      //});
+      // Obtain widget DOM node via the dijit registry
+      //.then(dijit.byId('widgetNode'))
+      //.then(dijit.getProperty('widgetNode', 'dummyProp'))
+      //.click()
+      //.then(function (/*dummyProp*/widget) {
+      //return true;
+      //assert.isFunction(widget.getData, 'widget.getData is a function');
+      //return widget.get('a');
+      //assert.strictEqual(dummyProp, 'foo');
+      //});
+      //.then(function(prop) {
+      //  assert.strictEqual(prop, null);
+      //});
     }
   });
 });
