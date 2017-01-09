@@ -4,9 +4,9 @@ define([
     'intern/dojo/node!leadfoot/helpers/pollUntil'
 ], function (registerSuite, assert, require, dijit, pollUntil) {
     registerSuite({
-        name: 'Dijit Functional Test',
+        name: 'Dijit Example Functional Test',
 
-        'functional test': function () {
+        'functional test 1': function () {
             var sliderSize;
             var url = require.toUrl('tests/functional/example.html');
 
@@ -15,6 +15,7 @@ define([
                 .setPageLoadTimeout(8000)
                 .setExecuteAsyncTimeout(10000)
                 //.then(pollUntil('return window.ready', 5000))
+                .then(pollUntil('return document.getElementById("titlePane");', 5000))
                 // Obtain widget DOM node via the dijit registry
                 .then(dijit.nodeById('titlePane', 'titleBarNode'))
                 // Explicitly set the Command chain's context to the node
