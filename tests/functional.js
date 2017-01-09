@@ -1,4 +1,4 @@
 define([
-  'tests/functional/DummyWidget'
+  'tests/functional/example'
 ], function () {
 });
