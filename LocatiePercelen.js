@@ -340,6 +340,14 @@ define([
     },
 
     reset: function () {
+      this.clear();
+
+      if (this.locatie) {
+        this.setData(this.locatie);
+      }
+    },
+
+    clear: function() {
       this.locatieLoading.style.display = 'none';
       this.locatieContent.style.display = 'block';
 
@@ -348,8 +356,11 @@ define([
       this.refAdres = null;
       this.refAdresNode.innerHTML = '';
 
-      if (this.locatie) {
-        this.setData(this.locatie);
+      this._currentZone = null;
+
+      if (this.showOppervlakte) {
+        this.totaleOppZone.innerHTML = '-';
+        this.totaleOppPercelen.innerHTML = '-';
       }
     },
 

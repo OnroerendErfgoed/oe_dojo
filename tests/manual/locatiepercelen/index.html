@@ -62,9 +62,12 @@
 
       locatiePercelen.startup();
       locatiePercelen.setData(locatie);
-//      locatiePercelen.updateZone(locatie.contour);
 
       locatiePercelen.updateZoneOppervlakte(512);
+
+//      setTimeout(function() {
+//        locatiePercelen.clear();
+//      }, 5000);
     });
   });
 
