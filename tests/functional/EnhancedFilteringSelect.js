@@ -13,10 +13,10 @@ define([
 ) {
 
   registerSuite({
-    name: 'DummyWidget',
+    name: 'EnhancedFilteringSelect',
 
     'html load test': function () {
-      var url = require.toUrl('tests/functional/DummyWidget.html');
+      var url = require.toUrl('tests/functional/EnhancedFilteringSelect.html');
 
       return this.remote
         .get(require.toUrl(url))
@@ -29,17 +29,25 @@ define([
         });
     },
 
-    'widget load test': function () {
+    'dropdown open test with input "test"': function () {
       return this.remote
-        .get(require.toUrl('tests/functional/DummyWidget.html'))
+        .get(require.toUrl('tests/functional/EnhancedFilteringSelect.html'))
         .setFindTimeout(4000)
         .setPageLoadTimeout(4000)
         .setExecuteAsyncTimeout(4000)
         .then(pollUntil('return document.getElementById("testid");', 5000))
-        .findByTagName('h2')
+        .then(dijit.nodeById('widgetNode', 'focusNode'))
+        .click()
+        .type('test')
+        .end()
+        .findAllByClassName('dijitComboBoxMenu')
+        .findAllByCssSelector('.dijitMenuItem.dijitReset')
         .getVisibleText()
-        .then(function (text) {
-          assert.strictEqual(text, 'title2');
+        .then(function (texts) {
+          assert.deepEqual(texts, [
+            'test1',
+            'test2'
+          ], 'The filtering select dropdown list should contain all values with test in the name');
         });
     }
   });
