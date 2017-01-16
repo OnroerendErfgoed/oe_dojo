@@ -50,7 +50,7 @@ define([
                 'test1',
                 'test2'
               ], 'The filtering select dropdown list should contain all values with test in the name');
-            })
+            });
     },
 
     'dropdown test with 1 input character': function () {
@@ -77,7 +77,7 @@ define([
           .isDisplayed()
           .then(function(visible) {
             assert.strictEqual(visible, false, 'Drop down should be hidden');
-          })
+          });
     }
   });
 });
