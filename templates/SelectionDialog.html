@@ -1,0 +1,59 @@
+<div class="dijitDialog" role="dialog" aria-labelledby="auteurDialog_title">
+  <div data-dojo-attach-point="titleBar" class="dijitDialogTitleBar">
+    <span data-dojo-attach-point="titleNode" class="dijitDialogTitle" role="heading"></span>
+		<span data-dojo-attach-point="closeButtonNode" class="dijitDialogCloseIcon"
+          data-dojo-attach-event="ondijitclick: onCancel" title="Annuleren" role="button" tabIndex="-1">
+			<span data-dojo-attach-point="closeText" class="closeText" title="Annuleren" tabIndex="-1">
+        <i class="fa fa-times"></i></span>
+		</span>
+  </div>
+
+  <div data-dojo-attach-point="containerNode" class="dijitDialogPaneContent">
+    <div class="row">
+      <div class="large-4 columns">
+        <div class="large-8 columns" style="padding: 0;">
+          <div class="placeholder-container">
+            <input type="text" data-dojo-attach-point="searchIdInput" placeholder="ID ${typeName}"/>
+          </div>
+        </div>
+        <div class="large-4 columns" style="padding: 0;">
+          <a href="#" class="button tiny" style="height: 40px;" data-dojo-attach-event="onClick: _filterId" >Zoek</a>
+        </div>
+      </div>
+      <div class="large-8 columns">
+        <div class="large-10 columns" style="padding: 0;">
+          <div class="placeholder-container">
+            <input data-dojo-attach-point="searchStringInput" type="text" placeholder="Zoek ${typeName}" />
+          </div>
+        </div>
+        <div class="large-2 columns" style="padding: 0;">
+          <a href="#" class="button tiny" style="height: 40px;" data-dojo-attach-event="onClick: _filterData" >Zoek</a>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-6 columns" data-dojo-attach-point="showMyItemsContainer" style="display: none;">
+        <input type="checkbox" id="showMyItems-${id}" class="checkbox-custom" data-dojo-attach-point="showMyItemsNode"/>
+        <label for="showMyItems-${id}" class="checkbox-custom-label" style="width: 90%; margin-left: 2px;">Toon enkel mijn bronnen</label>
+      </div>
+      <div class="large-3 large-offset-9 columns text-right">
+        <a class="refreshLink" data-dojo-attach-event="onClick: _refreshGrid" href="#" title="Vernieuw de tabel">Vernieuwen&nbsp;<span class="fa fa-refresh small" ></span></a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="large-12 columns dataGridContainer">
+        <div data-dojo-attach-point="dataGridNode"></div>
+      </div>
+      <div class="large-12 columns selectedGridContainer">
+        <h4>Toe te voegen ${typeName}</h4>
+        <div data-dojo-attach-point="selectedGridNode"></div>
+      </div>
+    </div>
+    <div class="row viewFooter">
+      <div class="large-12 columns text-center">
+        <a href="#" data-dojo-attach-event="onClick: _okClick" class="button small">Ok</a>
+        <a href="#" data-dojo-attach-event="onClick: _cancelClick" class="button small">Annuleren</a>
+      </div>
+    </div>
+  </div>
+</div>

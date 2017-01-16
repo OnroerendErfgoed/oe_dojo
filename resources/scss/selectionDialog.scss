@@ -1,0 +1,38 @@
+
+.selection-dialog {
+
+  .selectedGridContainer {
+    margin-top: 20px;
+  }
+
+  .dataGridContainer .dgrid {
+    height: 210px;
+  }
+
+  .selectedGridContainer .dgrid {
+    height: 140px;
+  }
+
+  .dgrid .dgrid-column-id {
+    width: 40px;
+  }
+
+  .dgrid .dgrid-column-remove,
+  .dgrid .dgrid-column-addItem {
+    width: 40px;
+    text-align: center;
+  }
+
+  .dgrid .dgrid-column-datum_indienen {
+    width: 125px;
+  }
+
+  .dgrid .dgrid-column-archeoloog {
+    width: 170px;
+  }
+
+  .dgrid .dgrid-column-erkenningsnummer {
+    width: 210px;
+  }
+
+}
