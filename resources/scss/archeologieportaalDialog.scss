@@ -1,0 +1,16 @@
+.navigate-dialog {
+  width: 800px;
+
+  .archLink {
+    margin: 0 0 0 175px;
+  }
+
+  a:not(.archLink) {
+    text-decoration: underline;
+    color: #86abbe;
+  }
+
+  a:not(.archLink):hover {
+
+  }
+}
