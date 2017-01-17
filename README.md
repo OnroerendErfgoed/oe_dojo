@@ -12,10 +12,13 @@ bower install https://github.com/OnroerendErfgoed/oe_dojo.git#<release nummer> -
 ```
 
 ## Development
-Check het project uit en run deze commando's:
+Check het project uit en run dit commando's:
 ```bash
 $ npm install
-$ bower install
+```
+of
+```bash
+$ npm install && npm test
 ```
 
 ## Testen
