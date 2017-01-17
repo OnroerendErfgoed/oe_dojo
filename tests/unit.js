@@ -1,4 +1,5 @@
 define([
+  'tests/unit/ArcheologieportaalDialog',
   'tests/unit/ClipboardMixin',
   'tests/unit/DummyWidget',
   'tests/unit/DateUtils',

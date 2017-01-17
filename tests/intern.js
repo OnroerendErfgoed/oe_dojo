@@ -78,8 +78,8 @@ define({
   excludeInstrumentation: /^(?:tests|node_modules|dojo|dijit|dstore|dgrid)\//,
 
   // Unit test suite(s) to run in each browser
-  suites: [ 'tests/all' ],
+  suites: [ 'tests/unit' ],
 
   // Functional test suite(s) to execute against each browser once unit tests are completed
-  functionalSuites: [ /* 'myPackage/tests/functional' */ ]
+  functionalSuites: [ 'tests/functional' ]
 });
