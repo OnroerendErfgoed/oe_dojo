@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Test LocatiePercelen</title>
+  <link rel="stylesheet" href="../../resources/css/localTest.css" />
+</head>
+
+<body class="nihilo">
+<h1 id="testid">Test dummy Widget</h1>
+<div id="widgetNode">test placeholder</div>
+
+<!-- load Dojo -->
+<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: 1"></script>
+
+<script>
+  var ready;
+
+  require([
+    'DummyWidget',
+    'dojo/domReady!'
+  ], function (DummyWidget) {
+    var dummyWidget = new DummyWidget({
+    }, 'widgetNode');
+
+    dummyWidget.startup();
+  });
+
+</script>
+
+</body>
+</html>
