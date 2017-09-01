@@ -81,9 +81,9 @@ define([
 
         var featureRequest = new ol.format.WFS().writeGetFeature({
           srsName: 'urn:ogc:def:crs:EPSG:6.9:31370',
-          featureNS: 'https://geo.agiv.be/ogc/wfs/grb',
-          featurePrefix: 'grb',
-          featureTypes: ['GRB_-_Adp_-_administratief_perceel'],
+          featureNS: 'informatievlaanderen.be/grb',
+          featurePrefix: 'GRB',
+          featureTypes: ['ADP'],
           filter: filter
         });
 
@@ -107,8 +107,8 @@ define([
      */
     readWfs: function (wfs) {
       var formatter = new ol.format.WFS({
-        featureNS: 'https://geo.agiv.be/ogc/wfs/grb',
-        featureType: 'GRB_-_Adp_-_administratief_perceel'
+        featureNS: 'informatievlaanderen.be/grb',
+        featureType: 'ADP'
       });
       return formatter.readFeatures(wfs, {});
     },
@@ -307,9 +307,9 @@ define([
 
       var featureRequest = new ol.format.WFS().writeGetFeature({
         srsName: 'urn:ogc:def:crs:EPSG:6.9:31370',
-        featureNS: 'https://geo.agiv.be/ogc/wfs/grb',
-        featurePrefix: 'grb',
-        featureTypes: ['GRB_-_Adp_-_administratief_perceel'],
+        featureNS: 'informatievlaanderen.be/grb',
+        featurePrefix: 'GRB',
+        featureTypes: ['ADP'],
         filter: ol.format.filter.equalTo('capakey', capakey)
       });
 
