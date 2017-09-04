@@ -1,6 +1,6 @@
 {
   "name": "oe_dojo",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Dojo library for Onroerend Erfgoed UI's",
   "repository": {
     "type": "git",
@@ -21,9 +21,12 @@
     "lib": "."
   },
   "devDependencies": {
+    "bower": "^1.8.0",
     "chromedriver": "^2.25.3",
     "coveralls": "^2.11.15",
+    "dijit-intern-helper": "git+https://github.com/SitePen/dijit-intern-helper.git",
     "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-jshint": "^1.1.0",
@@ -31,7 +34,8 @@
     "intern": "^3.4.1"
   },
   "scripts": {
-    "test": "intern-runner config=tests/intern reporters=Runner reporters=LcovHtml",
-    "chromedriver": "./node_modules/chromedriver/bin/chromedriver --port=4444 --url-base=wd/hub"
+    "test": "grunt test",
+    "chromedriver": "./node_modules/chromedriver/bin/chromedriver --port=4444 --url-base=wd/hub",
+    "postinstall": "./node_modules/bower/bin/bower install"
   }
 }

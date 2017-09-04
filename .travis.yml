@@ -14,13 +14,8 @@ addons:
       - chromium-browser
       - chromium-chromedriver
 
-before_install:
-  - npm install -g grunt-cli
-  - npm install -g bower
-
 install:
   - npm install
-  - bower install
 
 before_script:
   - grunt -v jshint
@@ -29,8 +24,6 @@ before_script:
   - "export CHROME_BIN=chromium-browser"
   - "sh -e /etc/init.d/xvfb start"
 
-script:
-  - grunt test
 
 # Send coverage data to Coveralls
 after_script: "cat ./lcov.info | ./node_modules/coveralls/bin/coveralls.js"

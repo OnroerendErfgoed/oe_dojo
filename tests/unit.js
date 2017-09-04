@@ -1,4 +1,5 @@
 define([
+  'tests/unit/ArcheologieportaalDialog',
   'tests/unit/ClipboardMixin',
   'tests/unit/DummyWidget',
   'tests/unit/DateUtils',
@@ -7,6 +8,7 @@ define([
   'tests/unit/ErrorUtils',
   'tests/unit/HandlerUtils',
   'tests/unit/LocatiePercelen',
+  'tests/unit/SelectionDialog',
   'tests/unit/TrackableRestStore',
   'tests/unit/TrackableMemoryStore',
   'tests/unit/locatiepercelen/RefAdresDialog',
