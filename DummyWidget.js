@@ -1,26 +1,27 @@
 define([
   'dojo/_base/declare',
-  'dijit/_WidgetBase'
+  'dijit/_WidgetBase',
+  'dijit/_TemplatedMixin'
 ], function (
   declare,
-  _WidgetBase
+  _WidgetBase,
+  _TemplatedMixin
 ) {
-  return declare([_WidgetBase], {
-    // description:
-    //
+  return declare([_WidgetBase, _TemplatedMixin], {
+
     baseClass: 'dummywidget',
+
     dummyProp: null,
 
-    // Properties to be sent into constructor
+    templateString: '<div><h2 data-dojo-attach-point="dataNode">title2</h2></div>',
 
     postCreate: function () {
-      // summary:
-      //      Overrides method of same name in dijit._Widget.
       this.inherited(arguments);
     },
 
     setData: function (value) {
-        this.dummyProp = value;
+      this.dummyProp = value;
+      this.dataNode.innerHtml = value;
     },
 
     getData: function () {

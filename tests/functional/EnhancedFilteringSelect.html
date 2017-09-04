@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Test EnhancedFilteringSelect</title>
+  <link rel="stylesheet" href="../../resources/css/localTest.css" />
+</head>
+
+<body class="nihilo">
+<h1 id="testid">Test EnhancedFilteringSelect</h1>
+<div id="widgetNode">widget placeholder</div>
+
+<!-- load Dojo -->
+<script type="text/javascript" src="../../dojo/dojo.js" data-dojo-config="async: 1"></script>
+
+<script>
+  require([
+    'EnhancedFilteringSelect',
+    'dojo/store/Memory',
+    'dojo/domReady!'
+  ], function (EnhancedFilteringSelect, Memory) {
+    var testStore = new Memory({
+      data: [
+        { name:'test1', id:'1' },
+        { name:'test2', id:'2' },
+        { name:'drie', id:'3' }
+      ]
+    });
+
+    var enhancedFilteringSelect = new EnhancedFilteringSelect({
+      store: testStore
+    }, 'widgetNode');
+
+    enhancedFilteringSelect.startup();
+  });
+
+</script>
+
+</body>
+</html>
