@@ -147,6 +147,7 @@ define([
         .attr({disabled: false});
       query('a.fa-pencil', this.locatieContent).removeClass('hide');
 
+      query(this.totaleOppBodemingreep).attr({disabled: false});
       // query('.placeholder-container:not(.placeholder-always-disabled) input#dichtstbijzijndeAdres-' + this.id,
       //   this.locatieContent).attr({disabled: true});
 
@@ -162,8 +163,10 @@ define([
       query('.placeholder-container:not(.placeholder-always-disabled) input,'+
         '.placeholder-container:not(.placeholder-always-disabled) select', this.locatieContent)
         .attr({disabled: true});
+      query(this.totaleOppBodemingreep).attr({disabled: true});
       this.refreshPercelenNode.style.display = 'none';
       query('a.fa-pencil', this.locatieContent).addClass('hide');
+
       this._perceelGrid.styleColumn('remove', 'display: none;');
     },
 
@@ -340,7 +343,7 @@ define([
     updateBodemOppervlakte: function(opp) {
       if (opp !== null) {
         this._bodemIngreepOpp = opp;
-        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
+        this.totaleOppBodemingreep.value = parseFloat(opp).toFixed(2);
       }
     },
 
