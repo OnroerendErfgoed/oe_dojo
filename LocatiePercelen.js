@@ -57,6 +57,7 @@ define([
     _perceelType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel',
     _currentZone: null,
     _warningDisplayed: false,
+    _bodemIngreepOpp: 0,
 
     postCreate: function () {
       console.debug('LocatiePercelen::postCreate');
@@ -252,7 +253,7 @@ define([
       });
     },
 
-    setData: function(locatie) {
+    setData: function(locatie, opp) {
       console.debug('LocatiePercelen::setData', locatie);
       this.locatie = locatie;
 
@@ -292,6 +293,10 @@ define([
         this._updatePerceelOppervlakte();
       }
 
+      if (opp) {
+        this.updateBodemOppervlakte(opp);
+      }
+
      /* if (this.bodemIngreep) {
         this._updateBodemOppervlakte();
       }*/
@@ -321,10 +326,21 @@ define([
       return elementen;
     },
 
+    getBodemOppervlakte: function() {
+      return parseFloat(this.totaleOppBodemingreep.value).toFixed(2);
+    },
+
     updateZoneOppervlakte: function(opp) {
       if (opp !== null) {
         this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
         this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
+      }
+    },
+
+    updateBodemOppervlakte: function(opp) {
+      if (opp !== null) {
+        this._bodemIngreepOpp = opp;
+        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
       }
     },
 
@@ -387,7 +403,7 @@ define([
       this.clear();
 
       if (this.locatie) {
-        this.setData(this.locatie);
+        this.setData(this.locatie, this._bodemIngreepOpp);
       }
     },
 
