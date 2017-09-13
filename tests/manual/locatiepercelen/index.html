@@ -44,19 +44,54 @@
 //      elementen: {}
 //    };
 
-    var locatie = { "contour": {"type":"MultiPolygon","coordinates":[[[[156148.07496554664,209985.98664404266],[156139.82496554664,209974.98664404266],[156174.07496554664,209964.23664404266],[156148.07496554664,209985.98664404266]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}},
+    var locatie = { "contour": {
+      "crs": {
+        "type": "name",
+        "properties": {
+          "name": "urn:ogc:def:crs:EPSG::31370"
+        }
+      },
+      "type": "MultiPolygon",
+      "coordinates": [
+        [
+          [
+            [
+              169021.89744811904,
+              176942.9373382811
+            ],
+            [
+              169029.2863370079,
+              176923.6873382811
+            ],
+            [
+              169070.5363370079,
+              176929.1873382811
+            ],
+            [
+              169062.2863370079,
+              176954.4373382811
+            ],
+            [
+              169021.89744811904,
+              176942.9373382811
+            ]
+          ]
+        ]
+      ]
+    },
       "elementen":[
-        {"perceel":{"capakey":"11313B0968/00H003","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00H003","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"}, "perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
+       /* {"perceel":{"capakey":"11313B0968/00H003","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00H003","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"}, "perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
         {"perceel":{"capakey":"11313B0968/00T002","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00T002","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"},"perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
         {"perceel":{"capakey":"11313B0968/00W003","afdelingsnummer":"11313","sectie":"B","perceel":"0968/00W003","afdeling":"ANTWERPEN 26 AFD/BORGERHOUT  3/"},"perceeltype":{"id":1},"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel"},
-        {"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementAdres","gemeente":{"naam":"Antwerpen"},"huisnummer":"5","land":"BE","postcode":"2140","straat":"Wolfjagerslei"}
+        {"type":"https://id.erfgoed.net/vocab/ontology#LocatieElementAdres","gemeente":{"naam":"Antwerpen"},"huisnummer":"5","land":"BE","postcode":"2140","straat":"Wolfjagerslei"}*/
       ]};
 
     locatieService.getAfdelingenStore().then(function(afdelingen) {
       var locatiePercelen = new LocatiePercelen({
         locatieService: locatieService,
         afdelingenStore: afdelingen,
-        showOppervlakte: true
+        showOppervlakte: true,
+        bodemIngreep: true
       }, 'widgetNode');
 
       locatiePercelen.startup();

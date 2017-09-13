@@ -49,6 +49,7 @@ define([
     disabled: true,
     afdelingenStore: null,
     showOppervlakte: false,
+    bodemIngreep: false,
     _perceelGrid: null,
     _perceelStore: null,
     _nearestAddress: null,
@@ -56,6 +57,7 @@ define([
     _perceelType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel',
     _currentZone: null,
     _warningDisplayed: false,
+    _bodemIngreepOpp: 0,
 
     postCreate: function () {
       console.debug('LocatiePercelen::postCreate');
@@ -68,8 +70,15 @@ define([
 
 
       if (!this.showOppervlakte) {
-        this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
         this.oppervlakteNode.style.display = 'none';
+      }
+
+      if (!this.bodemIngreep) {
+        this.bodemingreepNode.style.display = 'none';
+      }
+
+      if (!this.showOppervlakte && !this.bodemIngreep) {
+        this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
       }
 
       this._refAdresDialog = new RefAdresDialog({
@@ -211,6 +220,10 @@ define([
             this._updatePerceelOppervlakte();
           }
 
+         /* if (this.bodemIngreep) {
+            this._updateBodemOppervlakte();
+          }*/
+
           if (!this._warningDisplayed) {
             this._showPercelenWarning();
           }
@@ -240,7 +253,7 @@ define([
       });
     },
 
-    setData: function(locatie) {
+    setData: function(locatie, opp) {
       console.debug('LocatiePercelen::setData', locatie);
       this.locatie = locatie;
 
@@ -280,6 +293,14 @@ define([
         this._updatePerceelOppervlakte();
       }
 
+      if (opp) {
+        this.updateBodemOppervlakte(opp);
+      }
+
+     /* if (this.bodemIngreep) {
+        this._updateBodemOppervlakte();
+      }*/
+
       //hide loading div
       this.locatieLoading.style.display = 'none';
       this.locatieContent.style.display = 'block';
@@ -296,7 +317,7 @@ define([
       this._perceelStore.fetchSync().forEach(function (perceel) {
         delete perceel.capakey; //remove the extra grid ids again
         // remove oppervlakte when not asked for
-        if (!this.showOppervlakte && perceel.perceel && perceel.perceel.oppervlakte) {
+        if ((!this.showOppervlakte && !this.bodemIngreep) && perceel.perceel && perceel.perceel.oppervlakte) {
           delete perceel.perceel.oppervlakte;
         }
         elementen.push(perceel);
@@ -305,8 +326,20 @@ define([
       return elementen;
     },
 
+    getBodemOppervlakte: function() {
+      return parseFloat(this.totaleOppBodemingreep.value).toFixed(2);
+    },
+
     updateZoneOppervlakte: function(opp) {
       if (opp !== null) {
+        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
+        this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
+      }
+    },
+
+    updateBodemOppervlakte: function(opp) {
+      if (opp !== null) {
+        this._bodemIngreepOpp = opp;
         this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
       }
     },
@@ -339,11 +372,38 @@ define([
       );
     },
 
+    /*_updateBodemOppervlakte: function() {
+      var opp = 0;
+      var promises = [];
+      array.forEach(this._perceelStore.fetchSync(), function(item) {
+        var kadastraalPerceel = item.perceel;
+        if (kadastraalPerceel && kadastraalPerceel.oppervlakte) {
+          opp += parseFloat(kadastraalPerceel.oppervlakte);
+        }
+        else {
+          promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel, item));
+        }
+      }, this);
+      all(promises).then(
+        lang.hitch(this, function (result) {
+          array.forEach(result, function (perc) {
+            opp += parseFloat(perc.oppervlakte);
+            this._perceelStore.put(perc.perceel);
+          }, this);
+          this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
+        }),
+        lang.hitch(this, function (error) {
+          console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
+          this.totaleOppGebied.innerHTML = 'Er is een fout opgetreden!';
+        })
+      );
+    },*/
+
     reset: function () {
       this.clear();
 
       if (this.locatie) {
-        this.setData(this.locatie);
+        this.setData(this.locatie, this._bodemIngreepOpp);
       }
     },
 
@@ -361,6 +421,10 @@ define([
       if (this.showOppervlakte) {
         this.totaleOppZone.innerHTML = '-';
         this.totaleOppPercelen.innerHTML = '-';
+      }
+      if (this.bodemIngreep) {
+        this.totaleOppGebied.innerHTML = '-';
+        this.totaleOppBodemingreep.value = '';
       }
     },
 
