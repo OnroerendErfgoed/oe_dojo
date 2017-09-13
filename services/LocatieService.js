@@ -175,7 +175,7 @@ define([
                 kadPerc.sectie = results.perceelInfo.sectie.id;
                 kadPerc.perceel = results.perceelInfo.id;
                 kadPerc.capakey = perceel.get('CAPAKEY');
-                kadPerc.oppervlakte = perceel.get('OPPERVL');
+                kadPerc.oppervlakte = perceel.get('SHAPE').getArea();
                 /* jshint -W106 */
                 data.kadastraal_perceel = kadPerc;
                 data.adres = this._parseAddressString(adres);
@@ -195,7 +195,7 @@ define([
               kadPerc.sectie = results.perceelInfo.sectie.id;
               kadPerc.perceel = results.perceelInfo.id;
               kadPerc.capakey = perceel.get('CAPAKEY');
-              kadPerc.oppervlakte = perceel.get('OPPERVL');
+              kadPerc.oppervlakte = perceel.get('SHAPE').getArea();
 
               /* jshint -W106 */
               data.kadastraal_perceel = kadPerc;
@@ -243,7 +243,7 @@ define([
         array.forEach(percelen, lang.hitch(this, function(perceel) {
           var capakey = perceel.get('CAPAKEY');
           // var niscode = perceel.get('NISCODE');
-          var opp = parseFloat(perceel.get('OPPERVL')).toFixed(2);
+          var opp = parseFloat(perceel.get('SHAPE').getArea()).toFixed(2);
           var kadPerc = {
             capakey: capakey,
             afdelingsnummer: capakey.slice(0,5),
@@ -310,7 +310,7 @@ define([
         featureNS: 'informatievlaanderen.be/grb',
         featurePrefix: 'GRB',
         featureTypes: ['ADP'],
-        filter: ol.format.filter.equalTo('capakey', capakey)
+        filter: ol.format.filter.equalTo('CAPAKEY', capakey)
       });
 
       xhr.post(this.agivGRBUrl, {
@@ -323,7 +323,7 @@ define([
         lang.hitch(this, function (result) {
           var perceelopp = 0;
           array.forEach(this.readWfs(result), function (perceel) {
-            perceelopp += perceel.get('OPPERVL');
+            perceelopp += perceel.get('SHAPE').getArea();
           }, this);
           element.perceel.oppervlakte = parseFloat(perceelopp).toFixed(2);
           deferred.resolve({oppervlakte: perceelopp, perceel: element});
