@@ -15,6 +15,11 @@
     <div id="widgetNode"></div>
   </div>
 </div>
+<div class="row" style="height: 50px; background-color: lightblue;">
+  <div class="large large-12 columns text-center">
+    <div id="getdataNode"></div>
+  </div>
+</div>
 
 <!-- load Dojo -->
 <script type="text/javascript" src="./locatieConfig.js">
@@ -25,11 +30,13 @@
 
 <script>
   require([
+    'dijit/form/Button',
+    'dojo/json',
     'oe_dojo/services/LocatieService',
     'oe_dojo/LocatiePercelen',
     'oe_dojo/HandlerUtils',
     'dojo/domReady!'
-  ], function (LocatieService, LocatiePercelen) {
+  ], function (Button, JSON, LocatieService, LocatiePercelen) {
 
 //    var testzone = {"type":"MultiPolygon","coordinates":[[[[156150.90194227203,209986.07671206398],[156136.90194227203,209975.32671206398],[156169.90194227203,209967.57671206398],[156150.90194227203,209986.07671206398]]]],"crs":{"type":"name","properties":{"name":"urn:ogc:def:crs:EPSG::31370"}}};
 
@@ -91,13 +98,22 @@
         locatieService: locatieService,
         afdelingenStore: afdelingen,
         showOppervlakte: true,
-        bodemIngreep: true
+        bodemIngreep: true,
+        openbaarDomein: true
       }, 'widgetNode');
 
       locatiePercelen.startup();
       locatiePercelen.setData(locatie);
 
       locatiePercelen.updateZoneOppervlakte(512);
+
+      var getdataButton = new Button({
+        label: "get data",
+        onClick: function () {
+          console.log(JSON.stringify(locatiePercelen.getData()));
+        }
+      }, 'getdataNode');
+      getdataButton.startup();
 
 //      setTimeout(function() {
 //        locatiePercelen.clear();

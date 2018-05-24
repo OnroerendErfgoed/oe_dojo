@@ -50,11 +50,13 @@ define([
     afdelingenStore: null,
     showOppervlakte: false,
     bodemIngreep: false,
+    openbaarDomein: false,
     _perceelGrid: null,
     _perceelStore: null,
     _nearestAddress: null,
     _refAdresType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementAdres',
     _perceelType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel',
+    _openbaarDomeinType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementOpenbaar',
     _currentZone: null,
     _warningDisplayed: false,
     _bodemIngreepOpp: 0,
@@ -75,6 +77,10 @@ define([
 
       if (!this.bodemIngreep) {
         this.bodemingreepNode.style.display = 'none';
+      }
+
+      if (!this.openbaarDomein) {
+        this.openbaardomeinNode.style.display = 'none';
       }
 
       if (!this.showOppervlakte && !this.bodemIngreep) {
@@ -289,6 +295,14 @@ define([
         });
         this._perceelStore = new TrackableMemoryStore({data: kadPerceelList, idProperty: 'capakey'});
         this._perceelGrid.set('collection', this._perceelStore);
+
+        //set openbaar domein
+        var openbaarDomein = array.some(locatie.elementen, function(element) {
+          return (element.type === this._openbaarDomeinType);
+        }, this);
+        if (openbaarDomein) {
+          this.domeinCheckbox.checked = true;
+        }
       }
 
       // update oppervlakte
@@ -315,6 +329,14 @@ define([
 
       if (this.refAdres) {
         elementen.push(this.refAdres);
+      }
+
+      // openbaar domein
+      if (this.domeinCheckbox.checked) {
+        elementen.push({
+          perceeltype: { id: 2 },
+          type: this._openbaarDomeinType
+        });
       }
 
       this._perceelStore.fetchSync().forEach(function (perceel) {
@@ -428,6 +450,9 @@ define([
       if (this.bodemIngreep) {
         this.totaleOppGebied.innerHTML = '-';
         this.totaleOppBodemingreep.value = '';
+      }
+      if (this.openbaarDomein) {
+        this.domeinCheckbox.checked = false;
       }
     },
 
