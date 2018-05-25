@@ -236,6 +236,8 @@ define([
           if (!this._warningDisplayed) {
             this._showPercelenWarning();
           }
+
+          this._perceelGrid.resize();
         }),
         lang.hitch(this, function (error) {
           console.error(error);
