@@ -56,7 +56,7 @@ define([
     _nearestAddress: null,
     _refAdresType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementAdres',
     _perceelType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel',
-    _openbaarDomeinType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementOpenbaar',
+    _openbaarDomeinType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementOpenbaarDomein',
     _currentZone: null,
     _warningDisplayed: false,
     _bodemIngreepOpp: 0,
