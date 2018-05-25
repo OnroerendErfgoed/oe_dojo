@@ -333,9 +333,15 @@ define([
 
       // openbaar domein
       if (this.domeinCheckbox.checked) {
-        elementen.push({
+        var openbaarDomein = {
           type: this._openbaarDomeinType
-        });
+        };
+        if (this.refAdres) {
+          // use provincie & gemeente from refadres
+          openbaarDomein.provincie = this.refAdres.provincie;
+          openbaarDomein.gemeente = this.refAdres.gemeente;
+        }
+        elementen.push(openbaarDomein);
       }
 
       this._perceelStore.fetchSync().forEach(function (perceel) {
