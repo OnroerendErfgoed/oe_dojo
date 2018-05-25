@@ -334,7 +334,6 @@ define([
       // openbaar domein
       if (this.domeinCheckbox.checked) {
         elementen.push({
-          perceeltype: { id: 2 },
           type: this._openbaarDomeinType
         });
       }
