@@ -98,8 +98,8 @@ define([
         })),
         on(this.domeinCheckbox, 'change', lang.hitch(this, function() {
           this.emit('percelen.changed', {percelen: this.getData()});
-          if (this.domeinCheckbox.checked) {
-            this._getDichtstbijzijndeAdres(true);
+          if (this.domeinCheckbox.checked && this._currentZone) {
+            this._getDichtstbijzijndeAdres(this._currentZone, true);
           }
         }))
       );
