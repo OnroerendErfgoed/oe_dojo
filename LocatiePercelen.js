@@ -95,6 +95,12 @@ define([
       this.own(
         on(this._refAdresDialog, 'ok', lang.hitch(this, function(evt) {
           this._updateRefAdres(evt.refAdres);
+        })),
+        on(this.domeinCheckbox, 'change', lang.hitch(this, function() {
+          this.emit('percelen.changed', {percelen: this.getData()});
+          if (this.domeinCheckbox.checked) {
+            this._getDichtstbijzijndeAdres(true);
+          }
         }))
       );
     },
