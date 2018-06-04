@@ -241,6 +241,7 @@ define([
 
           if (!this._warningDisplayed) {
             this._showPercelenWarning();
+            this.emit('percelen.changed', {percelen: this.getData()});
           }
 
           this._perceelGrid.resize();
