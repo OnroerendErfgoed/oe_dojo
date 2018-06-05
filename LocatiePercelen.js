@@ -565,6 +565,7 @@ define([
     _removeRow: function (object) {
       if (object && object.perceel && object.perceel.capakey) {
         this._perceelStore.remove(object.perceel.capakey);
+        this.emit('percelen.changed', {percelen: this.getData()});
         if (this.showOppervlakte) {
           this._updatePerceelOppervlakte();
         }
