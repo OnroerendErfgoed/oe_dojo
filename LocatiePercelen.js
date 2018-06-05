@@ -50,11 +50,13 @@ define([
     afdelingenStore: null,
     showOppervlakte: false,
     bodemIngreep: false,
+    openbaarDomein: false,
     _perceelGrid: null,
     _perceelStore: null,
     _nearestAddress: null,
     _refAdresType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementAdres',
     _perceelType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementPerceel',
+    _openbaarDomeinType: 'https://id.erfgoed.net/vocab/ontology#LocatieElementOpenbaarDomein',
     _currentZone: null,
     _warningDisplayed: false,
     _bodemIngreepOpp: 0,
@@ -77,6 +79,10 @@ define([
         this.bodemingreepNode.style.display = 'none';
       }
 
+      if (!this.openbaarDomein) {
+        this.openbaardomeinNode.style.display = 'none';
+      }
+
       if (!this.showOppervlakte && !this.bodemIngreep) {
         this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
       }
@@ -89,6 +95,12 @@ define([
       this.own(
         on(this._refAdresDialog, 'ok', lang.hitch(this, function(evt) {
           this._updateRefAdres(evt.refAdres);
+        })),
+        on(this.domeinCheckbox, 'change', lang.hitch(this, function() {
+          this.emit('percelen.changed', {percelen: this.getData()});
+          if (this.domeinCheckbox.checked && this._currentZone) {
+            this._getDichtstbijzijndeAdres(this._currentZone, true);
+          }
         }))
       );
     },
@@ -213,7 +225,12 @@ define([
             perceel.afdeling = afdeling ? afdeling.naam : perceel.afdelingsnummer;
           }, this);
 
-          this._perceelStore = new TrackableMemoryStore({ data: result, idProperty: 'capakey' });
+          this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
+          array.forEach(result, function(perc) {
+            if (!this._perceelStore.getSync(perc.capakey)) {
+              this._perceelStore.add(perc);
+            }
+          },this);
           this._perceelGrid.set('collection', this._perceelStore);
 
           this.locatieLoading.style.display = 'none';
@@ -230,6 +247,9 @@ define([
           if (!this._warningDisplayed) {
             this._showPercelenWarning();
           }
+          this.emit('percelen.changed', {percelen: this.getData()});
+
+          this._perceelGrid.resize();
         }),
         lang.hitch(this, function (error) {
           console.error(error);
@@ -284,11 +304,21 @@ define([
         var kadPerceelList = locatie.elementen.filter(lang.hitch(this, function (element) {
           return (element.type === this._perceelType);
         }));
-        array.forEach(kadPerceelList, function (kadPerceel) {
-          kadPerceel.capakey = kadPerceel.perceel.capakey;
+        var kadPerceelListWithId = array.map(kadPerceelList, function(perceel) {
+          var newPerceel =lang.clone(perceel);
+          newPerceel.capakey = perceel.perceel.capakey;
+          return newPerceel;
         });
-        this._perceelStore = new TrackableMemoryStore({data: kadPerceelList, idProperty: 'capakey'});
+        this._perceelStore = new TrackableMemoryStore({data: kadPerceelListWithId, idProperty: 'capakey'});
         this._perceelGrid.set('collection', this._perceelStore);
+
+        //set openbaar domein
+        var openbaarDomein = array.some(locatie.elementen, function(element) {
+          return (element.type === this._openbaarDomeinType);
+        }, this);
+        if (openbaarDomein) {
+          this.domeinCheckbox.checked = true;
+        }
       }
 
       // update oppervlakte
@@ -317,13 +347,27 @@ define([
         elementen.push(this.refAdres);
       }
 
-      this._perceelStore.fetchSync().forEach(function (perceel) {
-        delete perceel.capakey; //remove the extra grid ids again
-        // remove oppervlakte when not asked for
-        if ((!this.showOppervlakte && !this.bodemIngreep) && perceel.perceel && perceel.perceel.oppervlakte) {
-          delete perceel.perceel.oppervlakte;
+      // openbaar domein
+      if (this.domeinCheckbox.checked) {
+        var openbaarDomein = {
+          type: this._openbaarDomeinType
+        };
+        if (this.refAdres) {
+          // use provincie & gemeente from refadres
+          openbaarDomein.provincie = this.refAdres.provincie;
+          openbaarDomein.gemeente = this.refAdres.gemeente;
         }
-        elementen.push(perceel);
+        elementen.push(openbaarDomein);
+      }
+
+      this._perceelStore.fetchSync().forEach(function (perceel) {
+        var clonePerceel = lang.clone(perceel);
+        delete clonePerceel.capakey; //remove the extra grid ids again
+        // remove oppervlakte when not asked for
+        if ((!this.showOppervlakte && !this.bodemIngreep) && clonePerceel.perceel && clonePerceel.perceel.oppervlakte) {
+          delete clonePerceel.perceel.oppervlakte;
+        }
+        elementen.push(clonePerceel);
       });
 
       return elementen;
@@ -408,6 +452,8 @@ define([
       if (this.locatie) {
         this.setData(this.locatie, this._bodemIngreepOpp);
       }
+
+      this.emit('percelen.changed', {percelen: this.getData()});
     },
 
     clear: function() {
@@ -428,6 +474,9 @@ define([
       if (this.bodemIngreep) {
         this.totaleOppGebied.innerHTML = '-';
         this.totaleOppBodemingreep.value = '';
+      }
+      if (this.openbaarDomein) {
+        this.domeinCheckbox.checked = false;
       }
     },
 
@@ -516,6 +565,7 @@ define([
     _removeRow: function (object) {
       if (object && object.perceel && object.perceel.capakey) {
         this._perceelStore.remove(object.perceel.capakey);
+        this.emit('percelen.changed', {percelen: this.getData()});
         if (this.showOppervlakte) {
           this._updatePerceelOppervlakte();
         }
