@@ -1,16 +1,13 @@
 dist: trusty
 language: node_js
 node_js:
-  - '0.10'
+  - 'lts/*'
 sudo: required
 notifications:
   email:
     - cedrik.vanderhaegen@vlaanderen.be
 addons:
-  apt:
-    packages:
-      - chromium-browser
-      - chromium-chromedriver
+  chrome: stable
 
 install:
   - npm install
@@ -18,10 +15,13 @@ install:
 before_script:
   - grunt -v jshint
   - export TZ=Europe/Brussels
+before_install:
+  - nvm install 8.12.0
+  - nvm use 8.12.0
+  - export CHROME_BIN=chromium-browser
   - "export DISPLAY=:99.0"
-  - "export CHROME_BIN=chromium-browser"
   - "sh -e /etc/init.d/xvfb start"
-
+  - sleep 3 # give xvfb some time to start
 
 # Send coverage data to Coveralls
 after_script: "cat ./lcov.info | ./node_modules/coveralls/bin/coveralls.js"
