@@ -361,17 +361,18 @@ define([
     },
 
     getBodemOppervlakte: function() {
-      return parseFloat(this.totaleOppBodemingreep.value).toFixed(2);
+      var val = this.totaleOppBodemingreep.value;
+      return val && val > 0 ? parseFloat(val).toFixed(2) : 0;
     },
 
     updateZoneOppervlakte: function(opp) {
-      if (opp !== null) {
+      if (opp !== null && opp > 0) {
         this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
       }
     },
 
     updateBodemOppervlakte: function(opp) {
-      if (opp !== null) {
+      if (opp !== null && opp > 0) {
         this._bodemIngreepOpp = opp;
         this.totaleOppBodemingreep.value = parseFloat(opp).toFixed(2);
       }

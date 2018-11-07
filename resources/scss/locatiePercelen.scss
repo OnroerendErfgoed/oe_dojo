@@ -17,6 +17,10 @@
 .locatie-percelen {
   height: 100%;
   overflow-y: auto;
+
+  input:invalid {
+    border: 5px solid #ff1217;
+  }
 }
 
 .refadres-dialog {
