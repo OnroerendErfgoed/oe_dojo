@@ -49,7 +49,6 @@ define([
     disabled: true,
     afdelingenStore: null,
     showOppervlakte: false,
-    bodemIngreep: false,
     openbaarDomein: false,
     _perceelGrid: null,
     _perceelStore: null,
@@ -75,15 +74,11 @@ define([
         this.oppervlakteNode.style.display = 'none';
       }
 
-      if (!this.bodemIngreep) {
-        this.bodemingreepNode.style.display = 'none';
-      }
-
       if (!this.openbaarDomein) {
         this.openbaardomeinNode.style.display = 'none';
       }
 
-      if (!this.showOppervlakte && !this.bodemIngreep) {
+      if (!this.showOppervlakte) {
         this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
       }
 
@@ -240,10 +235,6 @@ define([
             this._updatePerceelOppervlakte();
           }
 
-         /* if (this.bodemIngreep) {
-            this._updateBodemOppervlakte();
-          }*/
-
           if (!this._warningDisplayed) {
             this._showPercelenWarning();
           }
@@ -330,10 +321,6 @@ define([
         this.updateBodemOppervlakte(opp);
       }
 
-     /* if (this.bodemIngreep) {
-        this._updateBodemOppervlakte();
-      }*/
-
       //hide loading div
       this.locatieLoading.style.display = 'none';
       this.locatieContent.style.display = 'block';
@@ -364,7 +351,7 @@ define([
         var clonePerceel = lang.clone(perceel);
         delete clonePerceel.capakey; //remove the extra grid ids again
         // remove oppervlakte when not asked for
-        if ((!this.showOppervlakte && !this.bodemIngreep) && clonePerceel.perceel && clonePerceel.perceel.oppervlakte) {
+        if ((!this.showOppervlakte) && clonePerceel.perceel && clonePerceel.perceel.oppervlakte) {
           delete clonePerceel.perceel.oppervlakte;
         }
         elementen.push(clonePerceel);
@@ -380,7 +367,6 @@ define([
     updateZoneOppervlakte: function(opp) {
       if (opp !== null) {
         this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
-        this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
       }
     },
 
@@ -437,11 +423,11 @@ define([
             opp += parseFloat(perc.oppervlakte);
             this._perceelStore.put(perc.perceel);
           }, this);
-          this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
+          // this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
         }),
         lang.hitch(this, function (error) {
           console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
-          this.totaleOppGebied.innerHTML = 'Er is een fout opgetreden!';
+          // this.totaleOppGebied.innerHTML = 'Er is een fout opgetreden!';
         })
       );
     },*/
@@ -470,9 +456,6 @@ define([
       if (this.showOppervlakte) {
         this.totaleOppZone.innerHTML = '-';
         this.totaleOppPercelen.innerHTML = '-';
-      }
-      if (this.bodemIngreep) {
-        this.totaleOppGebied.innerHTML = '-';
         this.totaleOppBodemingreep.value = '';
       }
       if (this.openbaarDomein) {
