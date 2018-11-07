@@ -7,6 +7,7 @@ define([
   'dijit/_TemplatedMixin',
   'dojo/text!./templates/LocatiePercelen.html',
   'dojo/dom-construct',
+  'dojo/dom-class',
   'dojo/query',
   'dojo/on',
   'dojo/topic',
@@ -27,6 +28,7 @@ define([
   TemplatedMixin,
   template,
   domConstruct,
+  domClass,
   query,
   on,
   topic,
@@ -71,12 +73,12 @@ define([
 
 
       if (!this.showOppervlakte) {
-        this.oppervlakteNode.style.display = 'none';
+        domClass.add(this.oppervlakteNode, 'hide');
         this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
       }
 
       if (!this.openbaarDomein) {
-        this.openbaardomeinNode.style.display = 'none';
+        domClass.add(this.openbaardomeinNode, 'hide');
       }
 
       this._refAdresDialog = new RefAdresDialog({
@@ -154,9 +156,7 @@ define([
       query(this.totaleOppBodemingreep).attr({disabled: false});
       // query('.placeholder-container:not(.placeholder-always-disabled) input#dichtstbijzijndeAdres-' + this.id,
       //   this.locatieContent).attr({disabled: true});
-
-      this.refreshPercelenNode.style.display = 'inline-block';
-
+      domClass.remove(this.refreshPercelenNode, 'hide');
       this._perceelGrid.styleColumn('remove', 'display: table-cell');
     },
 
@@ -168,7 +168,7 @@ define([
         '.placeholder-container:not(.placeholder-always-disabled) select', this.locatieContent)
         .attr({disabled: true});
       query(this.totaleOppBodemingreep).attr({disabled: true});
-      this.refreshPercelenNode.style.display = 'none';
+      domClass.add(this.refreshPercelenNode, 'hide');
       query('a.fa-pencil', this.locatieContent).addClass('hide');
 
       this._perceelGrid.styleColumn('remove', 'display: none;');
@@ -206,8 +206,7 @@ define([
     },
 
     updatePercelen: function () {
-      this.locatieContent.style.display = 'none';
-      this.locatieLoading.style.display = 'block';
+      this._showLoading();
       this.locatieService.getKadastralePercelenInZone(this._currentZone).then(
         lang.hitch(this, function (result) {
           array.map(result, function (locatieElementPerceel) {
@@ -225,9 +224,6 @@ define([
           },this);
           this._perceelGrid.set('collection', this._perceelStore);
 
-          this.locatieLoading.style.display = 'none';
-          this.locatieContent.style.display = 'block';
-
           if (this.showOppervlakte) {
             this._updatePerceelOppervlakte();
           }
@@ -236,8 +232,6 @@ define([
             this._showPercelenWarning();
           }
           this.emit('percelen.changed', {percelen: this.getData()});
-
-          this._perceelGrid.resize();
         }),
         lang.hitch(this, function (error) {
           console.error(error);
@@ -248,8 +242,11 @@ define([
           });
           this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
           this._perceelGrid.set('collection', this._perceelStore);
-          this.locatieLoading.style.display = 'none';
-          this.locatieContent.style.display = 'block';
+        })
+      ).always(
+        lang.hitch(this, function () {
+          this._hideLoading();
+          this._perceelGrid.resize();
         })
       );
     },
@@ -319,8 +316,7 @@ define([
       }
 
       //hide loading div
-      this.locatieLoading.style.display = 'none';
-      this.locatieContent.style.display = 'block';
+      this._hideLoading();
     },
 
     getData: function() {
@@ -441,8 +437,7 @@ define([
     },
 
     clear: function() {
-      this.locatieLoading.style.display = 'none';
-      this.locatieContent.style.display = 'block';
+      this._hideLoading();
 
       this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
       this._perceelGrid.set('collection', this._perceelStore);
@@ -616,15 +611,11 @@ define([
 
     _compareAddresses: function(adres, compare) {
       if (adres && compare) {
-        if ((adres.land === compare.land) &&
+        return ((adres.land === compare.land) &&
           (adres.gemeente === compare.gemeente) &&
           (adres.postcode === compare.postcode) &&
           (adres.straat === compare.straat) &&
-          (adres.huisnummer === compare.huisnummer)) {
-          return true;
-        } else {
-          return false;
-        }
+          (adres.huisnummer === compare.huisnummer));
       } else {
         return true;
       }
@@ -633,6 +624,16 @@ define([
     _openEditRefAdres: function(evt) {
       evt ? evt.preventDefault() : null;
       this._refAdresDialog.show(this._perceelStore.data, this._nearestAddress);
+    },
+
+    _hideLoading: function () {
+      domClass.add(this.locatieLoading, 'hide');
+      domClass.remove(this.locatieContent, 'hide');
+    },
+
+    _showLoading: function () {
+      domClass.remove(this.locatieLoading, 'hide');
+      domClass.add(this.locatieContent, 'hide');
     }
   });
 });
