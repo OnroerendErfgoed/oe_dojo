@@ -72,14 +72,11 @@ define([
 
       if (!this.showOppervlakte) {
         this.oppervlakteNode.style.display = 'none';
+        this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
       }
 
       if (!this.openbaarDomein) {
         this.openbaardomeinNode.style.display = 'none';
-      }
-
-      if (!this.showOppervlakte) {
-        this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
       }
 
       this._refAdresDialog = new RefAdresDialog({
