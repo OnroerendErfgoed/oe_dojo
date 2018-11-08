@@ -309,10 +309,9 @@ define([
       // update oppervlakte
       if (this.showOppervlakte) {
         this._updatePerceelOppervlakte();
-      }
-
-      if (opp) {
-        this.updateBodemOppervlakte(opp);
+        if (opp) {
+          this.updateBodemOppervlakte(opp);
+        }
       }
 
       //hide loading div
