@@ -1,5 +1,6 @@
 // locatie percelen grid
 .dgrid.percelenGrid {
+  width: 100%;
   .dgrid-column-afdeling { width: 150px; }
   .dgrid-column-sectie { width: 50px; }
   .dgrid-column-capakey { width: 150px;}
@@ -17,6 +18,18 @@
 .locatie-percelen {
   height: 100%;
   overflow-y: auto;
+
+  input:invalid {
+    border: 5px solid #ff1217;
+  }
+
+  h4 {
+    margin: 0;
+  }
+
+  hr {
+    margin: 0.5rem 0;
+  }
 }
 
 .refadres-dialog {

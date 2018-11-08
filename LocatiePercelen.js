@@ -7,6 +7,7 @@ define([
   'dijit/_TemplatedMixin',
   'dojo/text!./templates/LocatiePercelen.html',
   'dojo/dom-construct',
+  'dojo/dom-class',
   'dojo/query',
   'dojo/on',
   'dojo/topic',
@@ -27,6 +28,7 @@ define([
   TemplatedMixin,
   template,
   domConstruct,
+  domClass,
   query,
   on,
   topic,
@@ -49,7 +51,6 @@ define([
     disabled: true,
     afdelingenStore: null,
     showOppervlakte: false,
-    bodemIngreep: false,
     openbaarDomein: false,
     _perceelGrid: null,
     _perceelStore: null,
@@ -72,19 +73,12 @@ define([
 
 
       if (!this.showOppervlakte) {
-        this.oppervlakteNode.style.display = 'none';
-      }
-
-      if (!this.bodemIngreep) {
-        this.bodemingreepNode.style.display = 'none';
+        domClass.add(this.oppervlakteNode, 'hide');
+        this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
       }
 
       if (!this.openbaarDomein) {
-        this.openbaardomeinNode.style.display = 'none';
-      }
-
-      if (!this.showOppervlakte && !this.bodemIngreep) {
-        this._perceelGrid.styleColumn('oppervlakte', 'display: none;');
+        domClass.add(this.openbaardomeinNode, 'hide');
       }
 
       this._refAdresDialog = new RefAdresDialog({
@@ -162,9 +156,7 @@ define([
       query(this.totaleOppBodemingreep).attr({disabled: false});
       // query('.placeholder-container:not(.placeholder-always-disabled) input#dichtstbijzijndeAdres-' + this.id,
       //   this.locatieContent).attr({disabled: true});
-
-      this.refreshPercelenNode.style.display = 'inline-block';
-
+      domClass.remove(this.refreshPercelenNode, 'hide');
       this._perceelGrid.styleColumn('remove', 'display: table-cell');
     },
 
@@ -176,7 +168,7 @@ define([
         '.placeholder-container:not(.placeholder-always-disabled) select', this.locatieContent)
         .attr({disabled: true});
       query(this.totaleOppBodemingreep).attr({disabled: true});
-      this.refreshPercelenNode.style.display = 'none';
+      domClass.add(this.refreshPercelenNode, 'hide');
       query('a.fa-pencil', this.locatieContent).addClass('hide');
 
       this._perceelGrid.styleColumn('remove', 'display: none;');
@@ -214,8 +206,7 @@ define([
     },
 
     updatePercelen: function () {
-      this.locatieContent.style.display = 'none';
-      this.locatieLoading.style.display = 'block';
+      this._showLoading();
       this.locatieService.getKadastralePercelenInZone(this._currentZone).then(
         lang.hitch(this, function (result) {
           array.map(result, function (locatieElementPerceel) {
@@ -233,23 +224,14 @@ define([
           },this);
           this._perceelGrid.set('collection', this._perceelStore);
 
-          this.locatieLoading.style.display = 'none';
-          this.locatieContent.style.display = 'block';
-
           if (this.showOppervlakte) {
             this._updatePerceelOppervlakte();
           }
-
-         /* if (this.bodemIngreep) {
-            this._updateBodemOppervlakte();
-          }*/
 
           if (!this._warningDisplayed) {
             this._showPercelenWarning();
           }
           this.emit('percelen.changed', {percelen: this.getData()});
-
-          this._perceelGrid.resize();
         }),
         lang.hitch(this, function (error) {
           console.error(error);
@@ -260,8 +242,11 @@ define([
           });
           this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
           this._perceelGrid.set('collection', this._perceelStore);
-          this.locatieLoading.style.display = 'none';
-          this.locatieContent.style.display = 'block';
+        })
+      ).always(
+        lang.hitch(this, function () {
+          this._hideLoading();
+          this._perceelGrid.resize();
         })
       );
     },
@@ -276,7 +261,7 @@ define([
       });
     },
 
-    setData: function(locatie, opp) {
+    setData: function(locatie) {
       console.debug('LocatiePercelen::setData', locatie);
       this.locatie = locatie;
 
@@ -324,19 +309,15 @@ define([
       // update oppervlakte
       if (this.showOppervlakte) {
         this._updatePerceelOppervlakte();
+        /* jshint -W106 */
+        if (locatie.oppervlakte_bodemingreep) {
+          this.updateBodemOppervlakte(locatie.oppervlakte_bodemingreep);
+        }
+        /* jshint +W106 */
       }
-
-      if (opp) {
-        this.updateBodemOppervlakte(opp);
-      }
-
-     /* if (this.bodemIngreep) {
-        this._updateBodemOppervlakte();
-      }*/
 
       //hide loading div
-      this.locatieLoading.style.display = 'none';
-      this.locatieContent.style.display = 'block';
+      this._hideLoading();
     },
 
     getData: function() {
@@ -364,7 +345,7 @@ define([
         var clonePerceel = lang.clone(perceel);
         delete clonePerceel.capakey; //remove the extra grid ids again
         // remove oppervlakte when not asked for
-        if ((!this.showOppervlakte && !this.bodemIngreep) && clonePerceel.perceel && clonePerceel.perceel.oppervlakte) {
+        if ((!this.showOppervlakte) && clonePerceel.perceel && clonePerceel.perceel.oppervlakte) {
           delete clonePerceel.perceel.oppervlakte;
         }
         elementen.push(clonePerceel);
@@ -374,22 +355,32 @@ define([
     },
 
     getBodemOppervlakte: function() {
-      return parseFloat(this.totaleOppBodemingreep.value).toFixed(2);
+      var val = this.totaleOppBodemingreep.value;
+      return val && val > 0 ? parseFloat(val).toFixed(2) : 0;
     },
 
     updateZoneOppervlakte: function(opp) {
-      if (opp !== null) {
+      console.debug('LocatiePercelen::updateZoneOppervlakte', opp);
+      if (opp !== null && opp > 0) {
         this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
-        this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
       }
     },
 
     updateBodemOppervlakte: function(opp) {
-      if (opp !== null) {
+      console.debug('LocatiePercelen::updateBodemOppervlakte', opp);
+      if (opp !== null && opp > 0) {
         this._bodemIngreepOpp = opp;
         this.totaleOppBodemingreep.value = parseFloat(opp).toFixed(2);
       }
     },
+
+    resetBodemOppervlakte: function() {
+      console.debug('LocatiePercelen::resetBodemOppervlakte');
+      if (this._bodemIngreepOpp) {
+        this.totaleOppBodemingreep.value = parseFloat(this._bodemIngreepOpp).toFixed(2);
+      }
+    },
+
 
     _updatePerceelOppervlakte: function() {
       console.debug('LocatiePercelen::_updatePerceelOppervlakte');
@@ -437,11 +428,11 @@ define([
             opp += parseFloat(perc.oppervlakte);
             this._perceelStore.put(perc.perceel);
           }, this);
-          this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
+          // this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
         }),
         lang.hitch(this, function (error) {
           console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
-          this.totaleOppGebied.innerHTML = 'Er is een fout opgetreden!';
+          // this.totaleOppGebied.innerHTML = 'Er is een fout opgetreden!';
         })
       );
     },*/
@@ -450,15 +441,14 @@ define([
       this.clear();
 
       if (this.locatie) {
-        this.setData(this.locatie, this._bodemIngreepOpp);
+        this.setData(this.locatie);
       }
 
       this.emit('percelen.changed', {percelen: this.getData()});
     },
 
     clear: function() {
-      this.locatieLoading.style.display = 'none';
-      this.locatieContent.style.display = 'block';
+      this._hideLoading();
 
       this._perceelStore = new TrackableMemoryStore({ data: [], idProperty: 'capakey' });
       this._perceelGrid.set('collection', this._perceelStore);
@@ -470,9 +460,6 @@ define([
       if (this.showOppervlakte) {
         this.totaleOppZone.innerHTML = '-';
         this.totaleOppPercelen.innerHTML = '-';
-      }
-      if (this.bodemIngreep) {
-        this.totaleOppGebied.innerHTML = '-';
         this.totaleOppBodemingreep.value = '';
       }
       if (this.openbaarDomein) {
@@ -635,15 +622,11 @@ define([
 
     _compareAddresses: function(adres, compare) {
       if (adres && compare) {
-        if ((adres.land === compare.land) &&
+        return ((adres.land === compare.land) &&
           (adres.gemeente === compare.gemeente) &&
           (adres.postcode === compare.postcode) &&
           (adres.straat === compare.straat) &&
-          (adres.huisnummer === compare.huisnummer)) {
-          return true;
-        } else {
-          return false;
-        }
+          (adres.huisnummer === compare.huisnummer));
       } else {
         return true;
       }
@@ -652,6 +635,16 @@ define([
     _openEditRefAdres: function(evt) {
       evt ? evt.preventDefault() : null;
       this._refAdresDialog.show(this._perceelStore.data, this._nearestAddress);
+    },
+
+    _hideLoading: function () {
+      domClass.add(this.locatieLoading, 'hide');
+      domClass.remove(this.locatieContent, 'hide');
+    },
+
+    _showLoading: function () {
+      domClass.remove(this.locatieLoading, 'hide');
+      domClass.add(this.locatieContent, 'hide');
     }
   });
 });
