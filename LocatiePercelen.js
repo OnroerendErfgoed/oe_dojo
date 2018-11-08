@@ -261,7 +261,7 @@ define([
       });
     },
 
-    setData: function(locatie, opp) {
+    setData: function(locatie) {
       console.debug('LocatiePercelen::setData', locatie);
       this.locatie = locatie;
 
@@ -309,9 +309,11 @@ define([
       // update oppervlakte
       if (this.showOppervlakte) {
         this._updatePerceelOppervlakte();
-        if (opp) {
-          this.updateBodemOppervlakte(opp);
+        /* jshint -W106 */
+        if (locatie.oppervlakte_bodemingreep) {
+          this.updateBodemOppervlakte(locatie.oppervlakte_bodemingreep);
         }
+        /* jshint +W106 */
       }
 
       //hide loading div
@@ -358,17 +360,27 @@ define([
     },
 
     updateZoneOppervlakte: function(opp) {
+      console.debug('LocatiePercelen::updateZoneOppervlakte', opp);
       if (opp !== null && opp > 0) {
         this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2);
       }
     },
 
     updateBodemOppervlakte: function(opp) {
+      console.debug('LocatiePercelen::updateBodemOppervlakte', opp);
       if (opp !== null && opp > 0) {
         this._bodemIngreepOpp = opp;
         this.totaleOppBodemingreep.value = parseFloat(opp).toFixed(2);
       }
     },
+
+    resetBodemOppervlakte: function() {
+      console.debug('LocatiePercelen::resetBodemOppervlakte');
+      if (this._bodemIngreepOpp) {
+        this.totaleOppBodemingreep.value = parseFloat(this._bodemIngreepOpp).toFixed(2);
+      }
+    },
+
 
     _updatePerceelOppervlakte: function() {
       console.debug('LocatiePercelen::_updatePerceelOppervlakte');
@@ -429,7 +441,7 @@ define([
       this.clear();
 
       if (this.locatie) {
-        this.setData(this.locatie, this._bodemIngreepOpp);
+        this.setData(this.locatie);
       }
 
       this.emit('percelen.changed', {percelen: this.getData()});
