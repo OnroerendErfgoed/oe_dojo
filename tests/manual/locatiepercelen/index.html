@@ -98,12 +98,12 @@
         locatieService: locatieService,
         afdelingenStore: afdelingen,
         showOppervlakte: true,
-        bodemIngreep: true,
         openbaarDomein: true
       }, 'widgetNode');
 
       locatiePercelen.startup();
       locatiePercelen.setData(locatie);
+      locatiePercelen.enable();
 
       locatiePercelen.updateZoneOppervlakte(512);
 

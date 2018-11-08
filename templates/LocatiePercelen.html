@@ -1,32 +1,32 @@
 <div class="row">
-  <div class="large-11 columns" style="display: none" data-dojo-attach-point="locatieLoading">
+  <div class="large-11 columns hide" data-dojo-attach-point="locatieLoading">
     <h4><i class="fa fa-spinner fa-pulse"></i>&nbsp;Data wordt opgehaald..</h4>
   </div>
   <div class="large-12 columns" data-dojo-attach-point="locatieContent">
     <h4>
-      <strong>Referentieadres:</strong> <span data-dojo-attach-point="refAdresNode"></span>
-      <a href="#" title="Pas het referentieadres aan" class="fa fa-pencil hide" style="float: right;" data-dojo-attach-event="onClick: _openEditRefAdres"></a>
+      Referentieadres: <small><span style="color: #989898" data-dojo-attach-point="refAdresNode"></span>
+      <a href="#" title="Pas het referentieadres aan" class="fa fa-pencil hide" style="float: right;" data-dojo-attach-event="onClick: _openEditRefAdres"></a></small>
     </h4>
+    <hr>
+    <div data-dojo-attach-point="oppervlakteNode">
+      <h4>Oppervlaktes</h4>
+      <ul>
+        <li>Oppervlakte projectgebied: <span data-dojo-attach-point="totaleOppZone">-</span> m²</li>
+        <li>Totale oppervlakte kadastrale percelen: <span data-dojo-attach-point="totaleOppPercelen">-</span> m²</li>
+        <li>Oppervlakte bodemingreep
+          <i class="fa fa-question-circle" title="Voor verkavelingen is geen bodemingreep van toepassing en dient er '0' ingevuld te worden."></i>:
+          <input style="display: inline-block; width: 100px; margin: 0; height: 1.5rem" step="0.01" min="0" placeholder="0.00" type="number" data-dojo-attach-point="totaleOppBodemingreep" value="0" disabled /> m²
+        </li>
+      </ul>
+    </div>
     <hr>
     <h4 style="display: inline-block">Kadastrale percelen</h4><a style="display: inline-block; float: right; padding-top: 8px;" href="#" data-dojo-attach-event="onClick: _refreshPercelen" data-dojo-attach-point="refreshPercelenNode"><i class="fa fa-refresh"></i>&nbsp;&nbsp;Haal percelen op</a>
     <div data-dojo-attach-point="percelenNode"></div>
-    <hr>
     <div data-dojo-attach-point="openbaardomeinNode">
       <div class="placeholder-container placeholder-disabled placeholder-checkbox">
         <input type="checkbox" id="domeinInput-${id}" data-dojo-attach-point="domeinCheckbox" disabled />
         <label class="placeholder-checkbox-label" for="domeinInput-${id}">Openbaar domein?</label>
       </div>
-    </div>
-    <div class="large-12 columns" data-dojo-attach-point="oppervlakteNode">
-      <p style="margin-bottom: 0;">Totale oppervlakte zone: <span data-dojo-attach-point="totaleOppZone">-</span> m²</p>
-      <p>Totale oppervlakte kadastrale percelen: <span data-dojo-attach-point="totaleOppPercelen">-</span> m²</p>
-    </div>
-    <div class="large-12 columns" data-dojo-attach-point="bodemingreepNode">
-      <p style="margin-bottom: 0;">Oppervlakte projectgebied: <span data-dojo-attach-point="totaleOppGebied">-</span> m²</p>
-      <p>Oppervlakte bodemingreep
-        <i class="fa fa-question-circle" title="Voor verkavelingen is geen bodemingreep van toepassing en dient er '0' ingevuld te worden."></i>:
-        <input type="number" data-dojo-attach-point="totaleOppBodemingreep" value="0" disabled /> m²
-      </p>
     </div>
   </div>
 </div>
