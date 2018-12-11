@@ -22,6 +22,12 @@ define([
         message: 'De opgevraagde resource werd niet gevonden: ' + response.url
       };
     }
+    else if (response.status >= 500 && response.status < 600) {
+      throw {
+        title: 'Er is een fout opgetreden (' + response.status + ')',
+        message: 'Er ging iets mis op de server, gelieve contact op te nemen met ict@onroerenderfgoed.be.'
+      };
+    }
     else {
       return JSON.parse(response.text || '{}');
     }
