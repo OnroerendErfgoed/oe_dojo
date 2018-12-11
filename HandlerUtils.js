@@ -25,7 +25,8 @@ define([
     else if (response.status >= 500 && response.status < 600) {
       throw {
         title: 'Er is een fout opgetreden (' + response.status + ')',
-        message: 'Er ging iets mis op de server, gelieve contact op te nemen met ict@onroerenderfgoed.be.'
+        message: 'Er ging iets fout in de server. Onze excuses. Stel je fouten vast of heb je een vraag? ' +
+            'Mail dan naar <a href="mailto:ict@onroerenderfgoed.be">ict@onroerenderfgoed.be</a>'
       };
     }
     else {
