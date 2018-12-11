@@ -1,6 +1,6 @@
 /* jshint unused:false */
 var miniExcludes = {
-    'zoneerder/README.md': 1
+    'oe_dojo/README.md': 1
   },
   amdExcludes = {
   },
