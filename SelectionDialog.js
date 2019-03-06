@@ -127,8 +127,8 @@ define([
       var columns = {
         id: 'iD',
         onderwerp:  'Onderwerp',
-        'datum_indienen': {
-          label: 'Datum indienen',
+        'datum_melden': {
+          label: 'Datum melden',
           formatter: lang.hitch(this, function (value) {
             return dateUtils.convertIsoStringToDate(value);
           })
