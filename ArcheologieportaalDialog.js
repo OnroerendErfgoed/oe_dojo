@@ -45,8 +45,8 @@ define([
     setUrls: function() {
       // VI vooronderzoek
       /* jshint -W106 */
-      this.meldingen_vo_vi.href = this.archeologieportaalUrl +
-        'meldingen_vooronderzoek/beheer';
+      this.toelatingen_vo_vi.href = this.archeologieportaalUrl +
+        'toelatingen_vooronderzoek/beheer';
       this.meldingen_aanvang_vo_vi.href = this.archeologieportaalUrl +
         'meldingen_aanvang/meldingen_aanvang_vooronderzoek_vi/beheer';
       this.arch_notas_vi.href = this.archeologieportaalUrl +
