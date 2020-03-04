@@ -124,18 +124,35 @@ define([
      */
     _createGrid: function (options, node) {
       console.debug('Menu::_createGrid');
-      var columns = {
-        id: 'iD',
-        onderwerp:  'Onderwerp',
-        'datum_melden': {
-          label: 'Datum melden',
-          formatter: lang.hitch(this, function (value) {
-            return dateUtils.convertIsoStringToDate(value);
-          })
-        },
-        archeoloog: 'Archeoloog',
-        erkenningsnummer: 'Erkenningsnummer'
-      };
+      var columns = null;
+
+      if (this.typeName.includes('nota')) {
+        columns = {
+          id: 'iD',
+          onderwerp:  'Onderwerp',
+          'datum_melden': {
+            label: 'Datum melden',
+            formatter: lang.hitch(this, function (value) {
+              return dateUtils.convertIsoStringToDate(value);
+            })
+          },
+          archeoloog: 'Archeoloog',
+          erkenningsnummer: 'Erkenningsnummer'
+        };
+      } else if (this.typeName.includes('toelating')) {
+        columns = {
+          id: 'iD',
+          onderwerp:  'Onderwerp',
+          'datum_indienen': {
+            label: 'Datum indienen',
+            formatter: lang.hitch(this, function (value) {
+              return dateUtils.convertIsoStringToDate(value);
+            })
+          },
+          archeoloog: 'Archeoloog',
+          erkenningsnummer: 'Erkenningsnummer'
+        };
+      }
 
       if (options.gridType === 'selected') {
         columns.remove = {
