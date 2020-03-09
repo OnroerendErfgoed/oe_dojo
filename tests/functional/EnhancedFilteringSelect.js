@@ -3,15 +3,13 @@ define([
   'intern/chai!assert',
   'require',
   'intern/dojo/node!dijit-intern-helper/helpers/dijit',
-  'intern/dojo/node!leadfoot/helpers/pollUntil',
-  'intern/dojo/node!leadfoot/keys'
+  'intern/dojo/node!leadfoot/helpers/pollUntil'
 ], function (
   registerSuite,
   assert,
   require,
   dijit,
-  pollUntil,
-  keys
+  pollUntil
 ) {
 
   registerSuite({
