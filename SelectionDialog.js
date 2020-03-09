@@ -120,9 +120,9 @@ define([
       var search = this.searchIdInput.value;
       if (search) {
         if (!this.onlyMyItems) {
-          this._dataGrid.set('collection', this.dataStore.filter({}));
+          this._dataGrid.set('collection', this.dataStore.filter({id: search}));
         } else {
-          this._dataGrid.set('collection', this.myDataStore.filter({}));
+          this._dataGrid.set('collection', this.myDataStore.filter({id: search}));
         }
         this._dataGrid.resize();
       }
