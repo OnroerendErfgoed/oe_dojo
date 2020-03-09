@@ -51,33 +51,6 @@ define([
                 'test2'
               ], 'The filtering select dropdown list should contain all values with test in the name');
             });
-    },
-
-    'dropdown test with 1 input character': function () {
-      return this.remote
-        .get(require.toUrl('tests/functional/EnhancedFilteringSelect.html'))
-        .setFindTimeout(4000)
-        .setPageLoadTimeout(4000)
-        .setExecuteAsyncTimeout(4000)
-        .then(pollUntil('return document.getElementById("testid");', 5000))
-        .then(dijit.nodeById('widgetNode', 'focusNode'))
-          .click()
-          .type('test')
-          .end()
-        .findById('widget_widgetNode_dropdown')
-          .isDisplayed()
-          .then(function(visible) {
-            assert.strictEqual(visible, true, 'Drop down should be visible');
-          })
-        .then(dijit.nodeById('widgetNode', 'focusNode'))
-          .click()
-          .pressKeys( [keys.BACKSPACE, keys.BACKSPACE, keys.BACKSPACE, keys.BACKSPACE] )
-          .end()
-        .findById('widget_widgetNode_dropdown')
-          .isDisplayed()
-          .then(function(visible) {
-            assert.strictEqual(visible, false, 'Drop down should be hidden');
-          });
     }
   });
 });
