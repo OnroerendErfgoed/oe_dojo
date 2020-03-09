@@ -69,6 +69,18 @@ define([
       }, this.selectedGridNode);
       this._selectedGrid.startup();
 
+      if (this.typeName.includes('nota')) {
+        this._dataGrid.styleColumn('datum_melden', 'display: table-cell;');
+        this._dataGrid.styleColumn('datum_indienen', 'display: none;');
+        this._selectedGrid.styleColumn('datum_melden', 'display: table-cell;');
+        this._selectedGrid.styleColumn('datum_indienen', 'display: none;');
+      } else if (this.typeName.includes('toelating')) {
+        this._dataGrid.styleColumn('datum_melden', 'display: none;');
+        this._dataGrid.styleColumn('datum_indienen', 'display: table-cell;');
+        this._selectedGrid.styleColumn('datum_melden', 'display: none;');
+        this._selectedGrid.styleColumn('datum_indienen', 'display: table-cell;');
+      }
+
 
       if (this.showMyItemsFilter) {
         this.showMyItemsContainer.style.display = 'inline-block';
@@ -124,11 +136,18 @@ define([
      */
     _createGrid: function (options, node) {
       console.debug('Menu::_createGrid');
+
       var columns = {
         id: 'iD',
         onderwerp:  'Onderwerp',
         'datum_melden': {
           label: 'Datum melden',
+          formatter: lang.hitch(this, function (value) {
+            return dateUtils.convertIsoStringToDate(value);
+          })
+        },
+        'datum_indienen': {
+          label: 'Datum indienen',
           formatter: lang.hitch(this, function (value) {
             return dateUtils.convertIsoStringToDate(value);
           })
@@ -244,7 +263,11 @@ define([
     _reset: function () {
       this.selectedStore = new Memory({ data: [] });
       this._selectedGrid.set('collection', this.selectedStore);
-      this._dataGrid.set('collection', this.dataStore.filter({}));
+      if (!this.onlyMyItems) {
+        this._dataGrid.set('collection', this.dataStore.filter({}));
+      } else {
+        this._dataGrid.set('collection', this.myDataStore.filter({}));
+      }
     },
 
     _validate: function () {
