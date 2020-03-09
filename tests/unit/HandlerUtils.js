@@ -95,7 +95,8 @@ define([
         dfd.reject('unknownurl test should fail');
       }, function(err){
         try {
-          assert.strictEqual(err.title, 'Niet gevonden', 'Error title for 404 should be fixed');
+          // assert.strictEqual(err.title, 'Niet gevonden', 'Error title for 404 should be fixed');
+          assert.strictEqual(err.response.status, 404, 'Error title for 404 should be fixed');
           dfd.resolve();
         }
         catch (assertError) {
