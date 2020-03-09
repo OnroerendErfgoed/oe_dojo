@@ -107,11 +107,11 @@ define([
       evt ? evt.preventDefault() : null;
       var search = this.searchIdInput.value;
       if (search) {
-      if (!this.onlyMyItems) {
-        this._dataGrid.set('collection', this.dataStore.filter({}));
-      } else {
-        this._dataGrid.set('collection', this.myDataStore.filter({}));
-      }
+        if (!this.onlyMyItems) {
+          this._dataGrid.set('collection', this.dataStore.filter({}));
+        } else {
+          this._dataGrid.set('collection', this.myDataStore.filter({}));
+        }
         this._dataGrid.resize();
       }
     },
@@ -244,7 +244,11 @@ define([
     _reset: function () {
       this.selectedStore = new Memory({ data: [] });
       this._selectedGrid.set('collection', this.selectedStore);
-      this._dataGrid.set('collection', this.dataStore.filter({}));
+      if (!this.onlyMyItems) {
+        this._dataGrid.set('collection', this.dataStore.filter({}));
+      } else {
+        this._dataGrid.set('collection', this.myDataStore.filter({}));
+      }
     },
 
     _validate: function () {
