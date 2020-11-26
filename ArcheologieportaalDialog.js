@@ -50,9 +50,9 @@ define([
       this.meldingen_aanvang_vo_vi.href = this.archeologieportaalUrl +
         'meldingen_aanvang/meldingen_aanvang_vooronderzoek_vi/beheer';
       this.arch_notas_vi.href = this.archeologieportaalUrl +
-        'notas/archeologienotas/beheer';
+        'notas/beheer/archeologienotas';
       this.notas_vi.href = this.archeologieportaalUrl +
-        'notas/notas/beheer';
+        'notas/beheer/notas';
 
       // VI opgraving
       this.meldingen_aanvang_opgr_vi.href = this.archeologieportaalUrl +
