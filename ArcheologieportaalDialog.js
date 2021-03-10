@@ -3,13 +3,15 @@ define([
   'dijit/_TemplatedMixin',
   'dijit/_WidgetsInTemplateMixin',
   'dijit/Dialog',
-  'dojo/text!./templates/ArcheologieportaalDialog.html'
+  'dojo/text!./templates/ArcheologieportaalDialog.html',
+  'dojo/dom-class'
 ], function (
   declare,
   _TemplatedMixin,
   _WidgetsInTemplateMixin,
   Dialog,
-  template
+  template,
+  domClass
 ) {
   return declare([Dialog, _TemplatedMixin, _WidgetsInTemplateMixin], {
 
@@ -17,6 +19,8 @@ define([
     baseClass: 'archeologieportaal-dialog',
     title: 'Navigeer',
     archeologieportaalUrl: null,
+    procesUrl: null,
+    authorisationController: null,
 
     postCreate: function () {
       this.inherited(arguments);
@@ -81,6 +85,16 @@ define([
         'rapporten/archeologierapporten/archeologierapporten_opgraving_wv/beheer';
       this.eindverslagen_opgr_wv.href = this.archeologieportaalUrl +
         'rapporten/eindverslagen/eindverslagen_opgraving_wv/beheer';
+      
+      // Processen
+      if (this.authorisationController && this.authorisationController._isBeheerder()
+          && this.procesUrl) {
+        this.proces_archnotas.href = this.procesUrl +
+          'archeologienotas';
+        this.proces_notas.href = this.procesUrl +
+          'notas';
+        domClass.remove(this.procesapplicaties, 'hide');
+      }
       /* jshint +W106 */
     }
   });
