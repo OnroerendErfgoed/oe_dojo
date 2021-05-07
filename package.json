@@ -25,7 +25,7 @@
     "chromedriver": "80.0.1",
     "coveralls": "^2.11.15",
     "dijit-intern-helper": "git+https://github.com/SitePen/dijit-intern-helper.git",
-    "grunt": "^1.0.1",
+    "grunt": "^1.3.0",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-clean": "^1.0.0",
     "grunt-contrib-connect": "^1.0.2",
