@@ -356,7 +356,7 @@ define([
 
     getBodemOppervlakte: function() {
       var val = this.totaleOppBodemingreep.value;
-      return val && val > 0 ? parseFloat(val).toFixed(2) : 0;
+      return val && val > 0 ? parseFloat(val).toFixed(2).replace('.', ',') : 0;
     },
 
     updateZoneOppervlakte: function(opp) {
@@ -370,14 +370,14 @@ define([
       console.debug('LocatiePercelen::updateBodemOppervlakte', opp);
       if (opp !== null && opp > 0) {
         this._bodemIngreepOpp = opp;
-        this.totaleOppBodemingreep.value = parseFloat(opp).toFixed(2);
+        this.totaleOppBodemingreep.value = parseFloat(opp).toFixed(2).replace('.', ',');
       }
     },
 
     resetBodemOppervlakte: function() {
       console.debug('LocatiePercelen::resetBodemOppervlakte');
       if (this._bodemIngreepOpp) {
-        this.totaleOppBodemingreep.value = parseFloat(this._bodemIngreepOpp).toFixed(2);
+        this.totaleOppBodemingreep.value = parseFloat(this._bodemIngreepOpp).toFixed(2).replace('.', ',');
       }
     },
 
@@ -401,7 +401,7 @@ define([
             opp += parseFloat(perc.oppervlakte);
             this._perceelStore.put(perc.perceel);
           }, this);
-          this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2);
+          this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2).replace('.', ',');
         }),
         lang.hitch(this, function (error) {
           console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
@@ -409,33 +409,6 @@ define([
         })
       );
     },
-
-    /*_updateBodemOppervlakte: function() {
-      var opp = 0;
-      var promises = [];
-      array.forEach(this._perceelStore.fetchSync(), function(item) {
-        var kadastraalPerceel = item.perceel;
-        if (kadastraalPerceel && kadastraalPerceel.oppervlakte) {
-          opp += parseFloat(kadastraalPerceel.oppervlakte);
-        }
-        else {
-          promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel, item));
-        }
-      }, this);
-      all(promises).then(
-        lang.hitch(this, function (result) {
-          array.forEach(result, function (perc) {
-            opp += parseFloat(perc.oppervlakte);
-            this._perceelStore.put(perc.perceel);
-          }, this);
-          // this.totaleOppGebied.innerHTML = parseFloat(opp).toFixed(2);
-        }),
-        lang.hitch(this, function (error) {
-          console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
-          // this.totaleOppGebied.innerHTML = 'Er is een fout opgetreden!';
-        })
-      );
-    },*/
 
     reset: function () {
       this.clear();
