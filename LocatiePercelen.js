@@ -468,7 +468,7 @@ define([
         oppervlakte: {
           label: 'Opp. (m²)',
           formatter: function(value, object) {
-            return object.perceel && object.perceel.oppervlakte ? object.perceel.oppervlakte : '';
+            return object.perceel && object.perceel.oppervlakte ? object.perceel.oppervlakte.replace('.', ',') : '';
           }
         },
         remove: {
