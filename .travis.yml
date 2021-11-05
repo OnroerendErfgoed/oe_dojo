@@ -1,4 +1,4 @@
-dist: trusty
+dist: xenial
 language: node_js
 node_js:
   - 'lts/*'
@@ -8,21 +8,23 @@ notifications:
     - cedrik.vanderhaegen@vlaanderen.be
 addons:
   chrome: stable
+services:
+  - xvfb
 
 install:
   - npm install
 
 before_script:
-  - chromedriver-update 80.0.3987.16
   - grunt -v jshint
   - export TZ=Europe/Brussels
 before_install:
   - nvm install 8.12.0
   - nvm use 8.12.0
-  - export CHROME_BIN=chromium-browser
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+
 
 # Send coverage data to Coveralls
 after_script: "cat ./lcov.info | ./node_modules/coveralls/bin/coveralls.js"
