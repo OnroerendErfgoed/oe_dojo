@@ -13,7 +13,7 @@ install:
   - npm install
 
 before_script:
-  - chromedriver-update 80
+  - chromedriver-update 80.0.3987.16
   - grunt -v jshint
   - export TZ=Europe/Brussels
 before_install:
