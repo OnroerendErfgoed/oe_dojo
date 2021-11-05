@@ -362,7 +362,7 @@ define([
     updateZoneOppervlakte: function(opp) {
       console.debug('LocatiePercelen::updateZoneOppervlakte', opp);
       if (opp !== null && opp > 0) {
-        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2).replace(',', '.');
+        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2).replace('.', ',');
       }
     },
 
