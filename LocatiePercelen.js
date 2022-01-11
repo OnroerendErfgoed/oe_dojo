@@ -356,7 +356,7 @@ define([
 
     getBodemOppervlakte: function() {
       var val = this.totaleOppBodemingreep.value.replace('.', '');
-      return val ? parseFloat(val).toFixed(2).replace(',', '.') : 0;
+      return val ? parseFloat(val.replace(',', '.')) : 0;
     },
 
     updateZoneOppervlakte: function(opp) {
