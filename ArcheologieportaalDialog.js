@@ -68,7 +68,7 @@ define([
 
       // WV vooronderzoek
       this.toelatingen_vo_wv.href = this.archeologieportaalUrl +
-        'toelatingen/toelatingen_vooronderzoek/beheer';
+        'toelatingen/beheer/#/toelatingen_vooronderzoek';
       this.meldingen_aanvang_vo_wv.href = this.archeologieportaalUrl +
         'meldingen_aanvang/meldingen_aanvang_vooronderzoek_wv/beheer';
       this.rapporten_vo_wv.href = this.archeologieportaalUrl +
@@ -78,7 +78,7 @@ define([
 
       // WV opgraving
       this.toelatingen_opgr_wv.href = this.archeologieportaalUrl +
-        'toelatingen/toelatingen_opgraving/beheer';
+        'toelatingen/beheer/#/toelatingen_opgraving';
       this.meldingen_aanvang_opgr_wv.href = this.archeologieportaalUrl +
         'meldingen_aanvang/meldingen_aanvang_opgraving_wv/beheer';
       this.rapporten_opgr_wv.href = this.archeologieportaalUrl +
