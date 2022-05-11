@@ -62,9 +62,9 @@ define([
       this.meldingen_aanvang_opgr_vi.href = this.archeologieportaalUrl +
         'meldingen_aanvang/meldingen_aanvang_opgraving_vi/beheer';
       this.rapporten_opgr_vi.href = this.archeologieportaalUrl +
-        'rapporten/archeologierapporten/archeologierapporten_vi/beheer';
+        'rapporten/beheer/#/archeologierapport_vi';
       this.eindverslagen_vi.href = this.archeologieportaalUrl +
-        'rapporten/eindverslagen/eindverslagen_vi/beheer';
+        'rapporten/beheer/#/eindverslag_vi';
 
       // WV vooronderzoek
       this.toelatingen_vo_wv.href = this.archeologieportaalUrl +
@@ -72,9 +72,9 @@ define([
       this.meldingen_aanvang_vo_wv.href = this.archeologieportaalUrl +
         'meldingen_aanvang/meldingen_aanvang_vooronderzoek_wv/beheer';
       this.rapporten_vo_wv.href = this.archeologieportaalUrl +
-        'rapporten/archeologierapporten/archeologierapporten_vooronderzoek_wv/beheer';
+        'rapporten/beheer/#/archeologierapporten_vooronderzoek_wv';
       this.eindverslagen_vo_wv.href = this.archeologieportaalUrl +
-        'rapporten/eindverslagen/eindverslagen_vooronderzoek_wv/beheer';
+        'rapporten/beheer/#/eindverslag_vooronderzoek_wv';
 
       // WV opgraving
       this.toelatingen_opgr_wv.href = this.archeologieportaalUrl +
@@ -82,9 +82,9 @@ define([
       this.meldingen_aanvang_opgr_wv.href = this.archeologieportaalUrl +
         'meldingen_aanvang/meldingen_aanvang_opgraving_wv/beheer';
       this.rapporten_opgr_wv.href = this.archeologieportaalUrl +
-        'rapporten/archeologierapporten/archeologierapporten_opgraving_wv/beheer';
+        'rapporten/beheer/#/archeologierapport_opgraving_wv';
       this.eindverslagen_opgr_wv.href = this.archeologieportaalUrl +
-        'rapporten/eindverslagen/eindverslagen_opgraving_wv/beheer';
+        'rapporten/beheer/#/eindverslag_opgraving_wv';
       
       // Processen
       if (this.isBeheerder) {
