@@ -1,6 +1,6 @@
 {
   "name": "oe_dojo",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "description": "Dojo library for Onroerend Erfgoed UI's",
   "repository": {
     "type": "git",
