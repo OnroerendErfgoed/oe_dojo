@@ -31,7 +31,7 @@
     "grunt-contrib-connect": "^1.0.2",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-run": "^0.6.0",
-    "intern": "^3.4.1"
+    "intern": "^4.10.1"
   },
   "scripts": {
     "test": "grunt test",
