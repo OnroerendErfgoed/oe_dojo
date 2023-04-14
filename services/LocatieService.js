@@ -81,7 +81,7 @@ define([
 
         var featureRequest = new ol.format.WFS().writeGetFeature({
           srsName: 'urn:ogc:def:crs:EPSG:6.9:31370',
-          featureNS: 'informatievlaanderen.be/grb',
+          featureNS: 'https://geo.api.vlaanderen.be/GRB',
           featurePrefix: 'GRB',
           featureTypes: ['ADP'],
           filter: filter
@@ -107,7 +107,7 @@ define([
      */
     readWfs: function (wfs) {
       var formatter = new ol.format.WFS({
-        featureNS: 'informatievlaanderen.be/grb',
+        featureNS: 'https://geo.api.vlaanderen.be/GRB',
         featureType: 'ADP'
       });
       return formatter.readFeatures(wfs, {});
@@ -307,7 +307,7 @@ define([
 
       var featureRequest = new ol.format.WFS().writeGetFeature({
         srsName: 'urn:ogc:def:crs:EPSG:6.9:31370',
-        featureNS: 'informatievlaanderen.be/grb',
+        featureNS: 'https://geo.api.vlaanderen.be/GRB',
         featurePrefix: 'GRB',
         featureTypes: ['ADP'],
         filter: ol.format.filter.equalTo('CAPAKEY', capakey)
