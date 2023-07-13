@@ -123,7 +123,6 @@ define([
             gemeente: res.address.gemeente,
             postcode: res.address.postcode,
             straat: res.address.straat,
-            huisnummer: res.address.huisnummer,
             adres: res.address.adres,
             land: res.address.land
           };
