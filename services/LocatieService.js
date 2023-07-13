@@ -31,7 +31,7 @@ define([
     agivGRBUrl: null,
     crabUrl: null,
     appUrl: null,
-    adresUrl: 'crab/percelen/',
+    adresUrl: 'adressenregister/percelen/',
     capakeyUrl: 'capakey/percelen/',
     checkFlandersUrl: 'check_within_flanders',
     targetNearestAddress: 'nearest_address',

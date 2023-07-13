@@ -535,10 +535,10 @@ define([
     _getAddressString: function (adres) {
       /* jshint -W106 */
       if (adres) {
-        var straat = (adres.straat ? adres.straat  + ' ' : '')
-          + (adres.huisnummer ? adres.huisnummer + ' ' : '')
-          + (adres.subadres ? adres.subadres : '');
-        var gemeente = (adres.postcode ? adres.postcode + ' ' : '')
+        var straat = (adres.straat ? adres.straat.naam  + ' ' : '')
+          + (adres.adres && adres.adres.huisnummer ? adres.adres.huisnummer + ' ' : '')
+          + (adres.adres && adres.adres.busnummer ? adres.adres.busnummer : '');
+        var gemeente = (adres.postcode && adres.postcode.nummer ? adres.postcode.nummer + ' ' : '')
           + (adres.gemeente && adres.gemeente.naam ? adres.gemeente.naam + ' ' : '?')
           + (adres.land ?  '(' + adres.land + ')' : '');
         return straat ? straat + ', ' + gemeente : gemeente;
