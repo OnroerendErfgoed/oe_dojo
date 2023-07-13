@@ -120,17 +120,11 @@ define([
           /* jshint -W106 */
           var newStyleAddress = {
             type: this._refAdresType,
-            gemeente: {
-              naam: res.address.gemeente,
-              id: res.address.gemeente_id
-            },
+            gemeente: res.address.gemeente,
             postcode: res.address.postcode,
             straat: res.address.straat,
-            straat_id: res.address.straat_id,
             huisnummer: res.address.huisnummer,
-            huisnummer_id: res.address.huisnummer_id,
-            subadres: res.address.subadres,
-            subadres_id: res.address.subadres_id,
+            adres: res.address.adres,
             land: res.address.land
           };
           /* jshint +W106 */
