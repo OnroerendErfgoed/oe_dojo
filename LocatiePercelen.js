@@ -108,7 +108,7 @@ define([
     _updateRefAdres: function(adres) {
       console.debug('LocatiePercelen::_updateRefAdres', adres);
       this.refAdres = adres;
-      this.refAdresNode.innerHTML = this._getAddressString(adres);
+      this.refAdresNode.innerHTML = adres.label || this._getAddressString(adres);
     },
 
     _getDichtstbijzijndeAdres: function(zone, useAsRefAdres) {

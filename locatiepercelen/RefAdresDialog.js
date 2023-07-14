@@ -156,20 +156,19 @@ define([
       }
     },
 
-    _getRefAdres: function() {
+    _getRefAdres: function () {
       if (this.dichtstbijzijndeAdresCheckbox.checked) {
         return this._dichtstbijzijndeAdres;
       }
-      else if (this.perceelAdresCheckbox.checked) {
-        var adres = this._adresStore.getSync(this.perceelAdresSelectNode.value).adres;
-        return this._transformAdresToNewFormat(adres);
+      if (this.perceelAdresCheckbox.checked) {
+        return this._adresStore.getSync(this.perceelAdresSelectNode.value);
       }
-      else if (this.vrijAdresCheckbox.checked) {
-        return this._transformAdresToNewFormat(this._manueelAdres);
+      if (this.vrijAdresCheckbox.checked) {
+        var adres = this._manueelAdres;
+        adres.label = this._manueelAdresSelect.value;
+        return adres;
       }
-      else {
-        return null;
-      }
+      return null;
     },
 
     _loadAdresPercelen: function(percelen) {
@@ -183,9 +182,7 @@ define([
             array.forEach(this._adresStore.data, function(item) {
               /* jshint -W106 */
               domConstruct.place(
-                '<option value="' + item.id + '">' + (item.adres.omschrijving_straat ?
-                item.adres.omschrijving_straat + ', ' : '') + (item.adres.postcode ?
-                item.adres.postcode + ' ' : '') + item.adres.gemeente + '</option>',
+                '<option value="' + item.id + '">' + item.label + '</option>',
                 this.perceelAdresSelectNode);
               /* jshint +W106 */
             }, this);
@@ -306,20 +303,6 @@ define([
       } else {
         return '';
       }
-    },
-
-    _transformAdresToNewFormat: function (adres) {
-      return {
-        type: this.refAdresType,
-        gemeente: {
-          naam: adres.gemeente
-        },
-        huisnummer: adres.huisnummer,
-        land: 'BE',
-        postcode: adres.postcode,
-        straat: adres.straat
-
-      };
     }
   });
 });

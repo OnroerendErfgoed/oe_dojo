@@ -118,15 +118,35 @@ define([
      * @param capakey
      * @returns {*}
      */
-    getAdresByCapakey: function(capakey) {
-      return xhr.get(this.crabUrl + this.adresUrl + capakey, {
-        handleAs: 'customJson',
+    getAdressenByCapakey: async function (capakey) {
+      var capakeyAdres = await xhr.get(this.crabUrl + this.adresUrl + capakey, {
+        handleAs: 'json',
         headers: {
           'Accept': 'application/json',
-          'X-Requested-With': '',
-          'Content-Type': 'application/xml'
+          'Content-Type': 'application/json'
         }
       });
+
+      if (capakeyAdres) {
+        var adresPromises = capakeyAdres.adressen.map(lang.hitch(this, function(adres) {
+          return this.getAdresById(adres.id);
+        }));
+
+        var adressen = await Promise.all(adresPromises);
+        return adressen;
+      } else {
+        return [];
+      }
+    },
+
+    getAdresById: function (id) {
+      return xhr.get(this.crabUrl + '/adressenregister/adressen/' + id , {
+        handleAs: 'json',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
     },
 
     /**
@@ -161,10 +181,11 @@ define([
         var promises = [];
         array.forEach(percelen, lang.hitch(this, function(perceel) {
           var info = this.getInfoByCapakey(perceel.get('CAPAKEY'));
-          var adres = this.getAdresByCapakey(perceel.get('CAPAKEY'));
+          var adressen = this.getAdressenByCapakey(perceel.get('CAPAKEY'));
+
           promises.push(all({
             perceelInfo: info,
-            adresInfo: adres
+            adresInfo: adressen
           }).then(lang.hitch(this, function(results) {
             var adressen = results.adresInfo.postadressen;
             if (adressen.length > 0) {
@@ -274,15 +295,10 @@ define([
       var promises = [];
       array.forEach(percelen, lang.hitch(this, function(perceel) {
         promises.push(
-          this.getAdresByCapakey(perceel.capakey).then(lang.hitch(this, function (results) {
-            var adressen = results.postadressen;
+          this.getAdressenByCapakey(perceel.capakey).then(lang.hitch(this, function (adressen) {
             if (adressen.length > 0) {
               array.forEach(adressen, lang.hitch(this, function (adres) {
-                var data = {};
-                data.adres = this._parseAddressString(adres);
-                data.id = btoa(adres);
-
-                store.put(data);
+                store.put(adres);
               }));
             }
           }), function(err) {
