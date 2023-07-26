@@ -187,7 +187,7 @@ define([
             perceelInfo: info,
             adresInfo: adressen
           }).then(lang.hitch(this, function(results) {
-            var adressen = results.adresInfo.postadressen;
+            var adressen = results.adresInfo;
             if (adressen.length > 0) {
               array.forEach(adressen, lang.hitch(this, function (adres) {
                 var data = {};

@@ -250,13 +250,10 @@ define([
         var adres = {};
         var straatNummer = adresString.split(',')[0].trim();
         var postcodeGemeemte = adresString.split(',')[1].trim();
-        adres.postcode = postcodeGemeemte.split(' ')[0];
-        adres.gemeente = postcodeGemeemte.substring(postcodeGemeemte.indexOf(' ') + 1);
-        adres.huisnummer = straatNummer.substring(straatNummer.lastIndexOf(' ')).trim();
-        adres.straat = straatNummer.substring(0, straatNummer.lastIndexOf(' ')).trim();
-        /* jshint -W106 */
-        adres.omschrijving_straat = adres.straat + ' ' + adres.huisnummer;
-        /* jshint +W106 */
+        adres.postcode = { nummer: postcodeGemeemte.split(' ')[0] };
+        adres.gemeente = { naam: postcodeGemeemte.substring(postcodeGemeemte.indexOf(' ') + 1) };
+        adres.adres = { huisnummer: straatNummer.substring(straatNummer.lastIndexOf(' ')).trim() };
+        adres.straat = { naam: straatNummer.substring(0, straatNummer.lastIndexOf(' ')).trim() };
         return adres;
       }
       catch(err) {
@@ -269,11 +266,8 @@ define([
         var adres = {};
         if (adresObj.type === 'crab_straat') {
           try {
-            adres.straat = adresObj.locatie.split(',')[0].trim();
-            /* jshint -W106 */
-            adres.omschrijving_straat = adres.straat;
-            /* jshint +W106 */
-            adres.gemeente = adresObj.locatie.split(',')[1].trim();
+            adres.straat = { naam: adresObj.locatie.split(',')[0].trim() };
+            adres.gemeente = { naam: adresObj.locatie.split(',')[1].trim() };
           } catch (err) {
             return adresObj.locatie;
           }
@@ -282,8 +276,9 @@ define([
           adres = this._parseAddressString(adresObj.locatie);
 
         } else if (adresObj.type === 'crab_gemeente') {
-          adres.gemeente = adresObj.locatie;
+          adres.gemeente = { naam: adresObj.locatie };
         }
+        adres.type = this.refAdresType;
         return adres;
       }
       return null;
