@@ -108,7 +108,7 @@ define([
     _updateRefAdres: function(adres) {
       console.debug('LocatiePercelen::_updateRefAdres', adres);
       this.refAdres = adres;
-      this.refAdresNode.innerHTML = this._getAddressString(adres);
+      this.refAdresNode.innerHTML = adres.label || this._getAddressString(adres);
     },
 
     _getDichtstbijzijndeAdres: function(zone, useAsRefAdres) {
@@ -120,17 +120,10 @@ define([
           /* jshint -W106 */
           var newStyleAddress = {
             type: this._refAdresType,
-            gemeente: {
-              naam: res.address.gemeente,
-              id: res.address.gemeente_id
-            },
+            gemeente: res.address.gemeente,
             postcode: res.address.postcode,
             straat: res.address.straat,
-            straat_id: res.address.straat_id,
-            huisnummer: res.address.huisnummer,
-            huisnummer_id: res.address.huisnummer_id,
-            subadres: res.address.subadres,
-            subadres_id: res.address.subadres_id,
+            adres: res.address.adres,
             land: res.address.land
           };
           /* jshint +W106 */
@@ -535,12 +528,12 @@ define([
     _getAddressString: function (adres) {
       /* jshint -W106 */
       if (adres) {
-        var straat = (adres.straat ? adres.straat  + ' ' : '')
-          + (adres.huisnummer ? adres.huisnummer + ' ' : '')
-          + (adres.subadres ? adres.subadres : '');
-        var gemeente = (adres.postcode ? adres.postcode + ' ' : '')
+        var straat = (adres.straat && adres.straat.naam ? adres.straat.naam  + ' ' : '')
+          + (adres.adres && adres.adres.huisnummer ? adres.adres.huisnummer + ' ' : '')
+          + (adres.adres && adres.adres.busnummer ? adres.adres.busnummer : '');
+        var gemeente = (adres.postcode && adres.postcode.nummer ? adres.postcode.nummer + ' ' : '')
           + (adres.gemeente && adres.gemeente.naam ? adres.gemeente.naam + ' ' : '?')
-          + (adres.land ?  '(' + adres.land + ')' : '');
+          + (adres.land && adres.land.code ?  '(' + adres.land.code + ')' : '');
         return straat ? straat + ', ' + gemeente : gemeente;
         /* jshint +W106 */
       } else {
