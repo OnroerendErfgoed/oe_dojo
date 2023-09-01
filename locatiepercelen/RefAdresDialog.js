@@ -161,7 +161,8 @@ define([
         return this._dichtstbijzijndeAdres;
       }
       if (this.perceelAdresCheckbox.checked) {
-        return this._adresStore.getSync(this.perceelAdresSelectNode.value);
+        var perceelAdres = this._adresStore.getSync(this.perceelAdresSelectNode.value);
+        return this._parseAddressString(perceelAdres);
       }
       if (this.vrijAdresCheckbox.checked) {
         var adres = this._manueelAdres;
@@ -244,19 +245,25 @@ define([
       return valid;
     },
 
-    _parseAddressString: function (adresString) {
+    _parseAddressString: function (adresObj) {
       //Damstraat 74, 9220 Hamme
+      var adresString = adresObj.label ? adresObj.label : adresObj;
       try {
         var adres = {};
-        var straatNummer = adresString.split(',')[0].trim();
-        var postcodeGemeemte = adresString.split(',')[1].trim();
-        adres.postcode = { nummer: postcodeGemeemte.split(' ')[0] };
-        adres.gemeente = { naam: postcodeGemeemte.substring(postcodeGemeemte.indexOf(' ') + 1) };
-        adres.adres = { huisnummer: straatNummer.substring(straatNummer.lastIndexOf(' ')).trim() };
-        adres.straat = { naam: straatNummer.substring(0, straatNummer.lastIndexOf(' ')).trim() };
+        var straatNummer = adresString.split(',')[0].trim().split(' ');
+        var postcodeGemeente = adresString.split(',')[1].trim();
+        adres.postcode = { nummer: postcodeGemeente.split(' ')[0] };
+        adres.gemeente = { naam: postcodeGemeente.substring(postcodeGemeente.indexOf(' ') + 1) };
+        adres.straat = { naam: straatNummer[0].trim() };
+        adres.adres = {
+          huisnummer: straatNummer[1].trim(),
+          busnummer: straatNummer[3] ? straatNummer[3].trim() : undefined,
+          id: adresObj.id ? adresObj.id : undefined,
+          uri: adresObj.uri ? adresObj.uri : undefined
+        };
+        adres.type = this.refAdresType;
         return adres;
-      }
-      catch(err) {
+      } catch(err) {
         return adresString;
       }
     },
