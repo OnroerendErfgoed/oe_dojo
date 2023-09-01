@@ -529,8 +529,8 @@ define([
       /* jshint -W106 */
       if (adres) {
         var straat = (adres.straat && adres.straat.naam ? adres.straat.naam  + ' ' : '')
-          + (adres.adres && adres.adres.huisnummer ? adres.adres.huisnummer + ' ' : '')
-          + (adres.adres && adres.adres.busnummer ? adres.adres.busnummer : '');
+          + (adres.adres && adres.adres.huisnummer ? adres.adres.huisnummer : '')
+          + (adres.adres && adres.adres.busnummer ? (' bus ' + adres.adres.busnummer) : '');
         var gemeente = (adres.postcode && adres.postcode.nummer ? adres.postcode.nummer + ' ' : '')
           + (adres.gemeente && adres.gemeente.naam ? adres.gemeente.naam + ' ' : '?')
           + (adres.land && adres.land.code ?  '(' + adres.land.code + ')' : '');
