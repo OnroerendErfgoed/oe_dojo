@@ -20,7 +20,7 @@ define([
     title: 'Navigeer',
     archeologieportaalUrl: null,
     procesUrl: null,
-    isBeheerder: null,
+    isLezer: null,
 
     postCreate: function () {
       this.inherited(arguments);
@@ -85,9 +85,9 @@ define([
         'rapporten/beheer/#/archeologierapporten_opgraving_wv';
       this.eindverslagen_opgr_wv.href = this.archeologieportaalUrl +
         'rapporten/beheer/#/eindverslagen_opgraving_wv';
-      
+
       // Processen
-      if (this.isBeheerder) {
+      if (this.isLezer) {
         this.proces_archnotas.href = this.procesUrl +
           'archeologienotas';
         this.proces_notas.href = this.procesUrl +
