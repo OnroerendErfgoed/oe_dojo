@@ -61,6 +61,8 @@ define([
     _currentZone: null,
     _warningDisplayed: false,
     _bodemIngreepOpp: 0,
+    _perceelOpp: 0,
+    _projectgebiedOpp: 0,
 
     postCreate: function () {
       console.debug('LocatiePercelen::postCreate');
@@ -347,24 +349,33 @@ define([
       return elementen;
     },
 
-    getBodemOppervlakte: function() {
-      var val = this.totaleOppBodemingreep.value.replace('.', '');
-      return val ? parseFloat(val.replace(',', '.')) : 0;
+    // oppervlakte projectgebied
+    getZoneOppervlakte: function() {
+      return this._projectgebiedOpp;
     },
 
     updateZoneOppervlakte: function(opp) {
       console.debug('LocatiePercelen::updateZoneOppervlakte', opp);
       if (opp !== null && opp > 0) {
-        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2).replace('.', ',');
+        this._projectgebiedOpp = parseFloat(opp).toFixed(2);
+      } else {
+        this._projectgebiedOpp = 0;
       }
+      this.totaleOppZone.innerHTML = this._projectgebiedOpp.replace('.', ',');
+    },
+
+    getBodemOppervlakte: function() {
+      return this._bodemIngreepOpp;
     },
 
     updateBodemOppervlakte: function(opp) {
       console.debug('LocatiePercelen::updateBodemOppervlakte', opp);
       if (opp !== null && opp > 0) {
-        this._bodemIngreepOpp = opp;
-        this.totaleOppBodemingreep.value = parseFloat(opp).toFixed(2).replace('.', ',');
+        this._bodemIngreepOpp = parseFloat(opp).toFixed(2);
+      } else {
+        this._bodemIngreepOpp = 0;
       }
+      this.totaleOppBodemingreep.value = this._bodemIngreepOpp.replace('.', ',');
     },
 
     resetBodemOppervlakte: function() {
@@ -374,6 +385,9 @@ define([
       }
     },
 
+    getPerceelOppervlakte: function() {
+      return this._perceelOpp;
+    },
 
     _updatePerceelOppervlakte: function() {
       console.debug('LocatiePercelen::_updatePerceelOppervlakte');
@@ -424,6 +438,9 @@ define([
       this._currentZone = null;
 
       if (this.showOppervlakte) {
+        this._projectgebiedOpp = 0;
+        this._perceelOpp = 0;
+        this._bodemIngreepOpp = 0;
         this.totaleOppZone.innerHTML = '-';
         this.totaleOppPercelen.innerHTML = '-';
         this.totaleOppBodemingreep.value = '';
