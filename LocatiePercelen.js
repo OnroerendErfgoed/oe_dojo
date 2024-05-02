@@ -421,7 +421,8 @@ define([
               opp += parseFloat(perc.oppervlakte);
               this._perceelStore.put(perc.perceel);
             }, this);
-            this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2).replace('.', ',');
+            this._perceelOpp = parseFloat(opp).toFixed(2);
+            this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
           }),
           lang.hitch(this, function (error) {
             console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
