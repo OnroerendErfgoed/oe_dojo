@@ -6,22 +6,16 @@ sudo: required
 notifications:
   email:
     - cedrik.vanderhaegen@vlaanderen.be
-addons:
-  chrome: stable
-services:
-  - xvfb
-
 install:
   - npm install
-
+  - bower install
 before_script:
-  - grunt -v jshint
   - export TZ=Europe/Brussels
 before_install:
   - nvm install 11.2.0
   - nvm use 11.2.0
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  - npm install -g grunt-cli
+  - npm install -g bower
+script:
+  - grunt jshint
 
-
-# Send coverage data to Coveralls
-after_script: "cat ./lcov.info | ./node_modules/coveralls/bin/coveralls.js"
