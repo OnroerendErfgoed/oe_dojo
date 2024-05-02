@@ -1,7 +1,7 @@
 dist: xenial
 language: node_js
 node_js:
-  - 'lts/*'
+  - '18.16.0'
 sudo: required
 notifications:
   email:
@@ -9,11 +9,7 @@ notifications:
 install:
   - npm install
   - bower install
-before_script:
-  - export TZ=Europe/Brussels
 before_install:
-  - nvm install 11.2.0
-  - nvm use 11.2.0
   - npm install -g grunt-cli
   - npm install -g bower
 script:
