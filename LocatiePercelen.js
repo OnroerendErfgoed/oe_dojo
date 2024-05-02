@@ -436,8 +436,14 @@ define([
       console.debug('LocatiePercelen::_removePerceelOppervlakte', capakey);
       const opp = await this.locatieService.getOppervlaktePerceel(capakey);
       console.debug('LocatiePercelen::_removePerceelOppervlakte::oppervlakte', opp);
-      this._perceelOpp = this._perceelOpp - opp;
-      this.totaleOppPercelen.innerHTML = this._perceelOpp.toString().replace('.', ',');
+      let nieuweOpp = this._perceelOpp - opp;
+      if (nieuweOpp < 0) {
+        this._perceelOpp = 0;
+      }
+      else {
+        this._perceelOpp = nieuweOpp.toFixed(2);
+      }
+      this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
     },
 
     reset: function () {
