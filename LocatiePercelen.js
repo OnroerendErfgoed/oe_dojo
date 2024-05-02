@@ -435,7 +435,6 @@ define([
     _removePerceelOppervlakte: async function(capakey){
       console.debug('LocatiePercelen::_removePerceelOppervlakte', capakey);
       const opp = await this.locatieService.getOppervlaktePerceel(capakey);
-      console.debug('LocatiePercelen::_removePerceelOppervlakte::oppervlakte', opp);
       let nieuweOpp = this._perceelOpp - opp;
       if (nieuweOpp < 0) {
         this._perceelOpp = 0;
