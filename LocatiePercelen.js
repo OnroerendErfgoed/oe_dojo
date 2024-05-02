@@ -490,12 +490,6 @@ define([
             return object.perceel && object.perceel.perceel ? object.perceel.perceel : '';
           }
         },
-        oppervlakte: {
-          label: 'Opp. (m²)',
-          formatter: function(value, object) {
-            return object.perceel && object.perceel.oppervlakte ? object.perceel.oppervlakte.replace('.', ',') : '';
-          }
-        },
         remove: {
           label: '',
           resizable: false,
