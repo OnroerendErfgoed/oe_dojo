@@ -437,7 +437,7 @@ define([
       const opp = await this.locatieService.getOppervlaktePerceel(capakey);
       console.debug('LocatiePercelen::_removePerceelOppervlakte::oppervlakte', opp);
       this._perceelOpp = this._perceelOpp - opp;
-      this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
+      this.totaleOppPercelen.innerHTML = this._perceelOpp.toString().replace('.', ',');
     },
 
     reset: function () {
