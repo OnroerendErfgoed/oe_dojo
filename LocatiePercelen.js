@@ -308,6 +308,12 @@ define([
         if (locatie.oppervlakte_bodemingreep) {
           this.updateBodemOppervlakte(locatie.oppervlakte_bodemingreep);
         }
+        if (locatie.oppervlakte_percelen) {
+          this._updatePerceelOppervlakte(locatie.oppervlakte_percelen);
+        }
+        if (locatie.oppervlakte_projectgebied) {
+          this.updateZoneOppervlakte(locatie.oppervlakte_projectgebied);
+        }
         /* jshint +W106 */
       }
 
@@ -381,7 +387,7 @@ define([
     resetBodemOppervlakte: function() {
       console.debug('LocatiePercelen::resetBodemOppervlakte');
       if (this._bodemIngreepOpp) {
-        this.totaleOppBodemingreep.value = parseFloat(this._bodemIngreepOpp).toFixed(2).replace('.', ',');
+        this.totaleOppBodemingreep.value = this._bodemIngreepOpp.replace('.', ',');
       }
     },
 
@@ -389,32 +395,37 @@ define([
       return this._perceelOpp;
     },
 
-    _updatePerceelOppervlakte: function() {
-      console.debug('LocatiePercelen::_updatePerceelOppervlakte');
-      var opp = 0;
-      var promises = [];
-      array.forEach(this._perceelStore.fetchSync(), function(item) {
-        var kadastraalPerceel = item.perceel;
-        if (kadastraalPerceel && kadastraalPerceel.oppervlakte) {
-          opp += parseFloat(kadastraalPerceel.oppervlakte);
-        }
-        else {
-          promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel, item));
-        }
-      }, this);
-      all(promises).then(
-        lang.hitch(this, function (result) {
-          array.forEach(result, function (perc) {
-            opp += parseFloat(perc.oppervlakte);
-            this._perceelStore.put(perc.perceel);
-          }, this);
-          this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2).replace('.', ',');
-        }),
-        lang.hitch(this, function (error) {
-          console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
-          this.totaleOppPercelen.innerHTML = 'Er is een fout opgetreden!';
-        })
-      );
+    _updatePerceelOppervlakte: function(opp) {
+      console.debug('LocatiePercelen::_updatePerceelOppervlakte', opp);
+      if (opp){
+        this._perceelOpp = parseFloat(opp).toFixed(2);
+        this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
+      }
+      else {
+        opp = 0;
+        var promises = [];
+        array.forEach(this._perceelStore.fetchSync(), function (item) {
+          var kadastraalPerceel = item.perceel;
+          if (kadastraalPerceel && kadastraalPerceel.oppervlakte) {
+            opp += parseFloat(kadastraalPerceel.oppervlakte);
+          } else {
+            promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel, item));
+          }
+        }, this);
+        all(promises).then(
+          lang.hitch(this, function (result) {
+            array.forEach(result, function (perc) {
+              opp += parseFloat(perc.oppervlakte);
+              this._perceelStore.put(perc.perceel);
+            }, this);
+            this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2).replace('.', ',');
+          }),
+          lang.hitch(this, function (error) {
+            console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
+            this.totaleOppPercelen.innerHTML = 'Er is een fout opgetreden!';
+          })
+        );
+      }
     },
 
     reset: function () {
