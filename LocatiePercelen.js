@@ -285,7 +285,7 @@ define([
           return (element.type === this._perceelType);
         }));
         var kadPerceelListWithId = array.map(kadPerceelList, function(perceel) {
-          var newPerceel =lang.clone(perceel);
+          var newPerceel = lang.clone(perceel);
           newPerceel.capakey = perceel.perceel.capakey;
           return newPerceel;
         });
@@ -373,7 +373,8 @@ define([
     },
 
     getBodemOppervlakte: function() {
-      return this._bodemIngreepOpp;
+      var val = this.totaleOppBodemingreep.value.replace('.', '');
+      return val ? parseFloat(val.replace(',', '.')) : 0;
     },
 
     updateBodemOppervlakte: function(opp) {
