@@ -146,7 +146,7 @@ define([
           'Accept': 'application/json',
           'Content-Type': 'application/json'
         }
-      })
+      });
     },
 
     /**
@@ -387,8 +387,9 @@ define([
      * @returns {boolean}
      */
     checkPerceelAlreadyExists: function(store, perceel) {
+      /* jshint maxcomplexity: 15 */
       var perceelList = store.data;
-      var alreadyExists = array.filter(perceelList, lang.hitch(this, function(perc) {
+      var alreadyExists = array.filter(perceelList, function(perc) {
         /* jshint -W106 */
         if (perc.kadastraal_perceel && perceel.kadastraal_perceel &&
           (perc.kadastraal_perceel.afdeling === perceel.kadastraal_perceel.afdeling) &&
@@ -398,27 +399,20 @@ define([
           /* jshint +W106 */
           // perceel info is equal, is address?
           if (perc.adres && perceel.adres) {
-            if ((perc.adres.land === perceel.adres.land) &&
+            return (perc.adres.land === perceel.adres.land) &&
               (perc.adres.gemeente === perceel.adres.gemeente) &&
               (perc.adres.postcode === perceel.adres.postcode) &&
               (perc.adres.straat === perceel.adres.straat) &&
-              (perc.adres.huisnummer === perceel.adres.huisnummer)) {
-              return true;
-            } else {
-              return false;
-            }
+              (perc.adres.huisnummer === perceel.adres.huisnummer);
           } else {
             return true;
           }
-        } else {
-          return false;
         }
-      }));
-      if (alreadyExists.length > 0) {
         return false;
-      } else {
-        return true;
-      }
+
+      }, this);
+
+      return alreadyExists.length <= 0;
     },
 
     _bufferZone: function(zone, buffer) {

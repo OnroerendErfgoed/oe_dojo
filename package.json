@@ -21,15 +21,15 @@
     "lib": "."
   },
   "devDependencies": {
-    "bower": "^1.8.0",
+    "bower": "^1.8.14",
     "chromedriver": "95.0.0",
     "coveralls": "^3.1.1",
     "dijit-intern-helper": "git+https://github.com/SitePen/dijit-intern-helper.git",
     "grunt": "^1.4.1",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.1.0",
-    "grunt-contrib-connect": "^1.0.2",
-    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-cli": "^1.4.3",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-connect": "^4.0.0",
+    "grunt-contrib-jshint": "^3.0.0",
     "grunt-run": "^0.8.1",
     "intern": "^4.10.1"
   },
