@@ -303,13 +303,15 @@ define([
 
       // update oppervlakte
       if (this.showOppervlakte) {
-        this._updatePerceelOppervlakte();
         /* jshint -W106 */
         if (locatie.oppervlakte_bodemingreep) {
           this.updateBodemOppervlakte(locatie.oppervlakte_bodemingreep);
         }
         if (locatie.oppervlakte_percelen) {
           this._updatePerceelOppervlakte(locatie.oppervlakte_percelen);
+        }
+        else {
+          this._updatePerceelOppervlakte();
         }
         if (locatie.oppervlakte_projectgebied) {
           this.updateZoneOppervlakte(locatie.oppervlakte_projectgebied);
@@ -397,7 +399,7 @@ define([
 
     _updatePerceelOppervlakte: function(opp) {
       console.debug('LocatiePercelen::_updatePerceelOppervlakte', opp);
-      if (opp){
+      if (opp) {
         this._perceelOpp = parseFloat(opp).toFixed(2);
         this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
       }
