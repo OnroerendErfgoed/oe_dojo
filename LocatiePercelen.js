@@ -432,6 +432,14 @@ define([
       }
     },
 
+    _removePerceelOppervlakte: async function(capakey){
+      console.debug('LocatiePercelen::_removePerceelOppervlakte', capakey);
+      const opp = await this.locatieService.getOppervlaktePerceel(capakey);
+      console.debug('LocatiePercelen::_removePerceelOppervlakte::oppervlakte', opp);
+      this._perceelOpp = this._perceelOpp - opp;
+      this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
+    },
+
     reset: function () {
       this.clear();
 
@@ -546,7 +554,7 @@ define([
         this._perceelStore.remove(object.perceel.capakey);
         this.emit('percelen.changed', {percelen: this.getData()});
         if (this.showOppervlakte) {
-          this._updatePerceelOppervlakte();
+          this._removePerceelOppervlakte(object.perceel.capakey);
         }
       }
     },

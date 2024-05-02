@@ -316,6 +316,34 @@ define([
       return deferred;
     },
 
+    getOppervlaktePerceel: async function(capakey) {
+      console.debug('LocatieService::getOppervlaktePerceel', capakey);
+      const featureRequest = new ol.format.WFS().writeGetFeature({
+        srsName: 'urn:ogc:def:crs:EPSG:6.9:31370',
+        featureNS: 'https://geo.api.vlaanderen.be/GRB',
+        featurePrefix: 'GRB',
+        featureTypes: ['ADP'],
+        filter: ol.format.filter.equalTo('CAPAKEY', capakey)
+      });
+
+      const percelen = await xhr.post(this.agivGRBUrl, {
+        data: new XMLSerializer().serializeToString(featureRequest),
+        headers: {
+          'X-Requested-With': '',
+          'Content-Type': 'application/xml'
+        }
+      });
+
+      if (percelen) {
+        let perceelopp = 0;
+        array.forEach(this.readWfs(percelen), function (perceel) {
+          perceelopp += perceel.get('SHAPE').getArea();
+        }, this);
+        return parseFloat(perceelopp).toFixed(2);
+      }
+      return 0;
+    },
+
     updateOppervlaktePerceel: function (kadastraalPerceel, element) {
       var deferred = new Deferred();
 
