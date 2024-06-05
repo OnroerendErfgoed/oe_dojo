@@ -293,6 +293,7 @@ define([
 
     _getAddressString: function (adres) {
       /* jshint -W106 */
+      /* jshint maxcomplexity: 15 */
       if (adres) {
         var straat = (adres.straat ? adres.straat.naam  + ' ' : '')
           + (adres.adres && adres.adres.huisnummer ? adres.adres.huisnummer + ' ' : '')
