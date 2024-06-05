@@ -22,14 +22,14 @@
   },
   "devDependencies": {
     "bower": "^1.8.14",
-    "chromedriver": "95.0.0",
+    "chromedriver": "119.0.1",
     "coveralls": "^3.1.1",
     "dijit-intern-helper": "git+https://github.com/SitePen/dijit-intern-helper.git",
     "grunt": "^1.4.1",
     "grunt-cli": "^1.4.3",
     "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-connect": "^4.0.0",
-    "grunt-contrib-jshint": "^3.0.0",
+    "grunt-contrib-jshint": "^3.2.0",
     "grunt-run": "^0.8.1",
     "intern": "^4.10.1"
   },
