@@ -61,6 +61,8 @@ define([
     _currentZone: null,
     _warningDisplayed: false,
     _bodemIngreepOpp: 0,
+    _perceelOpp: 0,
+    _projectgebiedOpp: 0,
 
     postCreate: function () {
       console.debug('LocatiePercelen::postCreate');
@@ -283,7 +285,7 @@ define([
           return (element.type === this._perceelType);
         }));
         var kadPerceelListWithId = array.map(kadPerceelList, function(perceel) {
-          var newPerceel =lang.clone(perceel);
+          var newPerceel = lang.clone(perceel);
           newPerceel.capakey = perceel.perceel.capakey;
           return newPerceel;
         });
@@ -301,10 +303,18 @@ define([
 
       // update oppervlakte
       if (this.showOppervlakte) {
-        this._updatePerceelOppervlakte();
         /* jshint -W106 */
         if (locatie.oppervlakte_bodemingreep) {
           this.updateBodemOppervlakte(locatie.oppervlakte_bodemingreep);
+        }
+        if (locatie.oppervlakte_percelen) {
+          this._updatePerceelOppervlakte(locatie.oppervlakte_percelen);
+        }
+        else {
+          this._updatePerceelOppervlakte();
+        }
+        if (locatie.oppervlakte_projectgebied) {
+          this.updateZoneOppervlakte(locatie.oppervlakte_projectgebied);
         }
         /* jshint +W106 */
       }
@@ -347,60 +357,92 @@ define([
       return elementen;
     },
 
-    getBodemOppervlakte: function() {
-      var val = this.totaleOppBodemingreep.value.replace('.', '');
-      return val ? parseFloat(val.replace(',', '.')) : 0;
+    // oppervlakte projectgebied
+    getZoneOppervlakte: function() {
+      return this._projectgebiedOpp;
     },
 
     updateZoneOppervlakte: function(opp) {
       console.debug('LocatiePercelen::updateZoneOppervlakte', opp);
       if (opp !== null && opp > 0) {
-        this.totaleOppZone.innerHTML = parseFloat(opp).toFixed(2).replace('.', ',');
+        this._projectgebiedOpp = parseFloat(opp).toFixed(2);
+      } else {
+        this._projectgebiedOpp = 0;
       }
+      this.totaleOppZone.innerHTML = this._projectgebiedOpp.replace('.', ',');
+    },
+
+    getBodemOppervlakte: function() {
+      var val = this.totaleOppBodemingreep.value.replace('.', '');
+      return val ? parseFloat(val.replace(',', '.')) : 0;
     },
 
     updateBodemOppervlakte: function(opp) {
       console.debug('LocatiePercelen::updateBodemOppervlakte', opp);
       if (opp !== null && opp > 0) {
-        this._bodemIngreepOpp = opp;
-        this.totaleOppBodemingreep.value = parseFloat(opp).toFixed(2).replace('.', ',');
+        this._bodemIngreepOpp = parseFloat(opp).toFixed(2);
+      } else {
+        this._bodemIngreepOpp = 0;
       }
+      this.totaleOppBodemingreep.value = this._bodemIngreepOpp.replace('.', ',');
     },
 
     resetBodemOppervlakte: function() {
       console.debug('LocatiePercelen::resetBodemOppervlakte');
       if (this._bodemIngreepOpp) {
-        this.totaleOppBodemingreep.value = parseFloat(this._bodemIngreepOpp).toFixed(2).replace('.', ',');
+        this.totaleOppBodemingreep.value = this._bodemIngreepOpp.replace('.', ',');
       }
     },
 
+    getPerceelOppervlakte: function() {
+      return this._perceelOpp;
+    },
 
-    _updatePerceelOppervlakte: function() {
-      console.debug('LocatiePercelen::_updatePerceelOppervlakte');
-      var opp = 0;
-      var promises = [];
-      array.forEach(this._perceelStore.fetchSync(), function(item) {
-        var kadastraalPerceel = item.perceel;
-        if (kadastraalPerceel && kadastraalPerceel.oppervlakte) {
-          opp += parseFloat(kadastraalPerceel.oppervlakte);
-        }
-        else {
-          promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel, item));
-        }
-      }, this);
-      all(promises).then(
-        lang.hitch(this, function (result) {
-          array.forEach(result, function (perc) {
-            opp += parseFloat(perc.oppervlakte);
-            this._perceelStore.put(perc.perceel);
-          }, this);
-          this.totaleOppPercelen.innerHTML = parseFloat(opp).toFixed(2).replace('.', ',');
-        }),
-        lang.hitch(this, function (error) {
-          console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
-          this.totaleOppPercelen.innerHTML = 'Er is een fout opgetreden!';
-        })
-      );
+    _updatePerceelOppervlakte: function(opp) {
+      console.debug('LocatiePercelen::_updatePerceelOppervlakte', opp);
+      if (opp) {
+        this._perceelOpp = parseFloat(opp).toFixed(2);
+        this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
+      }
+      else {
+        opp = 0;
+        var promises = [];
+        array.forEach(this._perceelStore.fetchSync(), function (item) {
+          var kadastraalPerceel = item.perceel;
+          if (kadastraalPerceel && kadastraalPerceel.oppervlakte) {
+            opp += parseFloat(kadastraalPerceel.oppervlakte);
+          } else {
+            promises.push(this.locatieService.updateOppervlaktePerceel(kadastraalPerceel, item));
+          }
+        }, this);
+        all(promises).then(
+          lang.hitch(this, function (result) {
+            array.forEach(result, function (perc) {
+              opp += parseFloat(perc.oppervlakte);
+              this._perceelStore.put(perc.perceel);
+            }, this);
+            this._perceelOpp = parseFloat(opp).toFixed(2);
+            this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
+          }),
+          lang.hitch(this, function (error) {
+            console.error('LocatiePercelen::_updatePerceelOppervlakte::all', error);
+            this.totaleOppPercelen.innerHTML = 'Er is een fout opgetreden!';
+          })
+        );
+      }
+    },
+
+    _removePerceelOppervlakte: async function(capakey){
+      console.debug('LocatiePercelen::_removePerceelOppervlakte', capakey);
+      const opp = await this.locatieService.getOppervlaktePerceel(capakey);
+      let nieuweOpp = this._perceelOpp - opp;
+      if (nieuweOpp < 0) {
+        this._perceelOpp = 0;
+      }
+      else {
+        this._perceelOpp = nieuweOpp.toFixed(2);
+      }
+      this.totaleOppPercelen.innerHTML = this._perceelOpp.replace('.', ',');
     },
 
     reset: function () {
@@ -424,6 +466,9 @@ define([
       this._currentZone = null;
 
       if (this.showOppervlakte) {
+        this._projectgebiedOpp = 0;
+        this._perceelOpp = 0;
+        this._bodemIngreepOpp = 0;
         this.totaleOppZone.innerHTML = '-';
         this.totaleOppPercelen.innerHTML = '-';
         this.totaleOppBodemingreep.value = '';
@@ -456,12 +501,6 @@ define([
           label: 'Perceel',
           formatter: function (value, object) {
             return object.perceel && object.perceel.perceel ? object.perceel.perceel : '';
-          }
-        },
-        oppervlakte: {
-          label: 'Opp. (m²)',
-          formatter: function(value, object) {
-            return object.perceel && object.perceel.oppervlakte ? object.perceel.oppervlakte.replace('.', ',') : '';
           }
         },
         remove: {
@@ -520,12 +559,13 @@ define([
         this._perceelStore.remove(object.perceel.capakey);
         this.emit('percelen.changed', {percelen: this.getData()});
         if (this.showOppervlakte) {
-          this._updatePerceelOppervlakte();
+          this._removePerceelOppervlakte(object.perceel.capakey);
         }
       }
     },
 
     _getAddressString: function (adres) {
+      /* jshint maxcomplexity: 15 */
       /* jshint -W106 */
       if (adres) {
         var straat = (adres.straat && adres.straat.naam ? adres.straat.naam  + ' ' : '')
