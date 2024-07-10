@@ -68,7 +68,11 @@ define([
           }
           else {
             manueelAdresStore.get(val).then(lang.hitch(this, function (data) {
-              this._manueelAdres = this._parseAddressObject(data);
+              if (data && data.locatie && data.type) {
+                this._manueelAdres = this._parseAddressString(data);
+              } else {
+                this._manueelAdres = null;
+              }
             }));
           }
         })
@@ -250,45 +254,26 @@ define([
       var adresString = adresObj.label ? adresObj.label : adresObj;
       try {
         var adres = {};
-        var straatNummer = adresString.split(',')[0].trim().split(' ');
-        var postcodeGemeente = adresString.split(',')[1].trim();
-        adres.postcode = { nummer: postcodeGemeente.split(' ')[0] };
-        adres.gemeente = { naam: postcodeGemeente.substring(postcodeGemeente.indexOf(' ') + 1) };
-        adres.straat = { naam: straatNummer[0].trim() };
-        adres.adres = {
-          huisnummer: straatNummer[1].trim(),
-          busnummer: straatNummer[3] ? straatNummer[3].trim() : undefined,
-          id: adresObj.id ? adresObj.id : undefined,
-          uri: adresObj.uri ? adresObj.uri : undefined
-        };
+        if (!adresString.includes(',')) {
+          adres.gemeente = { naam: adresString};
+        } else {
+          var straatNummer = adresString.split(',')[0].trim().split(' ');
+          var postcodeGemeente = adresString.split(',')[1].trim();
+          adres.postcode = { nummer: postcodeGemeente.split(' ').length > 1 ? postcodeGemeente.split(' ')[0] : undefined };
+          adres.gemeente = { naam: postcodeGemeente.substring(postcodeGemeente.indexOf(' ') + 1) };
+          adres.straat = { naam: straatNummer[0].trim() };
+          adres.adres = {
+            huisnummer: straatNummer[1] ? straatNummer[1].trim() : undefined,
+            busnummer: straatNummer[3] ? straatNummer[3].trim() : undefined,
+            id: adresObj.id ? adresObj.id : undefined,
+            uri: adresObj.uri ? adresObj.uri : undefined
+          };
+        }
         adres.type = this.refAdresType;
         return adres;
       } catch(err) {
         return adresString;
       }
-    },
-
-    _parseAddressObject: function(adresObj) {
-      if (adresObj && adresObj.locatie && adresObj.type) {
-        var adres = {};
-        if (adresObj.type === 'crab_straat') {
-          try {
-            adres.straat = { naam: adresObj.locatie.split(',')[0].trim() };
-            adres.gemeente = { naam: adresObj.locatie.split(',')[1].trim() };
-          } catch (err) {
-            return adresObj.locatie;
-          }
-
-        } else if (adresObj.type.indexOf('crab_huisnummer') >= 0) {
-          adres = this._parseAddressString(adresObj.locatie);
-
-        } else if (adresObj.type === 'crab_gemeente') {
-          adres.gemeente = { naam: adresObj.locatie };
-        }
-        adres.type = this.refAdresType;
-        return adres;
-      }
-      return null;
     },
 
     _getAddressString: function (adres) {
