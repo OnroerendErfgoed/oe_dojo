@@ -69,7 +69,7 @@ define([
           else {
             manueelAdresStore.get(val).then(lang.hitch(this, function (data) {
               if (data && data.locatie && data.type) {
-                this._manueelAdres = this._parseAddressString(data);
+                this._manueelAdres = this._parseAddressString(data.locatie);
               } else {
                 this._manueelAdres = null;
               }
