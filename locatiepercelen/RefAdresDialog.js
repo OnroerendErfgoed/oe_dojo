@@ -259,7 +259,8 @@ define([
         } else {
           var straatNummer = adresString.split(',')[0].trim().split(' ');
           var postcodeGemeente = adresString.split(',')[1].trim();
-          adres.postcode = { nummer: postcodeGemeente.split(' ').length > 1 ? postcodeGemeente.split(' ')[0] : undefined };
+          adres.postcode = { nummer:
+            postcodeGemeente.split(' ').length > 1 ? postcodeGemeente.split(' ')[0] : undefined };
           adres.gemeente = { naam: postcodeGemeente.substring(postcodeGemeente.indexOf(' ') + 1) };
           adres.straat = { naam: straatNummer[0].trim() };
           adres.adres = {
